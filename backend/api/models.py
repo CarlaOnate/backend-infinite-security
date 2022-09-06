@@ -34,7 +34,6 @@ class Producto(models.Model):
   deletedAt = models.DateField()
 
   class Meta:
-    managed = False
     db_table = 'Productos'
 
 
@@ -57,7 +56,6 @@ class Lugar(models.Model):
   deletedAt = models.DateField()
 
   class Meta:
-    managed = False
     db_table = 'Lugar'
 
 class Usuario(AbstractUser):
@@ -77,7 +75,7 @@ class Usuario(AbstractUser):
     (2, 'Admin parcial'),
   ]
   id = models.BigAutoField(primary_key=True)
-  username = models.TextField() # Nombre completo creado de los 3 campos
+  username = models.TextField(unique=True) # Nombre completo creado de los 3 campos
   password = models.TextField()
   nombre = models.TextField()
   apellidoPaterno = models.TextField()
@@ -98,7 +96,6 @@ class Usuario(AbstractUser):
   pass
 
   class Meta:
-    managed = False
     db_table = 'Usuario'
 
 class Reserva(models.Model):
@@ -122,5 +119,4 @@ class Reserva(models.Model):
   deletedAt = models.DateField()
 
   class Meta:
-    managed = False
     db_table = 'Reserva'
