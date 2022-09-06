@@ -10,6 +10,9 @@ function Home() {
         <Link to="/jiji">
           IRME AL
         </Link>
+        <Link to="/axios">
+          Ver como usar axios
+        </Link>
         <Pepo 
           edad={20}
         />
