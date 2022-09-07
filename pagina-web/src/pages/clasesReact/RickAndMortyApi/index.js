@@ -25,6 +25,24 @@ const RickAndMorty = () => {
 
   console.log('api 1', apiResponse)
   console.log('api 2', apiResponse2)
+
+  const arra = [1, 3, 5, 7, "a", {}]
+  arra.forEach((el, ind) => {
+    return 2
+  })
+  const newvoArra = arra.map((el, ind) => 2)
+
+  return (
+    <div>
+      {apiResponse && (apiResponse.data.results.map(el => (
+        <div>
+          <img alt="imagen" src={el.image} />
+          <p>{el.location.name}</p>
+          <p>{el.name}</p>
+        </div>
+      )))}
+    </div>
+  )
 }
 
 export default RickAndMorty

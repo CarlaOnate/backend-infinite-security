@@ -7,3 +7,7 @@ const service = axios.create({ baseURL })
 export const getCharacters = async () => {
   return await service.get('/character')
 }
+
+
+// const soyPromesa = promesa().then(data => "gaurdo datos").catch(e => console.log(e))
+

@@ -8,6 +8,10 @@ export const signup = async user => {
   return await service.post('/signup', user)
 }
 
+export const crearUsuario = async user => {
+  
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }
