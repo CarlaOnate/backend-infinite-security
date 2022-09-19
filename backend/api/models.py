@@ -75,7 +75,7 @@ class Usuario(AbstractUser):
     (2, 'Admin parcial'),
   ]
   id = models.BigAutoField(primary_key=True)
-  username = models.TextField(unique=True) # Nombre completo creado de los 3 campos
+  username = models.TextField() # Nombre completo creado de los 3 campos
   password = models.TextField()
   nombre = models.TextField()
   apellidoPaterno = models.TextField()
@@ -91,7 +91,7 @@ class Usuario(AbstractUser):
   fechaCambioContraseña = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateField(auto_now=True) # Automatically updates timestamp when instance is saved
-  deletedAt = models.DateField()
+  deletedAt = models.DateField(null=True)
   USERNAME_FIELD = 'correo'
   REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno']
   pass
