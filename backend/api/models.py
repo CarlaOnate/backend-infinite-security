@@ -44,11 +44,11 @@ class Lugar(models.Model):
     (3, 'Piso 3')
   ]
   id = models.BigAutoField(primary_key=True)
-  idProductos = models.JSONField(encoder=None) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
   piso = models.TextField()
-  salon = models.TextField()
-  detalles = models.TextField(blank=True)
   capacidad = models.IntegerField()
+  idProductos = models.JSONField(encoder=None) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
+  detalles = models.TextField(blank=True)
+  salon = models.TextField()
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
@@ -88,11 +88,12 @@ class Usuario(AbstractUser):
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
+  fechaCambioContraseña = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateField(auto_now=True) # Automatically updates timestamp when instance is saved
   deletedAt = models.DateField()
-  USERNAME_FIELD = 'username'
-  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'correo']
+  USERNAME_FIELD = 'correo'
+  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno']
   pass
 
   class Meta:
@@ -106,10 +107,10 @@ class Reserva(models.Model):
     (4, 'Cancelado'),
   ]
   id = models.BigAutoField(primary_key=True)
+  codigoReserva = models.TextField(unique=True)
   idUsuario = models.ForeignKey("Usuario", on_delete=models.RESTRICT)
   idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT)
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT)
-  codigoReserva = models.TextField(unique=True)
   fechaInicio = models.DateTimeField()
   fechaFinal = models.DateTimeField()
   estatus = models.IntegerField(choices=ESTATUS_ENUM)
