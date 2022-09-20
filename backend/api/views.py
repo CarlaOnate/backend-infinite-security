@@ -12,15 +12,24 @@ def testingAPI(req):
   return JsonResponse({"msg": "API Running"})
 
 # Historial reservas
+  # Admin
 @csrf_exempt
 def getHistorial(req):
-  column = req.POST["column"]
-  value = req.POST["value"]
-  # Missing permission check
-  columnText = column + '__contains'
-  reservas = Reserva.objects.filter(**{columnText:value})
-  serializedReservas = serializers.serialize('json', reservas)
-  return JsonResponse(serializedReservas, safe=False)
+  fields = [ el.name for el in Reserva._meta.get_fields()]
+  print(fields)
+  if req.POST:
+    column = req.POST["column"]
+    value = req.POST["value"]
+    # Missing permission check
+    columnText = column + '__contains'
+    reservas = Reserva.objects.filter(**{columnText:value})
+    serializedReservas = serializers.serialize('json', reservas)
+    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+  else:
+    reservas = Reserva.objects.all()
+    serializedReservas = serializers.serialize('json', reservas)
+    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+
 
 # Authentication
 @csrf_exempt
