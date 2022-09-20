@@ -17,7 +17,6 @@ def loginUser(req):
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) #set user in req.user
-    #HttpResponse("logged")
     return JsonResponse({"user": req.user.id})
   else:
     return JsonResponse({"error": "invalid credentials"})
