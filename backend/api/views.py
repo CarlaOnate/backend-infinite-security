@@ -33,10 +33,16 @@ def getHistorial(req):
 # User
 @csrf_exempt
 @login_required
-def getUserHistorial(req):
+def getUserHistorial(req): # mis reservas -> del usuario loggeado
   # Missing permission check
-  if req.user:
-    fields = [ el.name for el in Reserva._meta.get_fields()]
+  fields = [ el.name for el in Reserva._meta.get_fields() ]
+  if req.POST:
+    userId = req.POST["usuario"]
+    user = Usuario.objects.get(pk=userId)
+    reservas = Reserva.objects.filter(idUsuario=user)
+    serializedReservas = serializers.serialize('json', reservas)
+    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+  elif req.user:
     reservas = Reserva.objects.filter(idUsuario=req.user)
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
