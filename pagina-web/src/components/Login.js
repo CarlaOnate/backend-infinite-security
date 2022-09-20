@@ -7,7 +7,7 @@ const Login = props => {
   return (
     <div>
       <p>LOGIN</p>
-      <Input 
+      <Input
         allowClear
         maxLength={3}
       />
