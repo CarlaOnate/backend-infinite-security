@@ -9,6 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 def testingAPI(req):
   return JsonResponse({"msg": "API Running"})
 
+# Email endpoint
+
+
 # Authentication
 @csrf_exempt
 def loginUser(req):
