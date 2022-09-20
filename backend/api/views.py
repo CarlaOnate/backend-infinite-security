@@ -22,11 +22,11 @@ def getHistorial(req):
     value = req.POST["value"]
     # Missing permission check
     columnText = column + '__contains'
-    reservas = Reserva.objects.filter(**{columnText:value})
+    reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio")
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   else:
-    reservas = Reserva.objects.all()
+    reservas = Reserva.objects.all().order_by("fechaInicio")
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
 
@@ -39,11 +39,11 @@ def getUserHistorial(req): # mis reservas -> del usuario loggeado
   if req.POST:
     userId = req.POST["usuario"]
     user = Usuario.objects.get(pk=userId)
-    reservas = Reserva.objects.filter(idUsuario=user)
+    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   elif req.user:
-    reservas = Reserva.objects.filter(idUsuario=req.user)
+    reservas = Reserva.objects.filter(idUsuario=req.user).order_by("fechaInicio")
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   else:
