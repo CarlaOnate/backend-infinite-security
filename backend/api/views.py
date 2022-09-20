@@ -3,6 +3,7 @@ from .models import Usuario, Producto, Reserva, Lugar
 from django.db.models import Count, Value as V
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
@@ -485,3 +486,7 @@ def getFechaHora(req):
   print(Recursos)
   return JsonResponse(Recursos)
 
+@csrf_exempt
+def logoutUser(req):
+  logout(req)
+  return JsonResponse({"msg": "User logged out"})
