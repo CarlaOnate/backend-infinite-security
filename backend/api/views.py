@@ -41,3 +41,30 @@ def createUser(req): # Add email validation
 @csrf_exempt
 def getLoggedUser(req):
   return JsonResponse({"user": req.user.id})
+
+
+#Edit user or admin
+@csrf_exempt
+def editUserAdmin(req):
+  usuario = Usuario.objects.get(id = req.POST["id"])
+
+  #En el req debe de venir nombre, rol, departamento, apellidos maternos y paternos
+
+  #Asi se edita un usuario y se edita bien
+  nombre = req.POST["name"]
+  apellido = req.POST["lastName"]
+  apellido2 = req.POST["secondLastName"]
+  departamento = req.POST["departament"]
+  rol = req.POST["rol"]
+
+  usuario.nombre = nombre
+  usuario.apellidoPaterno = apellido
+  usuario.apellidoMaterno = apellido2
+  usuario.departament = departamento
+  usuario.rol = rol
+
+  usuario.username = nombre + ' ' + apellido + ' ' + apellido2
+
+  usuario.save()
+
+  return JsonResponse({"user": usuario.username})

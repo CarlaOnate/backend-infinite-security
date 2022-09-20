@@ -84,13 +84,17 @@ class Usuario(AbstractUser):
   fechaNacimiento = models.DateField()
   oficio = models.IntegerField(choices=OFICIO_ENUM)
   correo = models.EmailField(unique=True)
-  verified = models.BooleanField() # Falta esto en tabla de lucid chart
+  verified = models.BooleanField(default=False)
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
   fechaCambioContraseña = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateField(auto_now=True) # Automatically updates timestamp when instance is saved
+
+  #Se añade el departamento al que el usuario es asignado
+  departament = models.TextField(blank = True, null=True)
+
   deletedAt = models.DateField(null=True)
   USERNAME_FIELD = 'correo'
   REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno']
