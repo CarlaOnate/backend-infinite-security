@@ -15,15 +15,15 @@ def loginUser(req):
   email = req.POST["email"]
   password = req.POST["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
-  print('Auth user =>', authenticatedUser)
   if authenticatedUser is not None:
     login(req, authenticatedUser) #set user in req.user
-    JsonResponse({"user": req.user})
+    #HttpResponse("logged")
+    return JsonResponse({"user": req.user.id})
   else:
     return JsonResponse({"error": "invalid credentials"})
 
 @csrf_exempt
-def createUser(req): #Addd email validation
+def createUser(req): # Add email validation
   email = req.POST["email"]
   password = req.POST["password"]
   name = req.POST["name"]
@@ -37,7 +37,6 @@ def createUser(req): #Addd email validation
   # Create user and login at the same time
   authenticatedUser = authenticate(req, correo=email, password=password)
   login(req, authenticatedUser)
-  print('\n\n User id =>', newUser.id, '\n\n')
   return JsonResponse({"user": newUser.id})
 
 @csrf_exempt
