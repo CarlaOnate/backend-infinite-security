@@ -1,16 +1,25 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Usuario, Producto, Usuario, Lugar
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
 @csrf_exempt
 def testingAPI(req):
   return JsonResponse({"msg": "API Running"})
 
 # Email endpoint
-
+@csrf_exempt
+def sendEmail(email):
+  send_mail( # Missing email account in settings - google no longer accepts third party
+    'Probando email',
+    'Mensaje de email.',
+    'A01653555@tec.mx',
+    [email],
+    fail_silently=False,
+  )
+  return HttpResponse("YES")
 
 # Authentication
 @csrf_exempt
@@ -44,3 +53,8 @@ def createUser(req): # Add email validation
 @csrf_exempt
 def getLoggedUser(req):
   return JsonResponse({"user": req.user.id})
+
+@csrf_exempt
+def logoutUser(req):
+  logout(req)
+  return JsonResponse({"msg": "User logged out"})
