@@ -1,3 +1,4 @@
+from site import USER_SITE
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Usuario, Producto, Reserva, Lugar
 from django.contrib.auth.decorators import login_required
@@ -16,7 +17,6 @@ def testingAPI(req):
 @csrf_exempt
 def getHistorial(req):
   fields = [ el.name for el in Reserva._meta.get_fields()]
-  print(fields)
   if req.POST:
     column = req.POST["column"]
     value = req.POST["value"]
@@ -30,6 +30,18 @@ def getHistorial(req):
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
 
+# User
+@csrf_exempt
+@login_required
+def getUserHistorial(req):
+  # Missing permission check
+  if req.user:
+    fields = [ el.name for el in Reserva._meta.get_fields()]
+    reservas = Reserva.objects.filter(idUsuario=req.user)
+    serializedReservas = serializers.serialize('json', reservas)
+    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+  else:
+    return JsonResponse({"msg": "User not logged in"})
 
 # Authentication
 @csrf_exempt
