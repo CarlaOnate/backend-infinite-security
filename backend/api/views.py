@@ -1,4 +1,5 @@
 from site import USER_SITE
+from types import BuiltinMethodType
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Usuario, Producto, Reserva, Lugar
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import datetime
+import json
 
 # Create your views here.
 @csrf_exempt
@@ -108,3 +110,53 @@ def editUserAdmin(req):
   usuario.save()
 
   return JsonResponse({"user": usuario.username})
+
+# Recursos - producto o lugar
+@csrf_exempt
+def createRecurso(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  print('\n\n', body.keys(), '\n\n ')
+  if 'resourceType' in body.keys():
+    print('\n\nexists\n\n ', body.keys(), '\n\n ')
+    tipoRecurso = body['resourceType']
+    if tipoRecurso == "Lugar": return createLugar(req)
+    elif tipoRecurso == "Producto": return createProducto(req)
+    else: return JsonResponse({"error": "Resource type not valid"})
+  else:
+    return JsonResponse({"error": "Resource type not present"})
+
+def createLugar(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  # Variables must exist in request body
+  piso = body['floor'] # 1 to 3
+  capacidad = body['capacity']
+  idProducto = body['idProduct']
+  detalles = body['details']
+  salon = body['room']
+  fechaBloqueo = None
+  fechaDesbloqueo = None
+  # Vars are optional
+  if 'blockDate' in body.keys(): fechaBloqueo = body['blockDate']
+  if 'unblockDate' in body.keys(): fechaDesbloqueo = body['unblockDate']
+  Lugar.objects.create(piso=piso, detalles=detalles, capacidad=capacidad, salon=salon, fechaBloqueo=fechaBloqueo, fechaDesbloqueo=fechaDesbloqueo)
+  return JsonResponse({"user": "Created Lugar successfully"})
+
+def createProducto(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  nombre = body["name"]
+  detalles = body["details"]
+  modelo = body["model"]
+  noSerie = body["serialNumber"]
+  categoria = body["category"] # 1 to 7
+  cantidadTotal = body["qty"]
+  tipo = body["type"] # 1 (Soft) 2 (Hard)
+  fechaBloqueo = None
+  fechaDesbloqueo = None
+  # Vars are optional
+  if 'blockDate' in body.keys(): fechaBloqueo = body['blockDate']
+  if 'unblockDate' in body.keys(): fechaDesbloqueo = body['unblockDate']
+  Producto.objects.create(nombre=nombre, detalles=detalles, modelo=modelo, noSerie=noSerie, categoria=categoria, cantidadTotal=cantidadTotal, tipo=tipo, fechaBloqueo=fechaBloqueo, fechaDesbloqueo=fechaDesbloqueo)
+  return JsonResponse({"user": "Created Producto successfully"})

@@ -8,4 +8,5 @@ urlpatterns = [
   path('historial/', views.getHistorial, name='getHistorial'),
   path('user/historial/', views.getUserHistorial, name='getUserHistorial'),
   path('edit-user', views.editUserAdmin, name='editUserAdmin'),
+  path('create-resource', views.createRecurso, name='createRecurso'),
 ]
