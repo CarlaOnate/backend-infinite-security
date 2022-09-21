@@ -48,7 +48,7 @@ class Lugar(models.Model):
   id = models.BigAutoField(primary_key=True)
   piso = models.TextField()
   capacidad = models.IntegerField()
-  idProductos = models.JSONField(encoder=None, null=True) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
+  idProductos = models.ManyToManyField(Producto, null=True) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
   detalles = models.TextField(blank=True)
   salon = models.TextField()
   fechaBloqueo = models.DateTimeField(blank=True, null=True)

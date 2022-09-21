@@ -132,7 +132,6 @@ def createLugar(req):
   # Variables must exist in request body
   piso = body['floor'] # 1 to 3
   capacidad = body['capacity']
-  idProducto = body['idProduct']
   detalles = body['details']
   salon = body['room']
   fechaBloqueo = None
@@ -140,7 +139,13 @@ def createLugar(req):
   # Vars are optional
   if 'blockDate' in body.keys(): fechaBloqueo = body['blockDate']
   if 'unblockDate' in body.keys(): fechaDesbloqueo = body['unblockDate']
-  Lugar.objects.create(piso=piso, detalles=detalles, capacidad=capacidad, salon=salon, fechaBloqueo=fechaBloqueo, fechaDesbloqueo=fechaDesbloqueo)
+  #many to many field
+  newLugar = Lugar.objects.create(piso=piso, detalles=detalles, capacidad=capacidad, salon=salon, fechaBloqueo=fechaBloqueo, fechaDesbloqueo=fechaDesbloqueo)
+  if 'idProduct' in body.keys():
+    idProducto = body['idProduct']
+    for el in idProducto:
+      producto = Producto.objects.get(pk=el)
+      newLugar.idProductos.add(producto) # creates aux table with relations
   return JsonResponse({"user": "Created Lugar successfully"})
 
 def createProducto(req):
