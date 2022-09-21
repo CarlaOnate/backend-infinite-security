@@ -113,22 +113,20 @@ def editUserAdmin(req):
 
 # Recursos - producto o lugar
 @csrf_exempt
+@login_required
 def createRecurso(req):
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print('\n\n', body.keys(), '\n\n ')
   if 'resourceType' in body.keys():
-    print('\n\nexists\n\n ', body.keys(), '\n\n ')
     tipoRecurso = body['resourceType']
-    if tipoRecurso == "Lugar": return createLugar(req)
-    elif tipoRecurso == "Producto": return createProducto(req)
+    if tipoRecurso == "Lugar": return createLugar(body)
+    elif tipoRecurso == "Producto": return createProducto(body)
     else: return JsonResponse({"error": "Resource type not valid"})
   else:
     return JsonResponse({"error": "Resource type not present"})
 
-def createLugar(req):
-  body_unicode = req.body.decode('utf-8')
-  body = json.loads(body_unicode)
+def createLugar(body):
   # Variables must exist in request body
   piso = body['floor'] # 1 to 3
   capacidad = body['capacity']
@@ -148,9 +146,7 @@ def createLugar(req):
       newLugar.idProductos.add(producto) # creates aux table with relations
   return JsonResponse({"user": "Created Lugar successfully"})
 
-def createProducto(req):
-  body_unicode = req.body.decode('utf-8')
-  body = json.loads(body_unicode)
+def createProducto(body):
   nombre = body["name"]
   detalles = body["details"]
   modelo = body["model"]
@@ -165,3 +161,50 @@ def createProducto(req):
   if 'unblockDate' in body.keys(): fechaDesbloqueo = body['unblockDate']
   Producto.objects.create(nombre=nombre, detalles=detalles, modelo=modelo, noSerie=noSerie, categoria=categoria, cantidadTotal=cantidadTotal, tipo=tipo, fechaBloqueo=fechaBloqueo, fechaDesbloqueo=fechaDesbloqueo)
   return JsonResponse({"user": "Created Producto successfully"})
+
+@csrf_exempt
+def getRecurso(req): # Individual or all resources
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'resourceType' in body.keys():
+    tipoRecurso = body['resourceType']
+    if tipoRecurso == "Lugar": return getLugar(body)
+    elif tipoRecurso == "Producto": return getProducto(body)
+    else: return JsonResponse({"error": "Resource type not valid"})
+  else:
+    return JsonResponse({"error": "Resource type not present"})
+
+def getProducto(body):
+  if 'id' in body.keys(): #single product
+    producto = Producto.objects.get(pk=body['id'])
+    serializedProducto = serializers.serialize('json', [producto])
+    return JsonResponse({"value": serializedProducto})
+  elif 'byCategory' in body.keys():
+    returnObj = {}
+    for category in Producto.PRODUCT_CATEGORIES:
+      productos = Producto.objects.all().filter(deletedAt=None, categoria=category[0]) # return Productes that havent been deleted
+      returnObj[category[1]] = serializers.serialize('json', productos)
+    serializedProductos = json.dumps([returnObj])
+    return JsonResponse({"value": serializedProductos})
+  else:
+    productos = Producto.objects.all().filter(deletedAt=None) # return products that havent been deleted
+    serializedProductos = serializers.serialize('json', productos)
+    return JsonResponse({"value": serializedProductos})
+
+def getLugar(body):
+  if 'id' in body.keys(): #single product
+    lugar = Lugar.objects.get(pk=body['id'])
+    serializedLugar = serializers.serialize('json', [lugar])
+    return JsonResponse({"value": serializedLugar})
+  elif 'byFloor' in body.keys():
+    returnObj = {}
+    for piso in Lugar.PISOS_ENUM:
+      lugares = Lugar.objects.all().filter(deletedAt=None, piso=piso[0]) # return lugares that havent been deleted
+      returnObj[piso[0]] = serializers.serialize('json', lugares)
+    serializedLugares = json.dumps([returnObj])
+    return JsonResponse({"value": serializedLugares})
+  else:
+    lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
+    serializedLugares = serializers.serialize('json', lugares)
+    return JsonResponse({"value": serializedLugares})
