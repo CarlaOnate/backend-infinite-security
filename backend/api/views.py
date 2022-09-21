@@ -15,12 +15,13 @@ def testingAPI(req):
 # Historial reservas
   # Admin
 @csrf_exempt
-def getHistorial(req):
+@login_required
+def getHistorial(req): # historial reservas -> solo para admins
   fields = [ el.name for el in Reserva._meta.get_fields()]
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   if req.POST:
     column = req.POST["column"]
     value = req.POST["value"]
-    # Missing permission check
     columnText = column + '__contains'
     reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio")
     serializedReservas = serializers.serialize('json', reservas)
@@ -33,10 +34,10 @@ def getHistorial(req):
 # User
 @csrf_exempt
 @login_required
-def getUserHistorial(req): # mis reservas -> del usuario loggeado
-  # Missing permission check
+def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
+    if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     userId = req.POST["usuario"]
     user = Usuario.objects.get(pk=userId)
     reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
@@ -79,5 +80,11 @@ def createUser(req): # Add email validation
   return JsonResponse({"user": newUser.id})
 
 @csrf_exempt
+def logoutUser(req):
+  logout(req)
+  return JsonResponse({"msg": "User logged out"})
+
+@csrf_exempt
 def getLoggedUser(req):
   return JsonResponse({"user": req.user.id})
+
