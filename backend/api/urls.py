@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -8,4 +9,9 @@ urlpatterns = [
   path('historial/', views.getHistorial, name='getHistorial'),
   path('user/historial/', views.getUserHistorial, name='getUserHistorial'),
   path('edit-user', views.editUserAdmin, name='editUserAdmin'),
+
+  path('delete-user', views.deleteUser, name='deleteUser'),
+
+  path('getuseritself-user', views.getuseritself, name='getuseritself'),
+
 ]
