@@ -11,4 +11,5 @@ urlpatterns = [
   path('create-resource', views.createRecurso, name='createRecurso'),
   path('get-resource', views.getRecurso, name='getRecurso'),
   path('update-resource', views.updateRecurso, name='updateRecurso'),
+  path('delete-resource', views.deleteResource, name='deleteResource'),
 ]
