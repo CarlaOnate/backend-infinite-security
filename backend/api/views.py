@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
-import datetime
+from datetime import datetime
+from django.utils import timezone
 import json
 
 # Create your views here.
@@ -208,3 +209,69 @@ def getLugar(body):
     lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
     serializedLugares = serializers.serialize('json', lugares)
     return JsonResponse({"value": serializedLugares})
+
+@csrf_exempt
+def updateRecurso(req): # Individual or all resources
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'resourceType' in body.keys():
+    tipoRecurso = body['resourceType']
+    if tipoRecurso == "Lugar": return updateLugar(body)
+    elif tipoRecurso == "Producto": return updateProducto(body)
+    else: return JsonResponse({"error": "Resource type not valid"})
+  else:
+    return JsonResponse({"error": "Resource type not present"})
+
+def updateProducto(body):
+  if 'block' in body.keys(): #single product
+    producto = Producto.objects.get(pk=body['id'])
+    producto.fechaBloqueo = timezone.make_aware(datetime.fromisoformat(body['blockDate']))
+    producto.fechaDesbloqueo = timezone.make_aware(datetime.fromisoformat(body['unblockDate']))
+    producto.save()
+    return JsonResponse({ "msg": "Actualizado correctamente" })
+  else:
+    producto = Producto.objects.get(pk=body['id'])
+    producto.nombre = body['name']
+    producto.detalles = body['details']
+    producto.modelo = body['model']
+    producto.serialNumber = body['serialNumber']
+    producto.categoria = body['category']
+    producto.cantidadTotal = body['totalQty']
+    producto.tipo = body['type']
+    if (body['blockDate'] != None) and (body['unblockDate'] != None): # not null
+      producto.fechaBloqueo = timezone.make_aware(datetime.fromisoformat(body['blockDate']))
+      producto.fechaDesbloqueo = timezone.make_aware(datetime.fromisoformat(body['unblockDate']))
+    else:
+      producto.fechaBloqueo = None
+      producto.fechaDesbloqueo = None
+    producto.save()
+    return JsonResponse({"msg": "Actualizado correctamente"})
+
+def updateLugar(body):
+  if 'block' in body.keys(): #single product
+    lugar = Lugar.objects.get(pk=body['id'])
+    lugar.fechaBloqueo = timezone.make_aware(datetime.fromisoformat(body['blockDate']))
+    lugar.fechaDesbloqueo = timezone.make_aware(datetime.fromisoformat(body['unblockDate']))
+    lugar.save()
+    return JsonResponse({ "msg": "Actualizado correctamente" })
+  else:
+    lugar = Lugar.objects.get(pk=body['id'])
+    lugar.piso = body['floor']
+    lugar.capacidad = body['capacity']
+    lugar.detalles = body['details']
+    lugar.salon = body['room']
+    if 'idProduct' in body.keys():
+      idProducto = body['idProduct']
+      lugar.idProductos.clear() # delete current many to many relation
+      for el in idProducto: # add new relations
+        producto = Producto.objects.get(pk=el)
+        lugar.idProductos.add(producto) # creates aux table with relations
+    if (body['blockDate'] != None) and (body['unblockDate'] != None): # not null
+      lugar.fechaBloqueo = timezone.make_aware(datetime.fromisoformat(body['blockDate']))
+      lugar.fechaDesbloqueo = timezone.make_aware(datetime.fromisoformat(body['unblockDate']))
+    else:
+      lugar.fechaBloqueo = None
+      lugar.fechaDesbloqueo = None
+    lugar.save()
+    return JsonResponse({"msg": "Actualizado correctamente"})

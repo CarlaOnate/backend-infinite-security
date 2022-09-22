@@ -10,4 +10,5 @@ urlpatterns = [
   path('edit-user', views.editUserAdmin, name='editUserAdmin'),
   path('create-resource', views.createRecurso, name='createRecurso'),
   path('get-resource', views.getRecurso, name='getRecurso'),
+  path('update-resource', views.updateRecurso, name='updateRecurso'),
 ]
