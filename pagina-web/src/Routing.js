@@ -1,21 +1,31 @@
 import React from 'react';
-import Home from './pages/clasesReact/Home/App';
-import Pepo from './pages/clasesReact/Pepo'
-import { Ivan } from './pages/clasesReact/Ivan'
-import Registration from './pages/Registration'
-import RickAndMorty from './pages/clasesReact/RickAndMortyApi'
-import { Routes, Route } from "react-router-dom";
+import Contra from './Componentes/Contra';
+import imagen1 from './Imagenes/Imagen1.png';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Navbar from './Componentes/Navbars/Navbar';
 
 function Routing() {
   return (
-    <Routes>
-      <Route  path="/" element={<Home />}/>
-      <Route  path="/registro" element={<Registration />}/>
-      <Route  path="/jiji" element={<p> JIJIJI </p>}/>
-      <Route  path="/pepo" element={<Pepo />}/>
-      <Route  path="/ivan" element={<Ivan />}/>
-      <Route  path="/axios" element={<RickAndMorty />}/>
-    </Routes>
+    <>
+      <BrowserRouter>
+        
+        <Navbar/>
+
+        <Routes>
+          
+          <Route path='/' element={<p>Página principal</p>}/>
+
+          <Route  exact path="/RecuperarContra" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+          
+          <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+
+          <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+
+        </Routes>
+        
+      </BrowserRouter>
+      
+    </>
   );
 }
 
