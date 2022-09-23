@@ -1,12 +1,12 @@
 from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime
 from django.core import serializers
+from datetime import datetime, timedelta
 from django.utils import timezone
-import json
 import random
 # Create your views here.
 @csrf_exempt
@@ -35,6 +35,7 @@ def getHistorial(req): # historial reservas -> solo para admins
 # User
 @csrf_exempt
 @login_required
+# TODO: Dar la info del user filtrada para mobile, nombre dia, fecha, numero día
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
@@ -312,20 +313,16 @@ def deleteLugar(body):
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-
   #Asi se edita un usuario y se edita bien
   usuario.deletedAt = datetime.today()
   usuario.verified = 0
   usuario.correo = "Eliminado"
   usuario.password = "Eliminado"
-
   usuario.save()
-
   return JsonResponse({"user": usuario.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
-  
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
 
   usuarios = {
