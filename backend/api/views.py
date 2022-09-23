@@ -1,6 +1,3 @@
-from asyncio.windows_events import NULL
-from site import USER_SITE
-from types import BuiltinMethodType
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Usuario, Producto, Reserva, Lugar
 from django.contrib.auth.decorators import login_required
