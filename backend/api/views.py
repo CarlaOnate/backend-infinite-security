@@ -1,12 +1,11 @@
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
-import json
 from django.core import serializers
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 import random
 # Create your views here.
@@ -314,20 +313,16 @@ def deleteLugar(body):
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-
   #Asi se edita un usuario y se edita bien
-  usuario.deletedAt = date.today()
+  usuario.deletedAt = datetime.today()
   usuario.verified = 0
   usuario.correo = "Eliminado"
   usuario.password = "Eliminado"
-
   usuario.save()
-
   return JsonResponse({"user": usuario.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
-  
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
 
   usuarios = {
