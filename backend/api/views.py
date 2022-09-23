@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from site import USER_SITE
 from types import BuiltinMethodType
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
@@ -353,12 +354,19 @@ def createReserva(req):
   idUsuario = Usuario.objects.get(id = 1)
   
   codigoReserva = random.randint(1, 1000000000000)
+
   fechaInicio = req.POST["FechaInicio"]
   fechaFinal = req.POST["fechaFinal"]
+
   status = req.POST["status"]
   comentarios = req.POST["comentarios"]
 
-  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, estatus = status, comentarios = comentarios)
+  horaI = req.POST["horaI"]
+  horaF = req.POST["horaF"]
+
+
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
 
 
   return JsonResponse({"Recurso": Recurso.id})
@@ -397,3 +405,42 @@ def DeleteReserva(req):
   idReserva.save()
 
   return JsonResponse({"Recurso": idReserva.id})
+
+
+@csrf_exempt #Ya se regresan las fechas y horas de las reservas para ponerlas en el front
+def getFechaHora(req):
+  RecursosGenerales = Reserva.objects.all()
+  #print(RecursosGenerales)#Pasar de lista a diccionario
+  diccionario = dict(enumerate(set(RecursosGenerales)))
+  #print(diccionario[1].codigoReserva) #Asi sacas las cosas
+  Recursos = {}
+  #print(len(RecursosGenerales))
+
+  for i in range(len(RecursosGenerales)):
+    #print(datetime.now().date())
+
+    print(diccionario[i].fechaFinal)
+
+    # if(datetime(diccionario[i].fechaFinal) < datetime.now().date() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
+
+    #   RecursosP = {
+    #     "codigo": diccionario[i].codigoReserva,
+    #     "fechaFinal": diccionario[i].fechaFinal,
+    #     "fechaInicial": diccionario[i].fechaInicio,
+    #     "estatus": diccionario[i].estatus,
+    #     "idLugar": diccionario[i].idLugar_id,
+    #     "idProducto": diccionario[i].idProducto_id,
+    #     "idUsuario_id": diccionario[i].idUsuario_id,
+    #     "horainicio": diccionario[i].horaInicio,
+    #     "horafinal": diccionario[i].horaFinal,
+    #   }
+
+    #   Recursos[i] = RecursosP
+      
+    # else:
+    #   RecursosGenerales[i].estatus = 3
+    #   RecursosGenerales[i].save()
+
+  print(Recursos)
+  return JsonResponse(Recursos)
+

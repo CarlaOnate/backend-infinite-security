@@ -25,4 +25,6 @@ urlpatterns = [
   path('update-reserva', views.updateReserva, name='updateReserva'),
 
   path('Delete-reserva', views.DeleteReserva, name='DeleteReserva'),
+
+  path('getFechaHora-reserva', views.getFechaHora, name='DeleteReserva'),
 ]
