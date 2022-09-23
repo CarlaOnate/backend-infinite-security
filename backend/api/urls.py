@@ -8,7 +8,7 @@ urlpatterns = [
   path('logged-user', views.getLoggedUser, name='getLoggedUser'),
   path('logout-user', views.logoutUser, name='logoutUser'),
   path('historial/', views.getHistorial, name='getHistorial'),
-  path('user/historial/', views.getUserHistorial, name='getU serHistorial'),
+  path('user/historial/', views.getUserHistorial, name='getUserHistorial'),
   path('edit-user', views.editUserAdmin, name='editUserAdmin'),
 
   path('delete-user', views.deleteUser, name='deleteUser'),

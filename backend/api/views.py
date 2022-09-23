@@ -8,7 +8,6 @@ import json
 from django.core import serializers
 from datetime import datetime
 from django.utils import timezone
-import json
 import random
 # Create your views here.
 @csrf_exempt
@@ -37,6 +36,7 @@ def getHistorial(req): # historial reservas -> solo para admins
 # User
 @csrf_exempt
 @login_required
+# TODO: Dar la info del user filtrada para mobile, nombre dia, fecha, numero día
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
