@@ -1,15 +1,10 @@
-from asyncio.windows_events import NULL
-from site import USER_SITE
-from types import BuiltinMethodType
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
-import json
-from django.core import serializers
 from datetime import datetime
+from django.core import serializers
 from django.utils import timezone
 import json
 import random
@@ -319,7 +314,7 @@ def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
 
   #Asi se edita un usuario y se edita bien
-  usuario.deletedAt = date.today()
+  usuario.deletedAt = datetime.today()
   usuario.verified = 0
   usuario.correo = "Eliminado"
   usuario.password = "Eliminado"
@@ -376,7 +371,6 @@ def updateReserva(req):
 
   #Mandar el id de la reserva desde el front?
   idReserva = Reserva.objects.get(id = 1)
-  
   #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
 
   estatus = req.POST["estatus"]
@@ -400,7 +394,7 @@ def DeleteReserva(req):
   idReserva = Reserva.objects.get(id = req.POST["id"])
 
   idReserva.estatus = 4
-  idReserva.deletedAt = date.today()
+  idReserva.deletedAt = datetime.today()
 
   idReserva.save()
 
@@ -417,11 +411,11 @@ def getFechaHora(req):
   #print(len(RecursosGenerales))
 
   for i in range(len(RecursosGenerales)):
-    #print(datetime.now().date())
+    #print(datetime.now().datetime())
 
     print(diccionario[i].fechaFinal)
 
-    # if(datetime(diccionario[i].fechaFinal) < datetime.now().date() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
+    # if(datetime(diccionario[i].fechaFinal) < datetime.now().datetime() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
 
     #   RecursosP = {
     #     "codigo": diccionario[i].codigoReserva,
@@ -436,7 +430,7 @@ def getFechaHora(req):
     #   }
 
     #   Recursos[i] = RecursosP
-      
+
     # else:
     #   RecursosGenerales[i].estatus = 3
     #   RecursosGenerales[i].save()
