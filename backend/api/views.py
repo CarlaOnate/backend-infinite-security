@@ -11,7 +11,7 @@ from django.core import serializers
 from datetime import datetime
 from django.utils import timezone
 import json
-
+import random
 # Create your views here.
 @csrf_exempt
 def testingAPI(req):
@@ -313,8 +313,6 @@ def deleteLugar(body):
   lugar.save()
   return JsonResponse({"error": "Resource type not present"})
 
-
-
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
@@ -328,7 +326,6 @@ def deleteUser(req):
   usuario.save()
 
   return JsonResponse({"user": usuario.id})
-
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
@@ -347,3 +344,56 @@ def getuseritself(req):
 
   return JsonResponse(usuarios)
 
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def createReserva(req):
+  
+  #Se le pasa el id del usuario con el metodo de Carla
+  #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
+
+  idUsuario = Usuario.objects.get(id = 1)
+  
+  codigoReserva = random.randint(1, 1000000000000)
+  fechaInicio = req.POST["FechaInicio"]
+  fechaFinal = req.POST["fechaFinal"]
+  status = req.POST["status"]
+  comentarios = req.POST["comentarios"]
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, estatus = status, comentarios = comentarios)
+
+
+  return JsonResponse({"Recurso": Recurso.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def updateReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = 1)
+  
+  #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
+
+  estatus = req.POST["estatus"]
+  Lugar = req.POST["Lugar"]
+  Producto = req.POST["Producto"]
+  idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
+
+  idReserva.idUsuario = idUsuario
+  idReserva.estatus = estatus
+  idReserva.idLugar_id = Lugar
+  idReserva.idProducto_id = Producto
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def DeleteReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = req.POST["id"])
+
+  idReserva.estatus = 4
+  idReserva.deletedAt = date.today()
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})

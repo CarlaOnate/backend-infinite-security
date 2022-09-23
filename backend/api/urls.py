@@ -8,7 +8,7 @@ urlpatterns = [
   path('logged-user', views.getLoggedUser, name='getLoggedUser'),
   path('logout-user', views.logoutUser, name='logoutUser'),
   path('historial/', views.getHistorial, name='getHistorial'),
-  path('user/historial/', views.getUserHistorial, name='getUserHistorial'),
+  path('user/historial/', views.getUserHistorial, name='getU serHistorial'),
   path('edit-user', views.editUserAdmin, name='editUserAdmin'),
 
   path('delete-user', views.deleteUser, name='deleteUser'),
@@ -19,4 +19,10 @@ urlpatterns = [
   path('get-resource', views.getRecurso, name='getRecurso'),
   path('update-resource', views.updateRecurso, name='updateRecurso'),
   path('delete-resource', views.deleteResource, name='deleteResource'),
+
+  path('create-reserva', views.createReserva, name='createReserva'),
+
+  path('update-reserva', views.updateReserva, name='updateReserva'),
+
+  path('Delete-reserva', views.DeleteReserva, name='DeleteReserva'),
 ]
