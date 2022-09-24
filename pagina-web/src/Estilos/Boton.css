@@ -8,6 +8,15 @@
     border: none;
 }
 
+.CodigoPeque{
+    background-color: rgb(249, 165, 81);
+    color: white;
+    height: 40px;
+    width: 120px;
+    font-size: medium;
+    border: none;
+}
+
 .Codigoespecial{
     background-color: rgb(242, 71, 38);
     margin-top: 40px;
