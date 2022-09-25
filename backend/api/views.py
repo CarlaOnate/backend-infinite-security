@@ -1,14 +1,11 @@
-from site import USER_SITE
-from types import BuiltinMethodType
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
-import json
 from django.core import serializers
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 import json
 
@@ -313,26 +310,20 @@ def deleteLugar(body):
   lugar.save()
   return JsonResponse({"error": "Resource type not present"})
 
-
-
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-
   #Asi se edita un usuario y se edita bien
-  usuario.deletedAt = date.today()
+  usuario.deletedAt = datetime.today()
   usuario.verified = 0
   usuario.correo = "Eliminado"
   usuario.password = "Eliminado"
-
   usuario.save()
-
   return JsonResponse({"user": usuario.id})
 
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
-  
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
 
   usuarios = {
@@ -347,16 +338,31 @@ def getuseritself(req):
 
   return JsonResponse(usuarios)
 
+# Estadistica
 @csrf_exempt
-def getGeneralStatistics(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+def getGeneralStatistic(req):
+  # if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  if 'resourceType' in body.keys():
-    tipoRecurso = body['resourceType']
-    if tipoRecurso == "Lugar": return deleteLugar(body)
-    elif tipoRecurso == "Producto": return deleteProducto(body)
-    else: return JsonResponse({"error": "Resource type not valid"})
-  else:
-    return JsonResponse({"error": "Resource type not present"})
-  return JsonResponse("HOLO")
+  if 'graph' in body.keys():
+    graphType = body['graph']
+    if graphType == "Producto": return getMostReservedProducts(body)
+    elif graphType == "Lugar": return getMostReservedPlaces(body)
+    elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+  else: return JsonResponse({"error": "Graph type not valid"})
+
+def getMostReservedProducts(body):
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  print('\n\n first date =>', timezone.make_aware(datetime.today()), '\n\n => second date =>', datetimeRange, '\n\n')
+  mostReservedProducts = Reserva.objects.filter(deletedAt=None, createdAt__range=(timezone.make_aware(datetime.today()), datetimeRange))
+  # .annotate(productos=Count('idProducto'))
+  serializedProducts = serializers.serialize('json', mostReservedProducts)
+  return JsonResponse({"msg": serializedProducts})
+
+def getMostReservedPlaces(body):
+  return JsonResponse({"msg": "usuarios"})
+
+def getMostReservedCategories(body):
+  return JsonResponse({"msg": "usuarios"})

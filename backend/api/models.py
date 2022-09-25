@@ -1,7 +1,3 @@
-from operator import truediv
-from this import d
-from tkinter import TRUE
-from unicodedata import category
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
