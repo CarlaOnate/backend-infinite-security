@@ -8,6 +8,7 @@ from django.core import serializers
 from datetime import datetime, timedelta
 from django.utils import timezone
 import random
+import json
 # Create your views here.
 @csrf_exempt
 def testingAPI(req):
@@ -42,7 +43,7 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
     if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     userId = req.POST["usuario"]
     user = Usuario.objects.get(pk=userId)
-    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
+    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio").datetimes()
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   elif req.user:
@@ -218,6 +219,7 @@ def getLugar(body):
     lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
     serializedLugares = serializers.serialize('json', lugares)
     return JsonResponse({"value": serializedLugares})
+
 
 @csrf_exempt
 def updateRecurso(req): # Individual or all resources
