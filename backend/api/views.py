@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from datetime import datetime, timedelta
 from django.utils import timezone
+import random
 import json
-
 # Create your views here.
 @csrf_exempt
 def testingAPI(req):
@@ -36,13 +36,14 @@ def getHistorial(req): # historial reservas -> solo para admins
 # User
 @csrf_exempt
 @login_required
+# TODO: Dar la info del user filtrada para mobile, nombre dia, fecha, numero día
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
     if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     userId = req.POST["usuario"]
     user = Usuario.objects.get(pk=userId)
-    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
+    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio").datetimes()
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   elif req.user:
@@ -219,6 +220,7 @@ def getLugar(body):
     serializedLugares = serializers.serialize('json', lugares)
     return JsonResponse({"value": serializedLugares})
 
+
 @csrf_exempt
 def updateRecurso(req): # Individual or all resources
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
@@ -321,7 +323,6 @@ def deleteUser(req):
   usuario.save()
   return JsonResponse({"user": usuario.id})
 
-
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
@@ -366,3 +367,101 @@ def getMostReservedPlaces(body):
 
 def getMostReservedCategories(body):
   return JsonResponse({"msg": "usuarios"})
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def createReserva(req):
+  
+  #Se le pasa el id del usuario con el metodo de Carla
+  #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
+
+  idUsuario = Usuario.objects.get(id = 1)
+  
+  codigoReserva = random.randint(1, 1000000000000)
+
+  fechaInicio = req.POST["FechaInicio"]
+  fechaFinal = req.POST["fechaFinal"]
+
+  status = req.POST["status"]
+  comentarios = req.POST["comentarios"]
+
+  horaI = req.POST["horaI"]
+  horaF = req.POST["horaF"]
+
+
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
+
+
+  return JsonResponse({"Recurso": Recurso.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def updateReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = 1)
+  #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
+
+  estatus = req.POST["estatus"]
+  Lugar = req.POST["Lugar"]
+  Producto = req.POST["Producto"]
+  idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
+
+  idReserva.idUsuario = idUsuario
+  idReserva.estatus = estatus
+  idReserva.idLugar_id = Lugar
+  idReserva.idProducto_id = Producto
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def DeleteReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = req.POST["id"])
+
+  idReserva.estatus = 4
+  idReserva.deletedAt = datetime.today()
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})
+
+
+@csrf_exempt #Ya se regresan las fechas y horas de las reservas para ponerlas en el front
+def getFechaHora(req):
+  RecursosGenerales = Reserva.objects.all()
+  #print(RecursosGenerales)#Pasar de lista a diccionario
+  diccionario = dict(enumerate(set(RecursosGenerales)))
+  #print(diccionario[1].codigoReserva) #Asi sacas las cosas
+  Recursos = {}
+  #print(len(RecursosGenerales))
+
+  for i in range(len(RecursosGenerales)):
+    #print(datetime.now().datetime())
+
+    print(diccionario[i].fechaFinal)
+
+    # if(datetime(diccionario[i].fechaFinal) < datetime.now().datetime() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
+
+    #   RecursosP = {
+    #     "codigo": diccionario[i].codigoReserva,
+    #     "fechaFinal": diccionario[i].fechaFinal,
+    #     "fechaInicial": diccionario[i].fechaInicio,
+    #     "estatus": diccionario[i].estatus,
+    #     "idLugar": diccionario[i].idLugar_id,
+    #     "idProducto": diccionario[i].idProducto_id,
+    #     "idUsuario_id": diccionario[i].idUsuario_id,
+    #     "horainicio": diccionario[i].horaInicio,
+    #     "horafinal": diccionario[i].horaFinal,
+    #   }
+
+    #   Recursos[i] = RecursosP
+
+    # else:
+    #   RecursosGenerales[i].estatus = 3
+    #   RecursosGenerales[i].save()
+
+  print(Recursos)
+  return JsonResponse(Recursos)
+

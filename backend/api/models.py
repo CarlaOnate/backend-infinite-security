@@ -113,8 +113,13 @@ class Reserva(models.Model):
   idUsuario = models.ForeignKey("Usuario", on_delete=models.RESTRICT)
   idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT, null=True)
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
-  fechaInicio = models.DateTimeField()
-  fechaFinal = models.DateTimeField()
+  fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
+  fechaFinal = models.DateField()
+  
+  #Para saber las horas de uso
+  horaInicio = models.TextField(null = True)
+  horaFinal = models.TextField(null = True)
+
   estatus = models.IntegerField(choices=ESTATUS_ENUM)
   comentarios = models.TextField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
