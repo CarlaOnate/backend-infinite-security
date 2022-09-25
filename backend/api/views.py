@@ -345,6 +345,7 @@ def getGeneralStatistic(req):
   # if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
+  print('\n\n general statistic => \n\n')
   if 'graph' in body.keys():
     graphType = body['graph']
     if graphType == "Producto": return getMostReservedProducts(body)
@@ -355,12 +356,16 @@ def getGeneralStatistic(req):
 def getMostReservedProducts(body):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
-  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
-  print('\n\n first date =>', timezone.make_aware(datetime.today()), '\n\n => second date =>', datetimeRange, '\n\n')
-  mostReservedProducts = Reserva.objects.filter(deletedAt=None, createdAt__range=(timezone.make_aware(datetime.today()), datetimeRange))
-  # .annotate(productos=Count('idProducto'))
-  serializedProducts = serializers.serialize('json', mostReservedProducts)
-  return JsonResponse({"msg": serializedProducts})
+  #datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  #print('\n\n first date =>', timezone.make_aware(datetime.today()), '\n\n => second date =>', datetimeRange, '\n\n')
+  #mostReservedProducts = Reserva.objects.filter(deletedAt=None, createdAt__range=(timezone.make_aware(datetime.today()), datetimeRange)).annotate(total_products=Count("idProducto"))
+  mostReservedProducts = Reserva.objects.filter(deletedAt=None).annotate(total_products=Count("idProducto"))
+  print(mostReservedProducts)
+  for el in mostReservedProducts:
+    print(el)
+  #serializedProducts = serializers.serialize('json', mostReservedProducts)
+  #return JsonResponse({"msg": serializedProducts})
+  return JsonResponse({"msg": "holo"})
 
 def getMostReservedPlaces(body):
   return JsonResponse({"msg": "usuarios"})
