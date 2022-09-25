@@ -347,3 +347,16 @@ def getuseritself(req):
 
   return JsonResponse(usuarios)
 
+@csrf_exempt
+def getGeneralStatistics(req):
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'resourceType' in body.keys():
+    tipoRecurso = body['resourceType']
+    if tipoRecurso == "Lugar": return deleteLugar(body)
+    elif tipoRecurso == "Producto": return deleteProducto(body)
+    else: return JsonResponse({"error": "Resource type not valid"})
+  else:
+    return JsonResponse({"error": "Resource type not present"})
+  return JsonResponse("HOLO")
