@@ -8,3 +8,7 @@ body{
     height: 100vh;
     width: 98.9vw;
 }
+a{
+    text-decoration: none;
+    color: black;
+}
