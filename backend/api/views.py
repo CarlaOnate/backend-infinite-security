@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 from datetime import datetime, timedelta
 from django.utils import timezone
 import random
@@ -343,10 +344,9 @@ def getuseritself(req):
 # Estadistica
 @csrf_exempt
 def getGeneralStatistic(req):
-  # if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print('\n\n general statistic => \n\n')
   if 'graph' in body.keys():
     graphType = body['graph']
     if graphType == "Producto": return getMostReservedProducts(body)
@@ -358,42 +358,34 @@ def getMostReservedProducts(body):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
-  mostReservedProductsIds = Reserva.objects.filter(deletedAt=None, createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("idProducto").annotate(num_productos=Count('id')).order_by('-num_productos')[:5]
-  # Formating respose
+  mostReservedProducts = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
   productsResponse = []
-  for productEl in mostReservedProductsIds:
-    product = Producto.objects.get(pk=productEl['idProducto'])
-    productsResponse.append({"resource": serializers.serialize('json', [product]), "count": productEl['num_productos']})
-  return JsonResponse({"msg": productsResponse})
+  for product in mostReservedProducts:
+    serializedPlace = serializers.serialize('json', [product])
+    productsResponse.append({"place": serializedPlace, "count": product.count})
+  return JsonResponse({"value": productsResponse})
 
 def getMostReservedPlaces(body):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
-  mostReservedProductsIds = Reserva.objects.filter(deletedAt=None, createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("idLugar").annotate(num_lugares=Count('id')).order_by('-num_lugares')[:5]
-  # Formating respose
-  productsResponse = []
-  for lugarEl in mostReservedProductsIds:
-    product = Lugar.objects.get(pk=lugarEl['idLugar'])
-    productsResponse.append({"resource": serializers.serialize('json', [product]), "count": lugarEl['num_lugares']})
-  return JsonResponse({"msg": productsResponse})
+  mostReservedPlaces = Lugar.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
+  placesResponse = []
+  for place in mostReservedPlaces:
+    serializedPlace = serializers.serialize('json', [place])
+    placesResponse.append({"place": serializedPlace, "count": place.count})
+  return JsonResponse({"value": placesResponse})
 
 def getMostReservedCategories(body):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
-  mostReservedProductsIds = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("categoria").annotate(num_categorias=Count("categoria"))
-  print(mostReservedProductsIds)
-  #mostReservedCategories = mostReservedProductsIds.annotate(num_categorias=Count("idProducto__categoria"))
-  #print('\n\n', mostReservedCategories)
-  # Formating respose
+  productosEnReservas = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today())))[:5]
+  mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
-  """ for category in mostReservedCategories:
-    product = Lugar.objects.get(pk=category['idLugar'])
-    productsResponse.append({"resource": serializers.serialize('json', [product]), "count": category['num_categorias']}) """
-  return JsonResponse({"msg":"holo"})
-  #return JsonResponse({"msg": productsResponse})
-
+  for category in mostReservedCategories:
+    productsResponse.append({ "categoria": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+  return JsonResponse({"value": json.dumps(productsResponse)})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def createReserva(req):
