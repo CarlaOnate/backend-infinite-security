@@ -8,6 +8,7 @@ import Reservas from './Componentes/Reservas';
 import IniciarSesion from './Componentes/IniciarSesion';
 import Registrarse from './Componentes/Registrarse';
 import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
+import { ComponentWithContext } from './pages/ComponentWithContext';
 function Routing() {
   return (
     <>
@@ -32,6 +33,9 @@ function Routing() {
           <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
 
           <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+
+          {/* EXAMPLE CONTEXT */}
+          <Route  exact path="/user-context" element={<ComponentWithContext />}/>
 
         </Routes>
         
