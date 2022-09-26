@@ -1,12 +1,12 @@
-import { OmitProps } from "antd/lib/transfer/ListBody";
 import React from "react";
+import '../Estilos/CajaImagen.css'
 
 const CajaImagen = (props) =>{
     return(
-        <div>
-            <img src = {props.ruta} alt = "Imagen tec"/>
+        <div className="CajaImagenContenedor">
+            <img className="ImagenCajaImagen" src = {props.ruta} alt = "Imagen tec"/>
 
-            <p>{props.txt}</p>
+            <p className="TextoImagenCaja">{props.txt}</p>
         </div>
     )
 }

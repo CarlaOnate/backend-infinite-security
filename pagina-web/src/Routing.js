@@ -4,6 +4,10 @@ import imagen1 from './Imagenes/Imagen1.png';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Navbar from './Componentes/Navbars/Navbar';
 import Pantallaprincipal from './Componentes/pantallaPrincipal';
+import Reservas from './Componentes/Reservas';
+import IniciarSesion from './Componentes/IniciarSesion';
+import Registrarse from './Componentes/Registrarse';
+import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
 function Routing() {
   return (
     <>
@@ -15,7 +19,15 @@ function Routing() {
           
           <Route path='/' element={<Pantallaprincipal/>}/>
 
+          <Route path='/Reservas' element={<Reservas/>}/>
+
+          <Route path='/IniciarSesion' element = {<IniciarSesion/>}/>
+
           <Route  exact path="/RecuperarContra" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+
+          <Route exact path="/Registrarse" element={<Registrarse/>}/>
+          
+          <Route exact path="/RegistrarseCodigo" element={<RegistrarseCodigo/>}/>
           
           <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
 

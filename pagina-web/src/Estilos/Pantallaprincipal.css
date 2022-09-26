@@ -32,7 +32,7 @@
     position: absolute;
     z-index: 2;
     top: 410px;
-    width: 100vw;
+    width: 98.9vw;
 }
 
 .CajaNaranja{
@@ -42,7 +42,7 @@
     flex-direction: column;
     gap: 10px;
     background-color: rgb(223, 69, 39);
-    opacity: 0.7;
+    opacity: 0.8;
     padding: 10px;
     color: white;
     font-size: large;
@@ -82,6 +82,7 @@
     font-size: xx-large;
     font-weight: 800;
 }
+
 .Subtitulo2{
     color: rgb(249, 165, 81);
     font-size: x-large;
@@ -89,5 +90,55 @@
 }
 .Txt{
     font-size:large;
+}
 
+.TerceraSeccion{
+    background-color: rgb(235, 232, 226);
+    margin-top: 40px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.Cajitas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+}
+
+.Cajitasseccion3{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.CuartaSeccion{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.Contenedorflexcuartaseccion{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;    
+}
+
+.subtituloCuartaseccion{
+    font-size: larger;
+    width: 280px;
+    font-weight: 500;
+}
+
+.CajaTexto2{
+    color:black;
+    font-size: xx-large;
+    font-weight: 800;
 }

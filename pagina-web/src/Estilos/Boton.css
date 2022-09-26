@@ -12,7 +12,8 @@
     background-color: rgb(249, 165, 81);
     color: white;
     height: 40px;
-    width: 120px;
+    width: fit-content;
+    padding: 10px;
     font-size: medium;
     border: none;
 }
@@ -25,4 +26,12 @@
     width: 300px;
     font-size: x-large;
     border: none;
+}
+
+.Codigoverde{
+    color: rgb(51, 181, 156);
+    background-color: white;
+    border-color: rgb(51, 181, 156);
+    font-size: medium;
+    padding: 10px;
 }

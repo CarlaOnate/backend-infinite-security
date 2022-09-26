@@ -6,12 +6,13 @@ import { useLocation } from "react-router-dom";
 const Navbar = (props) => {
 
     const navigate = useLocation()
+
     console.log(navigate.pathname)
 
     const paths = {
         home: navigate.pathname === '/' && 'navActivo',
-        Borrar: navigate.pathname === '/Borrarcuenta' && 'navActivo',
-        Recuperar: navigate.pathname === '/RecuperarContra' && 'navActivo'
+        Reservas: navigate.pathname === '/Reservas' && 'navActivo',
+        IniciarSesion: navigate.pathname === '/IniciarSesion' && 'navActivo'
     }
 
     const navNoLog = (tipoNavbar) => {
@@ -20,33 +21,26 @@ const Navbar = (props) => {
             <>
                 <NavLink to="/" className={paths.home} > Home </NavLink>
                     
-                <NavLink to="/Borrarcuenta" className={paths.Borrar}> Borrar cuenta </NavLink>
+                <NavLink to="/Reservas" className={paths.Reservas}> Reservas </NavLink>
                             
-                <NavLink to="/RecuperarContra" className={paths.Recuperar}> Recuperar contra </NavLink>
+                <NavLink to="/IniciarSesion" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
             </>
             
         )
     }
 
-    const navNoLog2 = (tipoNavbar) => {
-        //Agrupar navlinks
+    const NavNoLog3 = (tipoNavbar) => {
         return(
             <>
-                <NavLink to="/" className={paths.home} > Home </NavLink>
-                    
-                <NavLink to="/" className={paths.Borrar}> Home2 </NavLink>
-                            
-                <NavLink to="/" className={paths.Recuperar}> Home3 </NavLink>
+                <NavLink to="/" className={paths.home}> Conoce el HUB </NavLink>
             </>
         )
     }
 
-    const tipoNavbar = 0;
-
     return(
         <nav>
             <div className="Navbar">
-                <img src="#" alt="Logo tec"/>
+                <img src = '../../Imagenes/logo-tec.jpg' alt="Logo tec"/>
 
                 <div className="Cajita">
                     
@@ -56,9 +50,17 @@ const Navbar = (props) => {
                         //Se guarda el id del usuario que esta logueado, variables de validaciones generales
                         //Islock cambia los navbar y así se muestran
                     }
+                    
+                    {navigate.pathname === '/' && navNoLog()}
+                    {navigate.pathname === '/Reservas' && navNoLog()}
+                    {navigate.pathname === '/IniciarSesion' && navNoLog()}
+                    {navigate.pathname === '/Registrarse' && navNoLog()}
+                    {navigate.pathname === '/RegistrarseCodigo' && navNoLog()}
 
-                    {tipoNavbar === 0 && navNoLog()}
-                    {tipoNavbar === 1 && navNoLog2()}
+                    {/* || navigate.pathname === '/Reservas' || navigate.pathname === '/IniciarSesion'  */}
+                    {/* {tipoNavbar === 1 && navNoLog2()} */}
+
+                    {navigate.pathname === '/RecuperarContra' && NavNoLog3()}
 
                 </div>
             </div>
