@@ -1,17 +1,16 @@
-from site import USER_SITE
-from types import BuiltinMethodType
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
+from django.db.models import Count, Value as V
+from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
-import json
 from django.core import serializers
-from datetime import datetime
+from django.core.serializers.json import DjangoJSONEncoder
+from datetime import datetime, timedelta
 from django.utils import timezone
+import random
 import json
-
 # Create your views here.
 @csrf_exempt
 def testingAPI(req):
@@ -39,13 +38,14 @@ def getHistorial(req): # historial reservas -> solo para admins
 # User
 @csrf_exempt
 @login_required
+# TODO: Dar la info del user filtrada para mobile, nombre dia, fecha, numero día
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
     if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     userId = req.POST["usuario"]
     user = Usuario.objects.get(pk=userId)
-    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
+    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio").datetimes()
     serializedReservas = serializers.serialize('json', reservas)
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   elif req.user:
@@ -222,6 +222,7 @@ def getLugar(body):
     serializedLugares = serializers.serialize('json', lugares)
     return JsonResponse({"value": serializedLugares})
 
+
 @csrf_exempt
 def updateRecurso(req): # Individual or all resources
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
@@ -313,26 +314,19 @@ def deleteLugar(body):
   lugar.save()
   return JsonResponse({"error": "Resource type not present"})
 
-
-
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-
   #Asi se edita un usuario y se edita bien
-  usuario.deletedAt = date.today()
+  usuario.deletedAt = datetime.today()
   usuario.verified = 0
   usuario.correo = "Eliminado"
   usuario.password = "Eliminado"
-
   usuario.save()
-
   return JsonResponse({"user": usuario.id})
-
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
-  
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
 
   usuarios = {
@@ -346,4 +340,148 @@ def getuseritself(req):
   }
 
   return JsonResponse(usuarios)
+
+# Estadistica
+@csrf_exempt
+def getGeneralStatistic(req):
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'graph' in body.keys():
+    graphType = body['graph']
+    if graphType == "Producto": return getMostReservedProducts(body)
+    elif graphType == "Lugar": return getMostReservedPlaces(body)
+    elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+  else: return JsonResponse({"error": "Graph type not valid"})
+
+def getMostReservedProducts(body):
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  mostReservedProducts = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
+  productsResponse = []
+  for product in mostReservedProducts:
+    serializedPlace = serializers.serialize('json', [product])
+    productsResponse.append({"place": serializedPlace, "count": product.count})
+  return JsonResponse({"value": productsResponse})
+
+def getMostReservedPlaces(body):
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  mostReservedPlaces = Lugar.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
+  placesResponse = []
+  for place in mostReservedPlaces:
+    serializedPlace = serializers.serialize('json', [place])
+    placesResponse.append({"place": serializedPlace, "count": place.count})
+  return JsonResponse({"value": placesResponse})
+
+def getMostReservedCategories(body):
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  productosEnReservas = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today())))[:5]
+  mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
+  productsResponse = []
+  for category in mostReservedCategories:
+    productsResponse.append({ "categoria": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+  return JsonResponse({"value": json.dumps(productsResponse)})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def createReserva(req):
+  
+  #Se le pasa el id del usuario con el metodo de Carla
+  #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
+
+  idUsuario = Usuario.objects.get(id = 1)
+  
+  codigoReserva = random.randint(1, 1000000000000)
+
+  fechaInicio = req.POST["FechaInicio"]
+  fechaFinal = req.POST["fechaFinal"]
+
+  status = req.POST["status"]
+  comentarios = req.POST["comentarios"]
+
+  horaI = req.POST["horaI"]
+  horaF = req.POST["horaF"]
+
+
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
+
+
+  return JsonResponse({"Recurso": Recurso.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def updateReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = 1)
+  #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
+
+  estatus = req.POST["estatus"]
+  Lugar = req.POST["Lugar"]
+  Producto = req.POST["Producto"]
+  idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
+
+  idReserva.idUsuario = idUsuario
+  idReserva.estatus = estatus
+  idReserva.idLugar_id = Lugar
+  idReserva.idProducto_id = Producto
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})
+
+@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+def DeleteReserva(req):
+
+  #Mandar el id de la reserva desde el front?
+  idReserva = Reserva.objects.get(id = req.POST["id"])
+
+  idReserva.estatus = 4
+  idReserva.deletedAt = datetime.today()
+
+  idReserva.save()
+
+  return JsonResponse({"Recurso": idReserva.id})
+
+
+@csrf_exempt #Ya se regresan las fechas y horas de las reservas para ponerlas en el front
+def getFechaHora(req):
+  RecursosGenerales = Reserva.objects.all()
+  #print(RecursosGenerales)#Pasar de lista a diccionario
+  diccionario = dict(enumerate(set(RecursosGenerales)))
+  #print(diccionario[1].codigoReserva) #Asi sacas las cosas
+  Recursos = {}
+  #print(len(RecursosGenerales))
+
+  for i in range(len(RecursosGenerales)):
+    #print(datetime.now().datetime())
+
+    print(diccionario[i].fechaFinal)
+
+    # if(datetime(diccionario[i].fechaFinal) < datetime.now().datetime() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
+
+    #   RecursosP = {
+    #     "codigo": diccionario[i].codigoReserva,
+    #     "fechaFinal": diccionario[i].fechaFinal,
+    #     "fechaInicial": diccionario[i].fechaInicio,
+    #     "estatus": diccionario[i].estatus,
+    #     "idLugar": diccionario[i].idLugar_id,
+    #     "idProducto": diccionario[i].idProducto_id,
+    #     "idUsuario_id": diccionario[i].idUsuario_id,
+    #     "horainicio": diccionario[i].horaInicio,
+    #     "horafinal": diccionario[i].horaFinal,
+    #   }
+
+    #   Recursos[i] = RecursosP
+
+    # else:
+    #   RecursosGenerales[i].estatus = 3
+    #   RecursosGenerales[i].save()
+
+  print(Recursos)
+  return JsonResponse(Recursos)
 
