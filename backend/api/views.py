@@ -358,7 +358,7 @@ def getMostReservedProducts(body):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
-  mostReservedProductsIds = Reserva.objects.filter(deletedAt=None, createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("idProducto").annotate(num_producto=Count('id')).order_by('-num_productos')[:5]
+  mostReservedProductsIds = Reserva.objects.filter(deletedAt=None, createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("idProducto").annotate(num_productos=Count('id')).order_by('-num_productos')[:5]
   # Formating respose
   productsResponse = []
   for productEl in mostReservedProductsIds:
@@ -379,7 +379,20 @@ def getMostReservedPlaces(body):
   return JsonResponse({"msg": productsResponse})
 
 def getMostReservedCategories(body):
-  return JsonResponse({"msg": "usuarios"})
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  mostReservedProductsIds = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).values("categoria").annotate(num_categorias=Count("categoria"))
+  print(mostReservedProductsIds)
+  #mostReservedCategories = mostReservedProductsIds.annotate(num_categorias=Count("idProducto__categoria"))
+  #print('\n\n', mostReservedCategories)
+  # Formating respose
+  productsResponse = []
+  """ for category in mostReservedCategories:
+    product = Lugar.objects.get(pk=category['idLugar'])
+    productsResponse.append({"resource": serializers.serialize('json', [product]), "count": category['num_categorias']}) """
+  return JsonResponse({"msg":"holo"})
+  #return JsonResponse({"msg": productsResponse})
 
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
