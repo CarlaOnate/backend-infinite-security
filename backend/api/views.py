@@ -490,3 +490,7 @@ def getFechaHora(req):
 def logoutUser(req):
   logout(req)
   return JsonResponse({"msg": "User logged out"})
+@csrf_exempt
+def logoutUser(req):
+  logout(req)
+  return JsonResponse({"msg": "User logged out"})
