@@ -1,0 +1,47 @@
+.Codigo{
+    background-color: rgb(249, 165, 81);
+    margin-top: 40px;
+    color: white;
+    height: 60px;
+    width: 300px;
+    font-size: x-large;
+    border: none;
+}
+
+.CodigoPeque{
+    background-color: rgb(249, 165, 81);
+    color: white;
+    height: 40px;
+    width: fit-content;
+    padding: 10px;
+    font-size: medium;
+    border: none;
+}
+
+.CodigoMediano{
+    background-color: rgb(249, 165, 81);
+    color: white;
+    height: 60px;
+    width: 200px;
+    padding: 10px;
+    font-size: large;
+    border: none;
+}
+
+.Codigoespecial{
+    background-color: rgb(242, 71, 38);
+    margin-top: 40px;
+    color: white;
+    height: 60px;
+    width: 300px;
+    font-size: x-large;
+    border: none;
+}
+
+.Codigoverde{
+    color: rgb(51, 181, 156);
+    background-color: white;
+    border-color: rgb(51, 181, 156);
+    font-size: medium;
+    padding: 10px;
+}
