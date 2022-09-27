@@ -19,14 +19,13 @@ urlpatterns = [
   path('update-resource', views.updateRecurso, name='updateRecurso'),
   path('delete-resource', views.deleteResource, name='deleteResource'),
   path('estadistica-general', views.getGeneralStatistic, name='getGeneralStatistic'),
-
   path('create-reserva', views.createReserva, name='createReserva'),
-
   path('update-reserva', views.updateReserva, name='updateReserva'),
-
   path('Delete-reserva', views.DeleteReserva, name='DeleteReserva'),
-
-  path('getFechaHora-reserva', views.getFechaHora, name='DeleteReserva'),
-  path('email', views.sendEmail, name='sendEmail'),
   path('logout-user', views.logoutUser, name='logoutUser'),
+  # Email auth
+  path('email', views.sendEmail, name='sendEmail'),
+  # Change password
+  path('verify-code', views.verifyCode, name='verifyCode'),
+  path('change-password', views.changePassword, name='changePassword'),
 ]
