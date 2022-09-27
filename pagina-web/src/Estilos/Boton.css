@@ -18,6 +18,16 @@
     border: none;
 }
 
+.CodigoMediano{
+    background-color: rgb(249, 165, 81);
+    color: white;
+    height: 60px;
+    width: 200px;
+    padding: 10px;
+    font-size: large;
+    border: none;
+}
+
 .Codigoespecial{
     background-color: rgb(242, 71, 38);
     margin-top: 40px;

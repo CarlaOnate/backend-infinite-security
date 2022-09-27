@@ -18,6 +18,43 @@ const RegistrarseCodigo = () =>{
 
         <div className="GeneralRegistroCodigo">
             
+            <div className="ImagenRegistroCodigo">
+                <img src="../Imagenes/InicioSesion.png" alt = "Imagen"/>
+            </div>
+
+            <div className="SeccionTextoRegistroCodigo">
+
+                <div className="TitulosRegistroCodigo">
+                    
+                    <div className="TituloRegistroCodigo">
+                        Registrarse
+                    </div>
+
+                    <div className="Link1RegistroCodigo">
+                        <NavLink to="/IniciarSesion" className={paths.IniciarSesion}>Iniciar Sesion</NavLink>
+                    </div>
+
+                </div>
+
+                <br></br>
+                <p>Ingresa el código que se envió a tu correo: </p>
+                
+                <div className="IngresoTextoRegistroCodigo">
+                    
+                    
+                    <Input mensaje = "Ingresa el código"/>
+                    <Boton texto = "Reenviar Codigo" clase = "Codigoverde"/>
+
+                </div>
+
+                <div className="BotonRegistrarfinalcodigo">
+
+                    <button className="CodigoMediano">
+                        <NavLink to="/" className={paths.home}>Registrarme</NavLink> 
+                    </button>
+                    
+                </div>
+            </div>
             {/* <NavLink to="/" className={paths.home}>Registrarme</NavLink> */}
             
         </div>

@@ -26,7 +26,7 @@ const Registrarse = () => {
 
             <div className="AreadeCamposRegistro">
 
-                <div className="TitulosInicioSesion">
+                <div className="TitulosRegistrarse1">
                         
                     <div className="TituloIniciarSesion">Registrarse</div>
 

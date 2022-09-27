@@ -26,3 +26,10 @@
     justify-content: center;
     padding-top: 20px;
 }
+
+.TitulosRegistrarse1{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 40px;
+}
