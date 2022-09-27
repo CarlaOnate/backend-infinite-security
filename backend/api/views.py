@@ -464,10 +464,14 @@ def sendEmail(req):
     return JsonResponse({"msg": "Tipo no valido"})
 
 def sendVerificationEmail(body):
+  user = Usuario.objects.get(correo=body["email"])
+  codigo = generateCodigo()
+  user.changePasswordCode = codigo
+  user.save()
   subject = "Verifica tu correo"
   email = EmailMessage(
     subject,
-    'Haz click aqui para verificar tu correo: http://127.0.0.1:8000/verify', # algun link al front
+    'Ingresa este codigo en la aplicación: ' + codigo,
     'inifniteseguridadapp@outlook.com',
     [body["email"]]
   )
@@ -475,11 +479,14 @@ def sendVerificationEmail(body):
   return JsonResponse({"msg": "Correo enviado"})
 
 @csrf_exempt
-def verifyUser(req): # Called from front after clicking on the email link - user needs to be logged in
-  user = req.user
-  user.verified = True
-  user.save()
-  return JsonResponse({"msg": "Usuario verificado"})
+def verifyUser(req):
+  if user.changePasswordCode != -1:
+    user = req.user
+    user.verified = True
+    user.save()
+    return JsonResponse({"msg": "Usuario verificado exitosamente"})
+  else:
+    return JsonResponse({"error": "No se ha iniciado proceso de cambio de verificación de correo"})
 
 def sendChagePasswordEmail(body):
   user = Usuario.objects.get(correo=body["email"])
@@ -489,7 +496,7 @@ def sendChagePasswordEmail(body):
   subject = "Cambia tu contraseña"
   email = EmailMessage(
     subject,
-    'Ingresa este codigo en la aplicación: ' + codigo, # algun link al front
+    'Ingresa este codigo en la aplicación: ' + codigo,
     'inifniteseguridadapp@outlook.com',
     [body["email"]]
   )
