@@ -27,13 +27,25 @@ def getHistorial(req): # historial reservas -> solo para admins
     column = req.POST["column"]
     value = req.POST["value"]
     columnText = column + '__contains'
-    reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio")
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+    reservasResponse = []
+    reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+    for reserva in reservas:
+      serializedReserva = serializers.serialize('json', [reserva])
+      serializedUser = serializers.serialize('json', [reserva.idUsuario])
+      serializedLugar = serializers.serialize('json', [reserva.idLugar])
+      serializedProducto = serializers.serialize('json', [reserva.idProducto])
+      reservasResponse.append({ "reserva": serializedReserva, "usuario": serializedUser, "lugar": serializedLugar, "producto": serializedProducto })
+    return JsonResponse({"values": reservasResponse, "columns": fields}, safe=False)
   else:
-    reservas = Reserva.objects.all().order_by("fechaInicio")
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+    reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+    reservasResponse = []
+    for reserva in reservas:
+      serializedReserva = serializers.serialize('json', [reserva])
+      serializedUser = serializers.serialize('json', [reserva.idUsuario])
+      serializedLugar = serializers.serialize('json', [reserva.idLugar])
+      serializedProducto = serializers.serialize('json', [reserva.idProducto])
+      reservasResponse.append({ "reserva": serializedReserva, "usuario": serializedUser, "lugar": serializedLugar, "producto": serializedProducto })
+    return JsonResponse({"values": reservasResponse, "columns": fields}, safe=False)
 
 # User
 @csrf_exempt
