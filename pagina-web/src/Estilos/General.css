@@ -1,12 +1,14 @@
-/* #root{
-   margin: 0 20px 0 20px;
-} */
-body{
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+body {
     font-family: 'Open Sans', sans-serif;
     margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 98.9vw;
+    padding: 0 20px;
+    width: 100%;
 }
 
 a{

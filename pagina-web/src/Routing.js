@@ -12,6 +12,8 @@ import { ComponentWithContext } from './pages/ComponentWithContext';
 import Borrarcuenta from './Componentes/BorrarCuenta';
 import PerfilUsuario from './Componentes/PerfilUsuario';
 import BorrarCuentaAdmin from './Componentes/BorrarCuentaAdmin'
+import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
+
 function Routing() {
   return (
     <>
@@ -43,6 +45,8 @@ function Routing() {
 
           {/* Rutas a definir */}
           <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+
+          <Route  exact path="/historial-reservas" element={<HistorialReservas />}/>
 
           {/* EXAMPLE CONTEXT */}
           <Route  exact path="/user-context" element={<ComponentWithContext />}/>
