@@ -29,8 +29,6 @@ def getHistorial(req): # historial reservas -> solo para admins
       value = body["value"]
       columnText = column + '__contains'
       reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
-      print('\n\n', column, value, '\n\n')
-      print(reservas)
       #Format response
       serializedReserva =  reservaJSONResponse(reservas)
       return JsonResponse({"values": serializedReserva}, safe=False)
