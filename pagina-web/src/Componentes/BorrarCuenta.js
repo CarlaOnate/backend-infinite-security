@@ -1,22 +1,34 @@
 import React from "react";
 import Boton from './Boton.js'
+import { useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import '../Estilos/Boton.css'
+import '../Estilos/BorrarCuentaUser.css'
 
 const Borrarcuenta = () =>{
-    return(
-        <div>
-           <section className='header'>.</section>
-            
-            <h1> Borrar una cuenta </h1>
+    const navigate = useLocation()
 
-            <h2> ¿Estás seguro de eliminar esta cuenta? </h2>
+    const paths = {
+        home: navigate.pathname === '/' && 'navActivo',
+        PerfilUsuario: navigate.pathname === '/PerfilUsuario' && 'navActivo',
+    }
+
+    return(
+        <div className="BorrarCuentaUserGeneral">            
+            <h1 className="TituloBorrarCuentaUser"> Borrar una cuenta </h1>
+
+            <h2 className="SubtituloBorrarCuentaUser"> ¿Estás seguro de eliminar esta cuenta? </h2>
 
             <div className="Botones">
-                <Boton texto = "Si" clase = 'Codigoespecial'/>
-                <Boton texto = "No" clase = 'Codigo'/>
+                <button className="Codigoespecial">
+                    <NavLink to="/" className={paths.home}> Si </NavLink>
+                </button>
+                <button className="Codigo">
+                    <NavLink to="/PerfilUsuario" className={paths.PerfilUsuario}> No </NavLink>
+                </button>
+                
             </div>
 
-           <footer className='footer'>.</footer>
         </div>
     )
 }

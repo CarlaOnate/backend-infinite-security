@@ -9,6 +9,9 @@ import IniciarSesion from './Componentes/IniciarSesion';
 import Registrarse from './Componentes/Registrarse';
 import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
 import { ComponentWithContext } from './pages/ComponentWithContext';
+import Borrarcuenta from './Componentes/BorrarCuenta';
+import PerfilUsuario from './Componentes/PerfilUsuario';
+import BorrarCuentaAdmin from './Componentes/BorrarCuentaAdmin'
 function Routing() {
   return (
     <>
@@ -30,8 +33,15 @@ function Routing() {
           
           <Route exact path="/RegistrarseCodigo" element={<RegistrarseCodigo/>}/>
           
-          <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+          <Route  exact path="/Borrarcuenta" element={<Borrarcuenta/>}/>
 
+          <Route  exact path="/PerfilUsuario" element={<PerfilUsuario/>}/>
+
+          <Route  exact path="/BorrarCuentaAdmin" element={<BorrarCuentaAdmin/>}/>
+
+
+
+          {/* Rutas a definir */}
           <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
 
           {/* EXAMPLE CONTEXT */}

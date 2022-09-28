@@ -37,6 +37,21 @@ const Navbar = (props) => {
         )
     }
 
+    //Este es el navbar del usuario Logueado
+    const NavNoLog4 = (tipoNavbar) => {
+        return(
+            <>
+                <NavLink to="/" className={paths.home} > Home </NavLink>
+                    
+                <NavLink to="/Reservas" className={paths.Reservas}> Reservas </NavLink>
+                            
+                <NavLink to="/IniciarSesion" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
+
+                {/* Falta el de la carita */}
+            </>
+        )
+    }
+
     return(
         <nav>
             <div className="Navbar">
