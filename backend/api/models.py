@@ -83,6 +83,7 @@ class Usuario(AbstractUser):
   oficio = models.IntegerField(choices=OFICIO_ENUM)
   correo = models.EmailField(unique=True)
   verified = models.BooleanField(default=False)
+  changePasswordCode = models.TextField(null=True)
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
