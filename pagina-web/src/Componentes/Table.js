@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from 'react'
-import { Space, Table as AntTable, Tag } from 'antd';
+import { Space, Table as AntTable, Tag } from 'antd'
+import { login, historial } from '../services/axios/user'
 
 export const Table = () => {
   const [ data, setData ] = useState()
   const columns = [
     {
       title: 'Código Reserva',
-      dataIndex: 'codigoReserva',
+      dataIndex: 'reserva.fields.codigoReserva',
       key: 'codigoReserva',
     },
     {
       title: 'Producto',
-      dataIndex: 'producto',
+      dataIndex: 'producto.fields.nombre',
       key: 'prodcto',
     },
     {
-      title: 'Luagr',
-      dataIndex: 'lugar',
+      title: 'Lugar',
+      dataIndex: 'lugar.fields.piso',
       key: 'lugar',
     },
     {
       title: 'Estatus',
-      dataIndex: 'estatus',
+      dataIndex: 'reserva.fields.estatus',
       key: 'estatus',
     },
     {
       title: 'Fecha',
-      dataIndex: 'fecha',
+      dataIndex: 'reserva.fields.fechaInicio',
       key: 'fecha',
     },
     {
@@ -36,23 +37,30 @@ export const Table = () => {
     }
   ]
 
+  const doLogin = () => {
+    login().then(e => console.log('data login =>', e)).catch(e => console.log(e))
+  }
 
+  const fetchData = () => {
+    historial().then(data => {
+      console.log(data)
+    }).catch(e => console.log(e))
+  }
 
   useEffect(() => {
-    setData([
-      {
-
-      }
-    ])
+    const fetch = async () => {
+      await doLogin()
+      //await fetchData()
+    }
+    fetch()
   }, [])
-
-
 
   return (
     <section>
       <AntTable
         columns={columns}
       />
+      <button onClick={fetchData}>FETCH</button>
     </section>
   )
 }

@@ -19,9 +19,10 @@ def testingAPI(req):
 # Historial reservas
   # Admin
 @csrf_exempt
-@login_required
 def getHistorial(req): # historial reservas -> solo para admins
   fields = [ el.name for el in Reserva._meta.get_fields()]
+  print('\n\n HISTORIAL =>', req.user, '\n\n')
+  print('\n\n SESSION =>', req.session, '\n\n')
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   if req.POST:
     column = req.POST["column"]
@@ -50,7 +51,6 @@ def getHistorial(req): # historial reservas -> solo para admins
 # User
 @csrf_exempt
 @login_required
-# TODO: Dar la info del user filtrada para mobile, nombre dia, fecha, numero día
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   fields = [ el.name for el in Reserva._meta.get_fields() ]
   if req.POST:
@@ -70,8 +70,10 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 # Authentication
 @csrf_exempt
 def loginUser(req):
-  email = req.POST["email"]
-  password = req.POST["password"]
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  email = body['email']
+  password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) #set user in req.user
@@ -81,7 +83,6 @@ def loginUser(req):
 
 @csrf_exempt
 def createUser(req): # Add email validation
-
   try:
     email = req.POST["email"]
     password = req.POST["password"]
