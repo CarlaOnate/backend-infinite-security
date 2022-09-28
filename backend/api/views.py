@@ -21,11 +21,12 @@ def testingAPI(req):
 @csrf_exempt
 def getHistorial(req): # historial reservas -> solo para admins
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  if req.POST:
-    column = req.POST["column"]
-    value = req.POST["value"]
+  if req.body != None:
+    body_unicode = req.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    column = body["column"]
+    value = body["value"]
     columnText = column + '__contains'
-    reservasResponse = []
     reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
     #Format response
     serializedReserva =  reservaJSONResponse(reservas)

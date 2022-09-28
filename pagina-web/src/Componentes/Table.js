@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Space, Table as AntTable, Tag } from 'antd'
-import { login, historial } from '../services/axios/user'
-import moment from 'moment'
+import React from 'react'
+import { Table as AntTable } from 'antd'
 
 export const Table = props => {
-  // TODO: Optionat - poner pagination
   const { columns, data, renderFooter } = props;
 
   return (
@@ -15,7 +12,7 @@ export const Table = props => {
         columns={columns}
         dataSource={data}
         footer={renderFooter}
-        scroll={{ y: 450 }}
+        scroll={{ y: 250 }}
         pagination={{
           position: ['bottomCenter'],
         }}

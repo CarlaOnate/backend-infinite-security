@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from 'react'
 import { Table } from '../../Componentes/Table';
 import { UserContext } from '../../context/userContext'
 import { login, historial } from '../../services/axios/user'
+import { Dropdown } from './Dropdown';
 import { tableColumns } from './tableColumns';
 import '../../Estilos/historial-reservas.css'
 
@@ -10,6 +11,7 @@ export const HistorialReservas = props => {
   const { history } = props;
   const { user } = useContext(UserContext)
   const [ data, setData ] = useState()
+  const [ dropdownItem, setDropdownItem ] = useState()
 
   if (user.rol) history.push('/login')
 
@@ -27,11 +29,19 @@ export const HistorialReservas = props => {
     fetch()
   }, [])
 
+  const handleDropdownItem = ({ key }) => {
+    setDropdownItem(key)
+  }
+
+  console.log()
+
   return (
     <div className='historial-reservas-container'>
       <div className='historial-top'>
         <p className='tab'>Reservas</p>
-        <div className='historial-filter'><p>DROPDOWN</p> <p>SEARCH BAR</p></div>
+        <div className='historial-filter'>
+          <Dropdown onClickItem={handleDropdownItem} selectedItem={dropdownItem}/>
+        </div>
       </div>
       <div className='full-table'>
         <Table
