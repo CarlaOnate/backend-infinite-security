@@ -8,8 +8,8 @@ withCredentials: true })
 
 // Add here user api endpoints
 export const login = async user => {
-  const fixedData = { email: "1234", password: "1234" }
-  return await service.post('/login-user', fixedData)
+  const { data } = await service.post('/login-user', user)
+  return data
 }
 
 export const signup = async user => {

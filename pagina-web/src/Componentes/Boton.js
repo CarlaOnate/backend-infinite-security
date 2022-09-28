@@ -3,7 +3,7 @@ import '../Estilos/Boton.css'
 
 const Boton = (props) => {
     return(
-        <button type='submit' className={props.clase}> {props.texto}</button>
+        <button onClick={props.onClick} type='submit' className={props.clase}> {props.texto}</button>
     )
 }
 
