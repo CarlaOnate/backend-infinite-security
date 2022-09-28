@@ -17,13 +17,8 @@ export const signup = async user => {
 }
 
 export const historial = async () => {
-  console.log('inside historial')
-
-  const jsonHistorial = await service.post('/historial/')
-  // const parsedHistorial = JSON.parse(jsonHistorial)
-  console.log(jsonHistorial)
-  // console.log(parsedHistorial)
-  return jsonHistorial
+  const { data } = await service.post('/historial/')
+  return data
 }
 
 export const logout = async() => {

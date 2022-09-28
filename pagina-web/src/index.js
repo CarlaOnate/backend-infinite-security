@@ -4,6 +4,9 @@ import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
 import {UserProvider} from './context/userContext';
 import './Estilos/General.css'
+import 'antd/dist/antd.css'
+import moment from 'moment'
+moment.locale('es-mx')
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
