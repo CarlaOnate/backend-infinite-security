@@ -4,7 +4,6 @@ import '../Estilos/footer.css'
 import '../Estilos/imagenes.css'
 import '../Estilos/Contra.css'
 import Cajatexto from './InputTexto'
-import Boton from './Boton'
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Input } from 'antd';
@@ -15,6 +14,7 @@ const Aumentar = {}
 
 const Contra = (props) => {
     const [vistas, setVistas] = useState(0)
+    // const [inputs, setInputs] = useState({})
 
     const navigate = useLocation()
 
@@ -30,21 +30,26 @@ const Contra = (props) => {
         console.log("Presionado")
     }
 
+    // const handleInput = (input, txt) =>{
+    //     setInputs(prev => ({
+    //         ...prev,
+    //         [input]: txt,
+    //     }));
+    // }
+
     const Vista1 = () => {
         return(
 
             <div>
                 <section className='header'>.</section>
                 <div className='Contenedorpartido'>
-                    <img src= {props.imagen} className='Imagen'/>
+                    <img src= {props.imagen} className='Imagen' alt='Imagen Seccion Contra'/>
                     <div className='Secciontexto'>
 
                     <p className='ParrafoBoton'>Ingrese su correo:</p>
 
-                    <Cajatexto mensaje = {props.mensaje}/>
+                    <Cajatexto mensaje = "Ingrese su correo"/>
                     
-                    {/* <Boton texto = "Obtener código" clase="Codigo"/> */}
-
                     <button className='Codigo' onClick={() => Aumentar()}>
                         Obtener código
                     </button>
@@ -62,21 +67,20 @@ const Contra = (props) => {
             <div>
                 <section className='header'>.</section>
                 <div className='Contenedorpartido'>
-                    <img src= {props.imagen} className='Imagen'/>
+                    <img src= {props.imagen} className='Imagen' alt='Imagen Seccion Contra'/>
                     <div className='Secciontexto'>
 
-                    <p className='ParrafoBoton'>Ingrese su correo:</p>
+                        <p className='ParrafoBoton'>Ingrese su correo:</p>
 
-                    <Cajatexto mensaje = {props.mensaje}/>
+                        <Cajatexto mensaje = "Ingrese su correo"/>
 
-                    <p className='ParrafoBoton'>Ingresa el código:</p>
-                    <Cajatexto mensaje = "Ingresa el código"/>
+                        <p className='ParrafoBoton'>Ingresa el código:</p>
 
-                    {/* <Boton texto = "Obtener código" clase="Codigo"/> */}
+                        <Cajatexto mensaje = "Ingresa el código"/>
 
-                    <button className='Codigo' onClick={() => Aumentar()}>
-                        Ingresar constraseña
-                    </button>
+                        <button className='Codigo' onClick={() => Aumentar()}>
+                            Ingresar constraseña
+                        </button>
 
                     </div>
 
@@ -91,29 +95,30 @@ const Contra = (props) => {
             <div>
                 <section className='header'>.</section>
                 <div className='Contenedorpartido'>
-                    <img src= {props.imagen} className='Imagen'/>
+                    <img src= {props.imagen} className='Imagen' alt='Imagen Seccion Contra'/>
                     <div className='Secciontexto'>
 
-                    <p className='ParrafoBoton'>Ingrese su correo:</p>
+                        <p className='ParrafoBoton'>Ingrese su correo:</p>
 
-                    <Cajatexto mensaje = {props.mensaje}/>
-                    
-                    <p className='ParrafoBoton'>Ingresa la nueva contraseña</p>
+                        <Cajatexto mensaje = "Ingrese su correo"/>
+                        
+                        <p className='ParrafoBoton'>Ingresa la nueva contraseña</p>
 
-                    <Input.Password 
-                    placeholder="Ingrese la contraseña" 
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
+                        <Input.Password 
+                        placeholder="Ingrese la contraseña" 
+                        className='InputContra'
+                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
 
-                    <p>Confirma la nueva contraseña</p>
-                    <Input.Password 
-                    placeholder="Confirma la contraseña" 
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
+                        <p>Confirma la nueva contraseña</p>
+                        <Input.Password 
+                        placeholder="Confirma la contraseña" 
+                        className='InputContra'
+                        iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
 
-                    {/* <Boton texto = "Obtener código" clase="Codigo"/> */}
 
-                    <button className='Codigo' onClick={() => Aumentar()}>
-                        Actualizar
-                    </button>
+                        <button className='Codigo' onClick={() => Aumentar()}>
+                            <NavLink to="/" className={paths.home}>Actualizar</NavLink>
+                        </button>
 
                     </div>
 
@@ -126,7 +131,6 @@ const Contra = (props) => {
         
         <div>
             
-            {console.log(vistas)}
             {vistas === 0 && Vista1()}
             {vistas === 1 && Vista2()}
             {vistas === 2 && Vista3()}
