@@ -23,21 +23,75 @@ def testingAPI(req):
 # Historial reservas
   # Admin
 @csrf_exempt
-@login_required
 def getHistorial(req): # historial reservas -> solo para admins
-  fields = [ el.name for el in Reserva._meta.get_fields()]
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  if req.POST:
-    column = req.POST["column"]
-    value = req.POST["value"]
-    columnText = column + '__contains'
-    reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio")
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
-  else:
-    reservas = Reserva.objects.all().order_by("fechaInicio")
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+  try:
+    if req.body != None:
+      body_unicode = req.body.decode('utf-8')
+      body = json.loads(body_unicode)
+      column = body["column"]
+      value = body["value"]
+      columnText = column + '__contains'
+      reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+      #Format response
+      serializedReserva =  reservaJSONResponse(reservas)
+      return JsonResponse({"values": serializedReserva}, safe=False)
+    else:
+      reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+      serializedReserva = reservaJSONResponse(reservas)
+      return JsonResponse({"values": serializedReserva}, safe=False)
+  except:
+      return JsonResponse({ "error": "Campos no validos"})
+
+
+def reservaJSONResponse(reservas):
+  reservaJson = []
+  for reserva in reservas:
+    productoDict = None
+    lugarDict = None
+    userDict = {}
+
+    if reserva.idProducto != None:
+      productoDict = {
+        "id": reserva.idProducto.pk,
+        "nombre": reserva.idProducto.nombre,
+        "categoria": Producto.PRODUCT_CATEGORIES[reserva.idProducto.categoria][1],
+        "cantidadSolicitada": reserva.idProducto.cantidadSolicitada
+      }
+    if reserva.idLugar != None:
+      lugarDict = {
+        "id": reserva.idLugar.pk,
+        "salon": reserva.idLugar.salon,
+        "piso": reserva.idLugar.piso,
+      }
+
+    reservaDict = {
+      "id": reserva.pk,
+      'codigoReserva': reserva.codigoReserva,
+      "fechaInicio": reserva.fechaInicio,
+      "fechaFinal": reserva.fechaFinal,
+      "horaInicio": reserva.horaInicio,
+      "horaFinal": reserva.horaFinal,
+      "estatus": reserva.estatus,
+      "estatusName": Reserva.ESTATUS_ENUM[reserva.estatus][1],
+      "comentarios": reserva.comentarios,
+      "fechaCreada": reserva.createdAt
+    }
+
+    if reserva.idUsuario.rol == None:
+      userDict = {
+        "nombre": reserva.idUsuario.username,
+        "rol": "Usuario",
+        "id": reserva.idUsuario.pk
+      }
+    else:
+      userDict = {
+        "nombre": reserva.idUsuario.username,
+        "rol": Usuario.ROL_ENUM[reserva.idUsuario.rol][1],
+        "id": reserva.idUsuario.pk
+      }
+    reservaJson.append({"reserva": reservaDict, "usuario": userDict, "producto": productoDict, "lugar": lugarDict})
+  return reservaJson
 
 # User
 @csrf_exempt

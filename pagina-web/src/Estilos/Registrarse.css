@@ -1,0 +1,35 @@
+.ArearegistroGeneral{
+    display: flex;
+    gap: 400px;
+    margin-top: 20px;
+    justify-content: space-evenly;
+    padding-bottom: 40px;
+}
+
+
+.AreadeCamposRegistro{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.Checkboxes{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.BotonRegistrarse{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.TitulosRegistrarse1{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 40px;
+}
