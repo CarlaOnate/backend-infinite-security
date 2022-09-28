@@ -443,8 +443,10 @@ def DeleteReserva(req):
 # Authentication
 @csrf_exempt
 def loginUser(req):
-  email = req.POST["email"]
-  password = req.POST["password"]
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  email = body['email']
+  password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) #set user in req.user
