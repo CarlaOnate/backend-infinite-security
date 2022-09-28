@@ -6,7 +6,9 @@ import { Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import CheckBox from "./CheckBox";
 import { NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import {UserContext} from '../context/userContext'
+
 
 const Registrarse = () => {
     

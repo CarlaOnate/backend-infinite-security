@@ -16,6 +16,10 @@ export const signup = async user => {
   return await service.post('/signup', user)
 }
 
+export const darAlta = async user => {
+  return await service.post('/signup/', user)
+}
+
 export const historial = async (filter) => {
   console.log('HISTORIAL FILTER =>', filter)
   const { data } = await service.post('/historial/', filter)
