@@ -1,8 +1,10 @@
+from dis import code_info
 from django.http import JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
 from django.db.models import Count, Value as V
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
@@ -11,6 +13,8 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 import random
 import json
+import string
+
 # Create your views here.
 @csrf_exempt
 def testingAPI(req):
@@ -107,50 +111,6 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
     return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
   else:
     return JsonResponse({"msg": "User not logged in"})
-
-# Authentication
-@csrf_exempt
-def loginUser(req):
-  body_unicode = req.body.decode('utf-8')
-  body = json.loads(body_unicode)
-  email = body['email']
-  password = body["password"]
-  authenticatedUser = authenticate(req, correo=email, password=password)
-  if authenticatedUser is not None:
-    login(req, authenticatedUser) #set user in req.user
-    return JsonResponse({"user": req.user.id})
-  else:
-    return JsonResponse({"error": "invalid credentials"})
-
-@csrf_exempt
-def createUser(req): # Add email validation
-  try:
-    email = req.POST["email"]
-    password = req.POST["password"]
-    name = req.POST["name"]
-    lastName = req.POST["lastName"]
-    secondLastName = req.POST["secondLastName"]
-    gender = req.POST["gender"]
-    dateOfBirth = req.POST["dateOfBirth"]
-    work = req.POST["work"]
-    username = name + ' ' + lastName + ' ' + secondLastName
-    newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
-    # Create user and login at the same time
-    authenticatedUser = authenticate(req, correo=email, password=password)
-    login(req, authenticatedUser)
-    return JsonResponse({"user": newUser.id})
-  except:
-    return JsonResponse({"Razon": "El campo no es unico"})
-
-@csrf_exempt
-def logoutUser(req):
-  logout(req)
-  return JsonResponse({"msg": "User logged out"})
-
-@csrf_exempt
-def getLoggedUser(req):
-  return JsonResponse({"user": req.user.id})
-
 
 #Edit user or admin
 @csrf_exempt
@@ -382,7 +342,6 @@ def deleteUser(req):
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def getuseritself(req):
   usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
-
   usuarios = {
     "nombre": usuario.nombre,
     "apellidoPaterno": usuario.apellidoPaterno,
@@ -392,7 +351,6 @@ def getuseritself(req):
     "correo":usuario.correo,
     "fechaNacimiento": usuario.fechaNacimiento,
   }
-
   return JsonResponse(usuarios)
 
 # Estadistica
@@ -443,99 +401,168 @@ def getMostReservedCategories(body):
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def createReserva(req):
-  
   #Se le pasa el id del usuario con el metodo de Carla
   #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
-
   idUsuario = Usuario.objects.get(id = 1)
-  
   codigoReserva = random.randint(1, 1000000000000)
-
   fechaInicio = req.POST["FechaInicio"]
   fechaFinal = req.POST["fechaFinal"]
-
   status = req.POST["status"]
   comentarios = req.POST["comentarios"]
-
   horaI = req.POST["horaI"]
   horaF = req.POST["horaF"]
-
-
-
   Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
-
-
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def updateReserva(req):
-
   #Mandar el id de la reserva desde el front?
   idReserva = Reserva.objects.get(id = 1)
   #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
-
   estatus = req.POST["estatus"]
   Lugar = req.POST["Lugar"]
   Producto = req.POST["Producto"]
   idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
-
   idReserva.idUsuario = idUsuario
   idReserva.estatus = estatus
   idReserva.idLugar_id = Lugar
   idReserva.idProducto_id = Producto
-
   idReserva.save()
-
   return JsonResponse({"Recurso": idReserva.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def DeleteReserva(req):
-
   #Mandar el id de la reserva desde el front?
   idReserva = Reserva.objects.get(id = req.POST["id"])
-
   idReserva.estatus = 4
   idReserva.deletedAt = datetime.today()
-
   idReserva.save()
-
   return JsonResponse({"Recurso": idReserva.id})
 
 
-@csrf_exempt #Ya se regresan las fechas y horas de las reservas para ponerlas en el front
-def getFechaHora(req):
-  RecursosGenerales = Reserva.objects.all()
-  #print(RecursosGenerales)#Pasar de lista a diccionario
-  diccionario = dict(enumerate(set(RecursosGenerales)))
-  #print(diccionario[1].codigoReserva) #Asi sacas las cosas
-  Recursos = {}
-  #print(len(RecursosGenerales))
+# Authentication
+@csrf_exempt
+def loginUser(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  email = body['email']
+  password = body["password"]
+  authenticatedUser = authenticate(req, correo=email, password=password)
+  if authenticatedUser is not None:
+    login(req, authenticatedUser) #set user in req.user
+    return JsonResponse({"user": req.user.id})
+  else:
+    return JsonResponse({"error": "invalid credentials"})
 
-  for i in range(len(RecursosGenerales)):
-    #print(datetime.now().datetime())
+@csrf_exempt
+def createUser(req): # Add email validation
+  try:
+    email = req.POST["email"]
+    password = req.POST["password"]
+    name = req.POST["name"]
+    lastName = req.POST["lastName"]
+    secondLastName = req.POST["secondLastName"]
+    gender = req.POST["gender"]
+    dateOfBirth = req.POST["dateOfBirth"]
+    work = req.POST["work"]
+    username = name + ' ' + lastName + ' ' + secondLastName
+    newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
+    # Create user and login at the same time
+    authenticatedUser = authenticate(req, correo=email, password=password)
+    login(req, authenticatedUser)
+    return JsonResponse({"user": newUser.id})
+  except:
+    return JsonResponse({"Razon": "El campo no es unico"})
 
-    print(diccionario[i].fechaFinal)
+@csrf_exempt
+def logoutUser(req):
+  logout(req)
+  return JsonResponse({"msg": "User logged out"})
 
-    # if(datetime(diccionario[i].fechaFinal) < datetime.now().datetime() and (diccionario[i].estatus == 1 or diccionario[i].estatus == 2 and diccionario[i].fechaFinal != NULL)):
+@csrf_exempt
+def getLoggedUser(req):
+  return JsonResponse({"user": req.user.id})
 
-    #   RecursosP = {
-    #     "codigo": diccionario[i].codigoReserva,
-    #     "fechaFinal": diccionario[i].fechaFinal,
-    #     "fechaInicial": diccionario[i].fechaInicio,
-    #     "estatus": diccionario[i].estatus,
-    #     "idLugar": diccionario[i].idLugar_id,
-    #     "idProducto": diccionario[i].idProducto_id,
-    #     "idUsuario_id": diccionario[i].idUsuario_id,
-    #     "horainicio": diccionario[i].horaInicio,
-    #     "horafinal": diccionario[i].horaFinal,
-    #   }
+@csrf_exempt
+def sendEmail(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'type' in body.keys():
+    typeEmail = body['type']
+    if typeEmail == "verify-email": return sendVerificationEmail(body)
+    elif typeEmail == "change-password": return sendChagePasswordEmail(body)
+  else:
+    return JsonResponse({"msg": "Tipo no valido"})
 
-    #   Recursos[i] = RecursosP
+def sendVerificationEmail(body):
+  user = Usuario.objects.get(correo=body["email"])
+  codigo = generateCodigo()
+  user.changePasswordCode = codigo
+  user.save()
+  subject = "Verifica tu correo"
+  email = EmailMessage(
+    subject,
+    'Ingresa este codigo en la aplicación: ' + codigo,
+    'inifniteseguridadapp@outlook.com',
+    [body["email"]]
+  )
+  email.send()
+  return JsonResponse({"msg": "Correo enviado"})
 
-    # else:
-    #   RecursosGenerales[i].estatus = 3
-    #   RecursosGenerales[i].save()
+@csrf_exempt
+def verifyUser(req):
+  if user.changePasswordCode != -1:
+    user = req.user
+    user.verified = True
+    user.save()
+    return JsonResponse({"msg": "Usuario verificado exitosamente"})
+  else:
+    return JsonResponse({"error": "No se ha iniciado proceso de cambio de verificación de correo"})
 
-  print(Recursos)
-  return JsonResponse(Recursos)
+def sendChagePasswordEmail(body):
+  user = Usuario.objects.get(correo=body["email"])
+  codigo = generateCodigo()
+  user.changePasswordCode = codigo
+  user.save()
+  subject = "Cambia tu contraseña"
+  email = EmailMessage(
+    subject,
+    'Ingresa este codigo en la aplicación: ' + codigo,
+    'inifniteseguridadapp@outlook.com',
+    [body["email"]]
+  )
+  email.send()
+  return JsonResponse({"msg": "Correo enviado"})
+
+@csrf_exempt
+def verifyCode(req): # Called from front after sending code via email - email must be in body
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  email = body["email"]
+  code = body["code"]
+  user = Usuario.objects.get(correo=email)
+  if user.changePasswordCode == code:
+    user.changePasswordCode = -1 # Set to -1 to flag that the code has been used
+    user.save()
+    return JsonResponse({"msg": "Codigo correcto"})
+  else:
+    return JsonResponse({"error": "Código incorrecto"})
+
+@csrf_exempt
+def changePassword(req): # Called from front after sending code via email - email must be in body
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  email = body["email"]
+  newPassword = body["password"]
+  user = Usuario.objects.get(correo=email)
+  if user.changePasswordCode != -1:
+    user.set_password(newPassword)
+    user.save()
+    return JsonResponse({"msg": "Contraseña cambiada exitosamente"})
+  else:
+    return JsonResponse({"error": "No se ha iniciado proceso de cambio de contraseña"})
+
+def generateCodigo():
+  return ''.join(random.choice(string.ascii_letters) for x in range(8))
+
 
