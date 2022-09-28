@@ -457,19 +457,19 @@ def loginUser(req):
 @csrf_exempt
 def createUser(req): # Add email validation
   try:
-    email = req.POST["email"]
-    password = req.POST["password"]
-    name = req.POST["name"]
-    lastName = req.POST["lastName"]
-    secondLastName = req.POST["secondLastName"]
-    gender = req.POST["gender"]
-    dateOfBirth = req.POST["dateOfBirth"]
-    work = req.POST["work"]
+    body_unicode = req.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    email = body["email"]
+    password = body["password"]
+    name = body["name"]
+    lastName = body["lastName"]
+    secondLastName = body["secondLastName"]
+    gender = body["gender"]
+    dateOfBirth = body["dateOfBirth"]
+    work = body["work"]
     username = name + ' ' + lastName + ' ' + secondLastName
     newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
     # Create user and login at the same time
-    authenticatedUser = authenticate(req, correo=email, password=password)
-    login(req, authenticatedUser)
     return JsonResponse({"user": newUser.id})
   except:
     return JsonResponse({"Razon": "El campo no es unico"})
