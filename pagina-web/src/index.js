@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client';
 import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
 import {UserProvider} from './context/userContext';
-import './Estilos/General.css'
 import 'antd/dist/antd.css'
+import './Estilos/General.css'
 import moment from 'moment'
 moment.locale('es-mx')
 

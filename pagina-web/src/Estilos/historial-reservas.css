@@ -1,0 +1,60 @@
+.historial-reservas-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+}
+
+.tab {
+  padding: 3px 0;
+  color: #F6A357;
+  border-bottom: 2px #F6A357 solid;
+}
+
+.historial-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.historial-filter {
+  display: flex;
+  gap: 10px;
+}
+
+.full-table {
+  align-self: center;
+  margin: 10px 0;
+  border: 3px #F57D7D solid;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.button-right {
+  padding: 0 10px;
+  align-self: flex-end;
+}
+
+.tag {
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+.por-iniciar {
+  background-color: #F8A357;
+}
+
+.en-proceso {
+  background-color: #3C50AD;
+}
+
+.finalizado {
+  background-color: #CF9256;
+}
+
+.cancelado {
+  background-color: #F0452C;
+}
