@@ -18,7 +18,13 @@
 
 .historial-filter {
   display: flex;
+  align-items: flex-end;
   gap: 10px;
+  width: 50%;
+}
+
+.historial-dropdown {
+  width: 50%;
 }
 
 .full-table {
@@ -31,8 +37,15 @@
 }
 
 .button-right {
+  background-color: #F6A357;
+  color: white;
+  border: none;
+  border-radius: 5px;
   padding: 0 10px;
   align-self: flex-end;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .tag {

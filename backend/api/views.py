@@ -21,20 +21,26 @@ def testingAPI(req):
 @csrf_exempt
 def getHistorial(req): # historial reservas -> solo para admins
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  if req.body != None:
-    body_unicode = req.body.decode('utf-8')
-    body = json.loads(body_unicode)
-    column = body["column"]
-    value = body["value"]
-    columnText = column + '__contains'
-    reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
-    #Format response
-    serializedReserva =  reservaJSONResponse(reservas)
-    return JsonResponse({"values": serializedReserva}, safe=False)
-  else:
-    reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
-    serializedReserva = reservaJSONResponse(reservas)
-    return JsonResponse({"values": serializedReserva}, safe=False)
+  try:
+    if req.body != None:
+      body_unicode = req.body.decode('utf-8')
+      body = json.loads(body_unicode)
+      column = body["column"]
+      value = body["value"]
+      columnText = column + '__contains'
+      reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+      print('\n\n', column, value, '\n\n')
+      print(reservas)
+      #Format response
+      serializedReserva =  reservaJSONResponse(reservas)
+      return JsonResponse({"values": serializedReserva}, safe=False)
+    else:
+      reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+      serializedReserva = reservaJSONResponse(reservas)
+      return JsonResponse({"values": serializedReserva}, safe=False)
+  except:
+      return JsonResponse({ "error": "Campos no validos"})
+
 
 def reservaJSONResponse(reservas):
   reservaJson = []
