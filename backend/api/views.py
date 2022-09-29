@@ -504,14 +504,14 @@ def sendVerificationEmail(body):
     subject,
     'Ingresa este codigo en la aplicación: ' + codigo,
     'inifniteseguridadapp@outlook.com',
-    [body["email"]]
+    [body["email"]],
   )
   email.send()
   return JsonResponse({"msg": "Correo enviado"})
 
 @csrf_exempt
 def verifyUser(req):
-  if user.changePasswordCode != -1:
+  if req.user.changePasswordCode != -1:
     user = req.user
     user.verified = True
     user.save()
