@@ -26,6 +26,7 @@ urlpatterns = [
   # Email auth
   path('email', views.sendEmail, name='sendEmail'),
   # Change password
+  path('verify-user', views.verifyUser, name='verifyUser'),
   path('verify-code', views.verifyCode, name='verifyCode'),
   path('change-password', views.changePassword, name='changePassword'),
 ]
