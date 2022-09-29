@@ -21,6 +21,11 @@ export const historial = async (filter) => {
   return data
 }
 
+export const getAdminStats = async (filter) => {
+  const { data } = await service.post('/estadistica-general', filter)
+  return data
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }

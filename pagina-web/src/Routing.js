@@ -11,11 +11,14 @@ import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
 import { ComponentWithContext } from './pages/ComponentWithContext';
 import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
 import { UserContext } from './context/userContext'
+import { Stats } from './pages/Stats/Stats'
 
 function Routing() {
-  const { user } = useContext(UserContext)
-  const userLoggedIn = user.user != null
-  const userIsAdmin = user.rol != null
+  // const { user } = useContext(UserContext)
+  const user = {user: true, rol: true}
+  console.log('ROUTING USER=>', user)
+  const userLoggedIn = user.user !== null
+  const userIsAdmin = user.rol !== null
   const showUserRoutes = userLoggedIn && !userIsAdmin
   const showAuthRoutes = !userLoggedIn
   const showAdminRoutes = userIsAdmin
@@ -40,6 +43,7 @@ function Routing() {
       <>
         <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
         <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>
+        <Route  exact path="/estadisticas" element={<Stats />}/>
       </>
     )
   }
@@ -47,6 +51,7 @@ function Routing() {
   const renderAdminRoutes = () => (
     <>
       <Route  exact path="/historial-reservas" element={<HistorialReservas />}/>
+      <Route  exact path="/estadisticas" element={<Stats />}/>
     </>
   )
 

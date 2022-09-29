@@ -1,0 +1,24 @@
+.stats-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-top {
+  display: flex;
+  gap: 10px;
+}
+
+.stats-options {
+  display: flex;
+  gap: 20px;
+}
+
+.stats-graphs {
+  display: flex;
+  gap: 10px;
+}
+
+.activo {
+  background-color: orange;
+  color: white;
+}

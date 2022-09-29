@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export const UserContext = React.createContext({ user: null, setUser: null })
+export const UserContext = React.createContext({ user: { user: 10, rol: 1 }, setUser: null })
 
 export const UserProvider = ({ children }) => {
   const [ user, setUser ] = useState({})

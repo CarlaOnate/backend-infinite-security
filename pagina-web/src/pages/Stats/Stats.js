@@ -1,0 +1,136 @@
+import React, { useEffect, useState } from 'react'
+import { AdminStats } from './AdminStats'
+import { Button } from 'antd';
+import { Chart } from "react-google-charts";
+import { getAdminStats } from '../../services/axios/user';
+
+const dataDefaultTexts = {
+  lugares: {
+    title: "Lugares mas reservados",
+    buttonText: "Lugares mas reservados",
+    keyValue: "lugares"
+  },
+  productos: {
+    title: "Productos mas reservados",
+    buttonText: "Productos mas reservados",
+    keyValue: "productos"
+  },
+  categorias: {
+    title: "Categorias mas reservadas",
+    buttonText: "Categorias mas reservadas",
+    keyValue: "categorias"
+  }
+}
+
+export const Stats = () => {
+  const [selectedGraphs, setSelectedGraphs] = useState({count: 0})
+  const [selectedButtons, setSelectedButtons] = useState({})
+  const [data, setData] = useState({})
+  const [formattedData, setFormattedData] = useState({})
+
+  useEffect(() => {
+    const formatGraphObject = () => {
+      Object.keys(data).forEach(key => {
+        const columns = []
+        let columnData
+        data[key].forEach(el => {
+          if (key === 'productos') {
+            columnData = ["Productos", "Cantidad"]
+            return columns.push([el.recurso.nombre, el.count])
+          }
+          if (key === 'lugares') {
+            columnData = ["Lugares", "Cantidad"]
+            return columns.push([`${el.recurso.piso}, ${el.recruso.salon}`, el.count])
+          }
+          if (key === 'categorias') {
+            columnData = ["Categorias", "Cantidad"]
+            return columns.push([el.recurso, el.count])
+          }
+        })
+        setFormattedData(prev => ({
+          ...prev,
+          [key]: {
+            data: [columnData, ...columns],
+            buttonText: dataDefaultTexts[key].buttonText,
+            keyValue: dataDefaultTexts[key].keyValue,
+            options: {
+              chart: {
+                title: dataDefaultTexts[key].title,
+              },
+            }
+          }
+        }))
+      })
+    }
+
+    if (Object.keys(data).length === 0) {
+      getAdminStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
+      getAdminStats({ graph: 'Lugar ', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
+      getAdminStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
+    }
+    formatGraphObject()
+  }, [data])
+
+  const removeGraphSelection = (type) => {
+    // Remove button selection
+    setSelectedButtons(prev => ({...prev, [type]: false}))
+    // Remove graph data from that button
+    setSelectedGraphs(prev => ({
+      ...prev,
+      [type]: false,
+      count: prev.count-1
+    }))
+  }
+
+  const addGraphSelection = (type) => {
+    if (selectedGraphs.count < 2) {
+      // Add button selection
+      setSelectedButtons(prev=> ({
+        ...prev,
+        [type]: true,
+      }))
+      // Add graph to selection graph
+      setSelectedGraphs(prev => ({
+        ...prev,
+        [type]: formattedData[type].data,
+        count: prev.count+1
+      }))
+    }
+  }
+
+  const handleOnClick = (type) => {
+    if (selectedButtons[type]) return removeGraphSelection(type)
+    return addGraphSelection(type)
+  }
+
+  return (
+    <>
+      <section className='stats-container'>
+        <div className='stats-top'>
+          <h1>Estadistica</h1>
+          <button>D</button>
+        </div>
+        <div className='stats-options'>
+          {Object.keys(formattedData).map(key => (
+            <Button type={`${selectedButtons[key] && 'primary'}`} onClick={() => handleOnClick(key)}>{formattedData[key].buttonText}</Button>
+          ))}
+        </div>
+        <div className='stats-graphs'>
+          {Object.keys(selectedGraphs) !== 0 && Object.keys(selectedGraphs).filter(el => el !== 'count').map(key => {
+            if (selectedGraphs[key]) {
+              return (
+              <Chart
+                chartType="Bar"
+                width="100%"
+                height="400px"
+                data={selectedGraphs[key]}
+                options={formattedData[key].options}
+              /> )
+            }
+            return <></>
+          })}
+        </div>
+      </section>
+    </>
+  )
+}
