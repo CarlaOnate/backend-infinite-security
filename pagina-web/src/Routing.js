@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import Contra from './Componentes/Contra';
 import imagen1 from './Imagenes/Imagen1.png';
-import { Routes, Route, BrowserRouter, NavLink, Navigate } from "react-router-dom";
+import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Navbar from './Componentes/Navbars/Navbar';
 import Pantallaprincipal from './Componentes/pantallaPrincipal';
 import Reservas from './Componentes/Reservas';

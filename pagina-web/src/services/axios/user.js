@@ -17,7 +17,6 @@ export const signup = async user => {
 }
 
 export const historial = async (filter) => {
-  console.log('HISTORIAL FILTER =>', filter)
   const { data } = await service.post('/historial/', filter)
   return data
 }

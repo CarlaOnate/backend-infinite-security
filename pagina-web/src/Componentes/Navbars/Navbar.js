@@ -6,9 +6,6 @@ import { useLocation } from "react-router-dom";
 const Navbar = (props) => {
 
     const navigate = useLocation()
-
-    console.log(navigate.pathname)
-
     const paths = {
         home: navigate.pathname === '/' && 'navActivo',
         Reservas: navigate.pathname === '/Reservas' && 'navActivo',
