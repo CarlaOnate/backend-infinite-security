@@ -12,12 +12,25 @@ export const login = async user => {
   return data
 }
 
-export const signup = async user => {
-  return await service.post('/signup', user)
+
+export const crearUsuario = async user => {
+  const { data } = await service.post('/create-user', user)
+  return data
 }
 
-export const darAlta = async user => {
-  return await service.post('/signup/', user)
+export const sendEmail = async user => {
+  const { data } = await service.post('/email', user)
+  return data
+}
+
+export const verificar = async user => {
+  const { data } = await service.post('/verify-code', user)
+  return data
+}
+
+export const verificarUsuario = async user => {
+  const { data } = await service.post('/verify-user', user)
+  return data
 }
 
 export const historial = async (filter) => {
