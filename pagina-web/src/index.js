@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
-import './Estilos/General.css'
+//import './Estilos/General.css'
+import './scss/';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
