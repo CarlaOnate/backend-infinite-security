@@ -1,14 +1,16 @@
-.Navbar{
+.navbar{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    background-color: red;
 
 }
 
 .Cajita{
     display: flex;
     gap: 40px;
+    background-color: yellow;
 }
 
 .navActivo{

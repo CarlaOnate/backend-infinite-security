@@ -1,0 +1,144 @@
+.PrimeraSeccion{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(rgb(34, 1, 255), rgb(54, 146, 186));/*Poner la imagen de fondo*/
+    /*background-image: url('../Imagenes/taylor-vick-M5tzZtFCOfs-unsplash.jpg');*/
+    height: 400px;
+}
+
+.ContenedorInicial1{
+    margin-right: 250px;
+}
+
+.ContenedorInicio{
+    display: flex;
+    flex-direction: column;
+    font-weight: 900;
+    color: white;
+    row-gap: 15px;
+    width: 300px;
+}
+
+.Subtitulo{
+    font-weight: 500;
+}
+
+.ContenedorCajaNaranja{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 2;
+    top: 410px;
+    width: 98.9vw;
+}
+
+.CajaNaranja{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgb(223, 69, 39);
+    opacity: 0.8;
+    padding: 10px;
+    color: white;
+    font-size: large;
+    font-weight:800;
+    width: fit-content;
+}
+
+.SegundaSeccion{
+    padding-top: 70px;
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    align-items: center;
+    justify-content: center;
+}
+
+.Numeros{
+    display: flex;
+    gap: 40px;
+}
+
+.Numeritos{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.Numeritos1{
+    display: flex;
+    flex-direction: column;
+    gap: 110px;
+}
+
+.CajaTexto{
+    margin-left: 50px;
+    color:black;
+    font-size: xx-large;
+    font-weight: 800;
+}
+
+.Subtitulo2{
+    color: rgb(249, 165, 81);
+    font-size: x-large;
+    font-weight: 700;
+}
+.Txt{
+    font-size:large;
+}
+
+.TerceraSeccion{
+    background-color: rgb(235, 232, 226);
+    margin-top: 40px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.Cajitas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+}
+
+.Cajitasseccion3{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.CuartaSeccion{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.Contenedorflexcuartaseccion{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;    
+}
+
+.subtituloCuartaseccion{
+    font-size: larger;
+    width: 280px;
+    font-weight: 500;
+}
+
+.CajaTexto2{
+    color:black;
+    font-size: xx-large;
+    font-weight: 800;
+}

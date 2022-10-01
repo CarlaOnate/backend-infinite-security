@@ -2,13 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
-//import './Estilos/General.css'
-import './scss/';
+import {UserProvider} from './context/userContext';
+import 'antd/dist/antd.css'
+import './Estilos/General.css'
+import moment from 'moment'
+moment.locale('es-mx')
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Routing/>
+    <UserProvider>
+      <Routing/>
+    </UserProvider>
   </React.StrictMode>
 );
 
