@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -121,7 +122,7 @@ class Reserva(models.Model):
   horaInicio = models.TextField(null = True)
   horaFinal = models.TextField(null = True)
 
-  estatus = models.IntegerField(choices=ESTATUS_ENUM)
+  estatus = models.IntegerField(choices=ESTATUS_ENUM, default = 1)
   comentarios = models.TextField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) # Automatically updates timestamp when instance is saved

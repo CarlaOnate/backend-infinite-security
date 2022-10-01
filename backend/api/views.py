@@ -202,6 +202,7 @@ def getRecurso(req): # Individual or all resources
   else:
     return JsonResponse({"error": "Resource type not present"})
 
+@csrf_exempt
 def getProducto(body):
   if 'id' in body.keys(): #single product
     producto = Producto.objects.get(pk=body['id'])
@@ -407,11 +408,10 @@ def createReserva(req):
   codigoReserva = random.randint(1, 1000000000000)
   fechaInicio = req.POST["FechaInicio"]
   fechaFinal = req.POST["fechaFinal"]
-  status = req.POST["status"]
   comentarios = req.POST["comentarios"]
   horaI = req.POST["horaI"]
   horaF = req.POST["horaF"]
-  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = comentarios)
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
