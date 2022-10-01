@@ -356,7 +356,7 @@ def getuseritself(req):
 # Estadistica
 @csrf_exempt
 def getGeneralStatistic(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'graph' in body.keys():
@@ -373,8 +373,8 @@ def getMostReservedProducts(body):
   mostReservedProducts = Producto.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
   productsResponse = []
   for product in mostReservedProducts:
-    serializedPlace = serializers.serialize('json', [product])
-    productsResponse.append({"place": serializedPlace, "count": product.count})
+    serializedPlace = getElementResponse(product, 'Producto')
+    productsResponse.append({"recurso": serializedPlace, "count": product.count})
   return JsonResponse({"value": productsResponse})
 
 def getMostReservedPlaces(body):
@@ -384,8 +384,8 @@ def getMostReservedPlaces(body):
   mostReservedPlaces = Lugar.objects.filter(deletedAt=None, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
   placesResponse = []
   for place in mostReservedPlaces:
-    serializedPlace = serializers.serialize('json', [place])
-    placesResponse.append({"place": serializedPlace, "count": place.count})
+    serializedPlace = getElementResponse(place, 'Lugar')
+    placesResponse.append({"recurso": serializedPlace, "count": place.count})
   return JsonResponse({"value": placesResponse})
 
 def getMostReservedCategories(body):
@@ -396,8 +396,43 @@ def getMostReservedCategories(body):
   mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
   for category in mostReservedCategories:
-    productsResponse.append({ "categoria": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
-  return JsonResponse({"value": json.dumps(productsResponse)})
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+  return JsonResponse({"value": productsResponse})
+
+def getElementResponse(element, tipo):
+  elementDict = None
+
+  if tipo == 'Producto':
+    elementDict = {
+      "id": element.pk,
+      "nombre": element.nombre,
+      "modelo": element.modelo,
+      "detalles": element.detalles,
+      "categoria": element.PRODUCT_CATEGORIES[element.categoria][1],
+      "cantidadSolicitada": element.cantidadSolicitada
+    }
+
+  if tipo == 'Lugar':
+    elementDict = {
+      "id": element.pk,
+      "nombre": element.nombre,
+      "categoria": Producto.PRODUCT_CATEGORIES[element.categoria][1],
+      "cantidadSolicitada": element.cantidadSolicitada
+    }
+  return elementDict
+
+# User
+@csrf_exempt
+def getGeneralStatistic(req):
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'graph' in body.keys():
+    graphType = body['graph']
+    if graphType == "Producto": return getMostReservedProducts(body)
+    elif graphType == "Lugar": return getMostReservedPlaces(body)
+    elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+  else: return JsonResponse({"error": "Graph type not valid"})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def createReserva(req):
