@@ -13,7 +13,7 @@ import Borrarcuenta from './Componentes/BorrarCuenta';
 import PerfilUsuario from './Componentes/PerfilUsuario';
 import BorrarCuentaAdmin from './Componentes/BorrarCuentaAdmin'
 import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
-
+import HacerReserva from './Componentes/Reservas/hacerReserva';
 function Routing() {
   return (
     <>
@@ -41,7 +41,13 @@ function Routing() {
 
           <Route  exact path="/BorrarCuentaAdmin" element={<BorrarCuentaAdmin/>}/>
 
+          <Route path='/hacerReserva' element={<HacerReserva/>}/>
 
+
+
+
+
+          
 
           {/* Rutas a definir */}
           <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo"/>}/>

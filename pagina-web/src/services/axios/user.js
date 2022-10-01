@@ -33,6 +33,18 @@ export const verificarUsuario = async user => {
   return data
 }
 
+//Para crear la reserva
+export const crearReserva = async user => {
+  const { data } = await service.post('/create-reserva', user)
+  return data
+}
+
+//Para crear llamar a los recursos y toda la info
+export const getRecursos = async user => {
+  const { data } = await service.post('/get-resource', user)
+  return data
+}
+
 export const historial = async (filter) => {
   console.log('HISTORIAL FILTER =>', filter)
   const { data } = await service.post('/historial/', filter)
