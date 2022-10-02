@@ -42,7 +42,13 @@ export const crearReserva = async user => {
 //Para crear llamar a los recursos y toda la info
 export const getRecursos = async user => {
   const { data } = await service.post('/get-resource', user)
-  return data
+  const regreso = JSON.parse(data.value)[0]
+  const regreso2 = Object.keys(regreso).map(key=>{
+    regreso[key]= JSON.parse(regreso[key])
+    //console.log(regreso[key])
+  })
+
+  return regreso
 }
 
 export const historial = async (filter) => {

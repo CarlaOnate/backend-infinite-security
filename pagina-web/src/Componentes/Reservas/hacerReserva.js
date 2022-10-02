@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Radio } from 'antd';
 import PantallaReserva1 from "./PantallaReserva1";
 import PantallaReserva2 from "./PantallaReserva2";
@@ -41,6 +41,55 @@ const HacerReserva = () => {
     console.log(enviado)
   }
 
+  let items = []
+    
+
+  const llamarLista = () =>{
+    
+    const filtrado = {
+      "resourceType": "Lugar",
+      "byFloor": true
+    }
+
+    getRecursos(filtrado).then((response) =>{
+      //console.log(response)
+      
+      for (let i in response){
+
+        if(response[i].length > 0){
+
+          console.log(response[i])
+          //console.log(response[i].length)
+
+          for(let j in response[i]){
+
+            var items2 = {}
+            console.log(items2)
+
+            items2 = {key: response[i][j].pk, label: response[i][j].fields.salon}
+
+            console.log(j)
+            console.log("Aqui")
+
+            items.push(items2)
+
+            console.log(items)
+            console.log(items2)
+
+        }
+      }
+    }
+      //console.log(items)
+      return items
+    }).catch((error) => {
+      console.log(error);
+    })
+
+  }
+  useEffect(()=>{
+    llamarLista()
+  },items = []) //Aqui en lugar de items es []
+
 
   return (
     <div>
@@ -50,7 +99,7 @@ const HacerReserva = () => {
         <Radio value={2}>Producto</Radio>
       </Radio.Group>
 
-      {pantalla === 1 && <PantallaReserva1 enviado = {enviado}/>}
+      {pantalla === 1 && <PantallaReserva1 enviado = {enviado} items = {items}/>}
       {pantalla === 2 && <PantallaReserva2 enviado = {enviado2}/>}
 
 

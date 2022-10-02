@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Radio } from 'antd';
 import MenuInterno from "./menuInterno";
 import { DownOutlined } from '@ant-design/icons';
@@ -12,47 +12,35 @@ const PantallaReserva1 = (props) => {
 
     const [itemName, setItemName] = useState("Select User Name");
     const [itemName2, setItemName2] = useState("Select User Name");
-
-
-    // const llamarLista = async () =>{
-
-    //     getRecursos.then((response) =>{
-    //         console.log(response.data)
-    //     }).catch((error) => {
-    //         console.log(error);
-    //       })
-          
-    // }
-
-    // llamarLista()
+    
 
     const onChange = (e) => {
         console.log("cambio a " + e.target.value)
         setPantallainterior(e.target.value);
     };
 
-    const items=[
-        {
-          key: '1',
-          label: 'Item 1',
-        },
-        {
-          key: '2',
-          label: 'Item 2',
-        },
-        {
-          key: '3',
-          label: 'Item 3',
-        },
-    ]
+    // const items=[
+    //     {
+    //       key: '1',
+    //       label: 'Item 1',
+    //     },
+    //     {
+    //       key: '2',
+    //       label: 'Item 2',
+    //     },
+    //     {
+    //       key: '3',
+    //       label: 'Item 3',
+    //     },
+    // ]
 
     const menu = (
         <Menu 
           selectable
           defaultSelectedKeys={['3']}
-          items = {items}
+          items = {props.items}
           onClick = {({key}) => {
-            setItemName(items.find((elm) => elm.key === key).key);
+            setItemName(props.items.find((elm) => elm.key === key).key);
           }}
         />
     );
@@ -60,9 +48,9 @@ const PantallaReserva1 = (props) => {
         <Menu 
           selectable
           defaultSelectedKeys={['3']}
-          items = {items}
+          items = {props.items}
           onClick = {({key}) => {
-            setItemName2(items.find((elm) => elm.key === key).key);
+            setItemName2(props.items.find((elm) => elm.key === key).key);
           }}
         />
     );
