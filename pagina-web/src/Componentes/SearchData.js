@@ -12,7 +12,6 @@ export const SearchData = props => {
         <label>{title}</label>
         <Search
           placeholder="Nombre, ID de usuario"
-          allowClear
           enterButton="Buscar"
           size="medium"
           onSearch={onSearch}

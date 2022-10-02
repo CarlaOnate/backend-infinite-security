@@ -192,8 +192,6 @@ export const AdminManagement = () => {
     )
   }
 
-  console.log(addInputs)
-
   return (
     <div>
       <SearchData

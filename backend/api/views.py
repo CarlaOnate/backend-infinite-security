@@ -369,7 +369,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "apellidoPaterno": usuario.apellidoPaterno,
         "apellidoMaterno": usuario.apellidoMaterno,
         "genero": usuario.genero,
-        "departamento": usuario.departament,
+        "departament": usuario.departament,
         "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],
         "correo": usuario.correo,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
