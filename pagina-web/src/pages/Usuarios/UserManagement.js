@@ -40,7 +40,6 @@ export const UserManagement = () => {
   }
 
   const onSearch = value => {
-    resetAltersStates()
     getUser({value}).then(data => {
       if(data.warning) {
         setWarning({ msg: data.warning })
@@ -66,7 +65,8 @@ export const UserManagement = () => {
       editUser(formatData)
         .then(data => {
           console.log('data =>', data)
-          data.user && setSuccess(true)
+          console.log('data =>', data.user)
+          if (data.user) setSuccess(true)
           resetShowStates()
           fetchData()
         })

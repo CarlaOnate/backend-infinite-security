@@ -46,7 +46,6 @@ export const AdminManagement = () => {
   }
 
   const onSearch = value => {
-    resetAltersStates()
     getUser({value}).then(data => {
       if(data.warning) {
         setWarning({ msg: data.warning })
