@@ -1,14 +1,34 @@
-// Abstracts
-@import './abstracts/colors',
-        './abstracts/remFactor',
-        './abstracts/variables';
+@import // Abstracts
+    './abstracts/colors',
+    './abstracts/functions',
+    './abstracts/mixins',
+    './abstracts/remFactor',
+    './abstracts/variables';
 
-// Base
-@import './base/normalize';
+@import // Base
+    './base/normalize',
+    './base/typography';
 
-// Components
-@import './components/navbar';
+@import // Components
+    './components/buttons',
+    './components/dropdown',
+    './components/navbar';
 
-// Layout
+@import // Layout
+    './layout/footer',
+    './layout/forms',
+    './layout/header',
+    './layout/sidebar';
 
-// Pages
+@import // Pages
+    './pages/deleteAccount',
+    './pages/graphUser',
+    './pages/login',
+    './pages/recoverPassword',
+    './pages/reserves',
+    './pages/reservesHistory',
+    './pages/singUp',
+    './pages/statistics';
+
+@import // Themes
+    './themes/light';

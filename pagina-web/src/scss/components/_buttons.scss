@@ -1,7 +1,11 @@
+@mixin button($color) {
+    background-color: $color;
+}
+
 .standarButton {
-    background-color: $standarButtonColor;
+    @include button($standarButtonColor);
 }
 
 .warningButton {
-    background-color: $warningButtonColor;
+    @include button($warningButtonColor);
 }
