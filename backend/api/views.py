@@ -117,16 +117,19 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 #Edit user or admin
 @csrf_exempt
 def editUserAdmin(req):
-  usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-
+  print(req.user.id)
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  usuario = Usuario.objects.get(id = body['id'])
   #En el req debe de venir nombre, rol, departamento, apellidos maternos y paternos
 
   #Asi se edita un usuario y se edita bien
-  """ nombre = req.POST["name"]
-  apellido = req.POST["lastName"]
-  apellido2 = req.POST["secondLastName"] """
-  departamento = req.POST["departament"]
-  rol = req.POST["rol"]
+  nombre = body['name']
+  apellido = body["lastName"]
+  apellido2 = body["secondLastName"]
+  departamento = body["departament"]
+  rol = body["rol"]
 
   if (rol == 0): rol = None;
 
@@ -362,6 +365,9 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
+        "nombre": usuario.nombre,
+        "apellidoPaterno": usuario.apellidoPaterno,
+        "apellidoMaterno": usuario.apellidoMaterno,
         "genero": usuario.genero,
         "departamento": usuario.departament,
         "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],

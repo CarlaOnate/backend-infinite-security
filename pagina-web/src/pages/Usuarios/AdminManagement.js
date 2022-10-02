@@ -13,6 +13,11 @@ export const AdminManagement = () => {
   const [ data, setData ] = useState()
   const [ error, setError ] = useState(false)
   const [ warning, setWarning ] = useState({ msg: "" })
+  const [ success, setSuccess ] = useState(false)
+
+  const fetchData = () => {
+    data && onSearch(data[0].pk)
+  }
 
   const onClickButton = buttonType => {
     if (buttonType === 'edit') {
@@ -45,14 +50,38 @@ export const AdminManagement = () => {
       if(data.warning) {
         setWarning({ msg: data.warning })
       } else {
+        resetShowStates()
         setData([data])
       }
-    }).catch(errorMsg => setError(true))
+    }).catch(() => setError(true))
   }
 
-  const resetWarningsAndError = () => {
+  const onSubmitAddAdmin = () => {
+    const makeAdminBody = {
+      ...addInputs,
+      id: data[0].pk,
+      secondLastName: data[0].apellidoMaterno,
+      lastName: data[0].apellidoPaterno,
+      name: data[0].nombre,
+    }
+    makeUserAdmin(makeAdminBody)
+      .then(data => {
+        data.username && setSuccess(true)
+        resetShowStates()
+        fetchData()
+      })
+      .catch(error => setError(true))
+  }
+
+  const resetAltersStates = () => {
     setWarning({ msg: "" })
     setError(false)
+    setSuccess(false)
+  }
+
+  const resetShowStates = () => {
+    setShowEditInputs(false)
+    setShowAddAdminInputs(false)
   }
 
   const searchTableActions = [
@@ -60,7 +89,7 @@ export const AdminManagement = () => {
       text: "Agregar",
       style: "user-admin-edit__button",
       onClick: () => onClickButton('add'),
-      show: data && data[0].rol !== 0
+      show: data && data[0].rol === null
     },
     {
       text: "Editar",
@@ -104,13 +133,13 @@ export const AdminManagement = () => {
     {
       text: "Departamento",
       style: "user-admin-edit__button",
-      onChange: (e) => onChangeEditInput(e, 'department'),
+      onChange: (e) => onChangeEditInput(e, 'departament'),
       show: data && data[0].rol !== 0
     },
     {
       text: "Correo",
       style: "user-admin-edit__button",
-      onChange: (e) => onChangeEditInput(e, 'department'),
+      onChange: (e) => onChangeEditInput(e, 'email'),
       show: data && data[0].rol === 0
     }
   ]
@@ -120,17 +149,17 @@ export const AdminManagement = () => {
       text: "Rol",
       style: "user-admin-edit__button",
       onChange: (e) => onChangeAddInputs(e, 'rol'),
-      show: data && data[0].rol === null
+      show: data && data[0].rol === null,
     },
     {
       text: "Departamento",
       style: "user-admin-edit__button",
-      onChange: (e) => onChangeAddInputs(e, 'department'),
+      onChange: (e) => onChangeAddInputs(e, 'departament'),
       show: data && data[0].rol !== 0
     }
   ]
 
-  const renderInputs = (options) => {
+  const renderInputs = (options, onSubmit) => {
     return (
       <div>
         <div>
@@ -144,7 +173,7 @@ export const AdminManagement = () => {
           ))}
         </div>
         <div>
-          <Button>Confirmar</Button>
+          <Button onClick={onSubmit}>Confirmar</Button>
         </div>
       </div>
     )
@@ -156,12 +185,14 @@ export const AdminManagement = () => {
       <Alert
       message={warning.msg}
       type="warning"
-      afterClose={resetWarningsAndError}
+      afterClose={resetAltersStates}
       showIcon
       closable
     />
     )
   }
+
+  console.log(addInputs)
 
   return (
     <div>
@@ -174,14 +205,22 @@ export const AdminManagement = () => {
         columns={adminManagementTableColumn}
       />
       {showEditInputs && renderInputs(editAdminOptions)}
-      {showAddAdminInputs && renderInputs(addAdminInputs)}
+      {showAddAdminInputs && renderInputs(addAdminInputs, onSubmitAddAdmin)}
       {error &&
         <Alert
-          message="Error Text"
+          message="Error"
           description="Hubo un error, inténtalo mas tarde"
           type="error"
           showIcon
-          afterClose={resetWarningsAndError}
+          afterClose={resetAltersStates}
+          closable
+        />}
+       {success &&
+        <Alert
+          message="Se hizo el cambio con exito"
+          type="success"
+          showIcon
+          afterClose={resetAltersStates}
           closable
         />}
     </div>

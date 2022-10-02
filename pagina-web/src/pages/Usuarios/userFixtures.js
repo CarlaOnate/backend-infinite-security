@@ -36,7 +36,7 @@ export const adminManagementTableColumn = [
   {
     title: 'Departamento',
     dataIndex: 'departament',
-    key: 'departamento',
+    key: 'departament',
   },
   {
     title: 'Oficio',
