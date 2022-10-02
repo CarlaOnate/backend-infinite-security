@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
-import {UserProvider} from './context/userContext';
+import { UserProvider } from './context/userContext';
 import 'antd/dist/antd.css';
 //import './Estilos/General.css';
-import './scss/styles.scss';
+import './scss/main.scss';
 import moment from 'moment';
 moment.locale('es-mx');
 
