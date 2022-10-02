@@ -1,13 +1,13 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { Table } from '../../Componentes/Table';
-import { UserContext } from '../../context/userContext'
-import { historial } from '../../services/axios/user'
+import React, { useEffect, useContext, useState } from 'react';
+import { Table } from '../../components/Table';
+import { UserContext } from '../../context/userContext';
+import { historial } from '../../services/axios/user';
 import { Dropdown } from './Dropdown';
 import { tableColumns } from './tableColumns';
 import { Input } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
-import '../../Estilos/historial-reservas.css'
+import '../../Estilos/historial-reservas.css';
 const { Search } = Input;
 
 const dropdownItems = [
@@ -113,5 +113,5 @@ export const HistorialReservas = props => {
         Descargar historial
       </button>
     </div>
-  )
-}
+  );
+};

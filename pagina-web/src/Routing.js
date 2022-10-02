@@ -1,16 +1,20 @@
 import React, {useContext} from 'react';
-import Contra from './Componentes/Contra';
-import imagen1 from './Imagenes/Imagen1.png';
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
-import { Navbar2 } from './Componentes/Navbars/Navbar2';
-import Pantallaprincipal from './Componentes/pantallaPrincipal';
-import Reservas from './Componentes/Reservas';
-import IniciarSesion from './Componentes/IniciarSesion';
-import Registrarse from './Componentes/Registrarse';
-import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
-import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
 import { UserContext } from './context/userContext'
-import { Stats } from './pages/Stats/Stats'
+
+import Contra from './components/Contra';
+import { Navbar } from './components/navbar/Navbar';
+import Pantallaprincipal from './components/pantallaPrincipal';
+import Reservas from './components/Reservas';
+import Registrarse from './components/Registrarse';
+import IniciarSesion from './components/IniciarSesion';
+import RegistrarseCodigo from './components/RegistrarseCodigo';
+
+import RecoverPasswordImage from './images/recoverPassword.png';
+
+import { Stats } from './pages/statistics/Stats';
+import { HistorialReservas } from './pages/reservesHistory/ReservesHistory';
+
 
 function Routing(props) {
   const { user } = useContext(UserContext);
@@ -27,40 +31,40 @@ function Routing(props) {
 
   const renderAuthRoutes = (authProps) => (
     <>
-      <Route path='/IniciarSesion' element = {<IniciarSesion {...authProps} />}/>
-      <Route  exact path="/RecuperarContra" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo" {...authProps} />}/>
-      <Route exact path="/Registrarse" element={<Registrarse {...authProps} />}/>
+      <Route path='/login' element = {<IniciarSesion {...authProps} />}/>
+      <Route  exact path="/recover-password" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+      <Route exact path="/sing-up" element={<Registrarse {...authProps} />}/>
     </>
   );
 
   const renderPublicRoutes = (authProps) => (
     <>
       <Route path='/' element={<Pantallaprincipal {...authProps} />}/>
-      <Route path='/Reservas' element={<Reservas {...authProps} />}/>
+      <Route path='/reserves' element={<Reservas {...authProps} />}/>
     </>
   );
 
   const renderUserRoutes = (authProps) => {
     return (
       <>
-        <Route  exact path="/Borrarcuenta" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo" {...authProps} />}/>
-        <Route  exact path="/GraficasUsuario" element={<Contra imagen = {imagen1} mensaje = "Ingrese su correo" {...authProps} />}/>
-        <Route  exact path="/estadisticas" element={<Stats {...authProps} />}/>
+        <Route  exact path="/delete-account" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+        <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+        <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
       </>
     );
   };
 
   const renderAdminRoutes = (authProps) => (
     <>
-      <Route  exact path="/historial-reservas" element={<HistorialReservas {...authProps} />}/>
-      <Route  exact path="/estadisticas" element={<Stats {...authProps} />}/>
+      <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
+      <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
     </>
   );
 
   return (
     <>
       <BrowserRouter>
-        <Navbar2 {...authProps} />
+        <Navbar {...authProps} />
         <Routes>
           {renderPublicRoutes(authProps)}
           {showUserRoutes && renderUserRoutes(authProps)}

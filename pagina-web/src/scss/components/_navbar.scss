@@ -1,31 +1,17 @@
 .navbar {
-
     width: 100%;
-
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: red;
+    background-color: $yellowStandarColor;
 
-    img {
-        width: 14rem;
-    }
-
-    .navbar__options {
-        display: flex;
+    .navbar__option {
         gap: 40px;
-        background-color: yellow;
+        background-color: red;
     }
 
-}
+    .navbar__option--selected{
 
-
-.navActivo{
-    border-radius: 50% 15%;
-    background-color: rgb(249, 165, 81);
-    padding: 15px;
-}
-a{
-    padding: 15px;
+    }
 }

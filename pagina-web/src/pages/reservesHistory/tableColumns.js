@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment';
 
 const renderEstatus = (_, record) => {
   const { reserva: { estatus, estatusName } } = record;

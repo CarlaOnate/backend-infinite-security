@@ -1,17 +1,15 @@
 import React from "react";
 import Button from './Button.jsx';
 
-const deleteAccount = () =>{
+export const DeleteAccount = () =>{
   return(
-      <div className="deleteAccount">
-        <h1 className="deleteAccount__tittle"> Borrar una cuenta </h1>
-        <h2 className="deleteAccount__content"> ¿Estás seguro de eliminar esta cuenta? </h2>
-        <div className="deleteAccount__button">
-          <Button texto = "Borrar cuenta" clase = 'deleteAccount__button--confirm'/>
-          <Button texto = "Cancelar" clase = 'deleteAccount__button--cancel'/>
-        </div>
+    <div className="deleteAccount">
+      <h1 className="deleteAccount__tittle"> Borrar una cuenta </h1>
+      <h2 className="deleteAccount__text"> ¿Estás seguro de eliminar esta cuenta? </h2>
+      <div className="deleteAccount__buttonsContainer">
+        <Button texto = "Borrar cuenta" clase = 'standarButton'/>
+        <Button texto = "Cancelar" clase = 'warningButton'/>
       </div>
-    )
-}
-
-export default deleteAccount;
+    </div>
+  );
+};

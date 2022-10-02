@@ -1,11 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { Menu as AntMenu, Dropdown as AntDropdown, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 
 export const Dropdown = props => {
   const { items, selectedItem, onClickItem } = props;
-
   const menu = (<AntMenu size="small" onClick={onClickItem} selectable items={items}/>)
 
   return (
@@ -15,5 +14,5 @@ export const Dropdown = props => {
         <DownOutlined />
       </Space>
     </AntDropdown>
-  )
-}
+  );
+};

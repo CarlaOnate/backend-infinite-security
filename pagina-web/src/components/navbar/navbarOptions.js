@@ -1,6 +1,6 @@
 export const adminOptions = [
-  { text: "Historial reservas", to: "/bookingHistory" },
-  { text: "Estadistica", to: "/statistics" },
+  { text: "Historial reservas", to: "/reserves-history" },
+  { text: "Estadísticas", to: "/statistics" },
   { text: "Recursos", to: "/resources" },
   { text: "Usuarios", to: "/users" },
   { text: "Reservas", to: "/reserves" },
@@ -8,12 +8,12 @@ export const adminOptions = [
 ]
 
 export const userOptions = [
-  { text: "Estadisticas", to: "/statistics" },
+  { text: "Estadísticas", to: "/statistics" },
   { text: "Conoce el HUB", to: "/" }
 ]
 
 export const notLoggedOptions = [
-  { text: "Home", to: "/" },
+  { text: "Inicio", to: "/" },
   { text: "Reservas", to: "/reserves" },
   { text: "Iniciar Sesión", to: "/login" },
 ]
