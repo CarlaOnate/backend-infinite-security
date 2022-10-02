@@ -1,15 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import '../../Estilos/Navbar.css'
 import { useLocation } from "react-router-dom";
-import tecLogo from '../../images/tecLogo.png';
-import '../../scss/styles.scss';
 
 const Navbar = (props) => {
 
     const navigate = useLocation()
-
-    console.log(navigate.pathname)
-
     const paths = {
         home: navigate.pathname === '/' && 'navActivo',
         Reservas: navigate.pathname === '/Reservas' && 'navActivo',
@@ -40,8 +36,9 @@ const Navbar = (props) => {
 
     return(
         <nav>
-            <div className="navbar">
-                <img src = {tecLogo} alt="Tecnológic de Monterrey Logo+"/>
+            <div className="Navbar">
+                <img src = '../../Imagenes/logo-tec.jpg' alt="Logo tec"/>
+
                 <div className="Cajita">
                     
                     {
