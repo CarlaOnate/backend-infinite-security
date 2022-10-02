@@ -1,5 +1,5 @@
 import React from "react";
-import Boton from "./Boton"
+import Button from "./Button";
 import CajaNumeros from "./NumberBox"
 import CajaImagen from "./ImageBox";
 import '../Estilos/Pantallaprincipal.css'
@@ -17,7 +17,7 @@ const Pantallaprincipal = ()=>{
                             Primera intitución especializada en la ciberseguridad mexicana
                         </section>
                         
-                        <Boton texto = "Descubre más" clase = 'CodigoPeque'/>
+                        <Button texto = "Descubre más" clase = 'CodigoPeque'/>
                     </div>
 
                 </section>
@@ -91,7 +91,7 @@ const Pantallaprincipal = ()=>{
                     <div className="subtituloCuartaseccion">
                         Bajala de la App Store y descrubre su potencial
                     </div>
-                    <Boton texto = "Descarga aquí" clase = 'CodigoPeque'/>
+                    <Button texto = "Descarga aquí" clase = 'CodigoPeque'/>
                 </div>
 
                 <div className="Prueba">

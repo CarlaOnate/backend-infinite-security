@@ -1,10 +1,8 @@
 import React , {useState} from 'react';
-import '../Estilos/header.css'
-import '../Estilos/footer.css'
 import '../Estilos/imagenes.css'
 import '../Estilos/Contra.css'
 import Cajatexto from './InputTexto'
-import Boton from './Boton'
+import Button from './Button'
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Input } from 'antd';

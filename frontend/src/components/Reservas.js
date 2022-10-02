@@ -1,5 +1,5 @@
 import React from "react";
-import Boton from "./Boton";
+import Button from "./Button";
 import '../Estilos/Reservas.css'
 
 const Reservas = () => {
@@ -17,7 +17,7 @@ const Reservas = () => {
                             Desarrolla tus habilidades al máximo
                         </section>
                         
-                        <Boton texto = "Registrate y reserva ya" clase = 'CodigoPeque'/>
+                        <Button texto = "Registrate y reserva ya" clase = 'CodigoPeque'/>
 
                     </div>
 

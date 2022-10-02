@@ -1,6 +1,6 @@
 import React from "react";
 import tecLogo from '../../images/tecLogo.png';
-import Navbar from "../Componentes/navbar/Navbar";
+import Navbar from "./navbar/Navbar";
 
 export const Header = ( props ) => {
   return(

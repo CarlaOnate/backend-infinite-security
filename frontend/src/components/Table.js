@@ -1,5 +1,5 @@
-import React from 'react'
-import { Table as AntTable } from 'antd'
+import React from 'react';
+import { Table as AntTable } from 'antd';
 
 export const Table = props => {
   const { columns, data, renderFooter } = props;

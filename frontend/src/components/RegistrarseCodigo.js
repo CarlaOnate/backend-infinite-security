@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Boton from './Boton'
+import Button from './Button';
 import Input from './InputTexto'
 import '../Estilos/RegistroCodigo.css'
 
@@ -43,7 +43,7 @@ const RegistrarseCodigo = () =>{
                     
                     
                     <Input mensaje = "Ingresa el código"/>
-                    <Boton texto = "Reenviar Codigo" clase = "Codigoverde"/>
+                    <Button texto = "Reenviar Codigo" clase = "Codigoverde"/>
 
                 </div>
 

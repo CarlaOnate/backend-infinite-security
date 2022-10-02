@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import InputTexto from './InputTexto'
-import Boton from "./Boton";
+import Button from "./Button";
 import '../Estilos/IniciarSesion.css'
 
 const IniciarSesion = () =>{
@@ -43,7 +43,7 @@ const IniciarSesion = () =>{
 
                     <div className="BotonLinkfinal">
                        
-                       <Boton texto = "Iniciar Sesion" clase= "CodigoPeque"/>
+                       <Button texto = "Iniciar Sesion" clase= "CodigoPeque"/>
                         
                         <div className="LinkContraseña">
                             <NavLink to="/RecuperarContra" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
