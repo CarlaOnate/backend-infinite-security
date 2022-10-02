@@ -129,11 +129,13 @@ def editUserAdmin(req):
   apellido = body["lastName"]
   apellido2 = body["secondLastName"]
   departamento = body["departament"]
+  correo = body["email"]
   rol = body["rol"]
 
   if (rol == 0): rol = None;
 
   usuario.nombre = nombre
+  usuario.correo = correo
   usuario.apellidoPaterno = apellido
   usuario.apellidoMaterno = apellido2
   usuario.departament = departamento
@@ -357,9 +359,10 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
       if valueId: searchById = True
     except:
       searchById = False
-    if searchById: usuario = Usuario.objects.get(pk=body['value'])
-    else: usuario = Usuario.objects.get(username__contains=body['value'])
-    if usuario != None:
+    if searchById: usuario = Usuario.objects.filter(pk=body['value'])[:1]
+    else: usuario = Usuario.objects.filter(username__contains=body['value'])[:1]
+    if usuario.exists():
+      usuario = usuario[0]
       rolName = 'Usuario'
       if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol][1]
       usuarioDict = {

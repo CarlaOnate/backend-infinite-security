@@ -31,8 +31,8 @@ export const getUser = async (user) => {
   return data
 }
 
-export const makeUserAdmin = async (adminData) => {
-  const { data } = await service.post('/edit-user', adminData)
+export const editUser = async (userData) => {
+  const { data } = await service.post('/edit-user', userData)
   return data
 }
 

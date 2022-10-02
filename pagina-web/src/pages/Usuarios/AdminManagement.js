@@ -1,7 +1,7 @@
 import { Input, Alert, Button} from 'antd'
 import React, { useState } from 'react'
 import { SearchData } from '../../Componentes/SearchData'
-import { getUser, makeUserAdmin } from '../../services/axios/user'
+import { getUser, editUser } from '../../services/axios/user'
 import { adminManagementTableColumn } from './userFixtures'
 import  '../../Estilos/admin-management.css'
 
@@ -31,7 +31,7 @@ export const AdminManagement = () => {
     if (buttonType === 'remove') {
       setShowEditInputs(false)
       setShowAddAdminInputs(false)
-      return console.log('PICO remove ADMIN');
+      onSubmit({ rol: null, departament: null })
     }
   }
 
@@ -56,21 +56,22 @@ export const AdminManagement = () => {
     }).catch(() => setError(true))
   }
 
-  const onSubmitAddAdmin = () => {
-    const makeAdminBody = {
-      ...addInputs,
+  const onSubmit = (inputs = {}) => {
+    const formatData = {
       id: data[0].pk,
       secondLastName: data[0].apellidoMaterno,
       lastName: data[0].apellidoPaterno,
       name: data[0].nombre,
+      email: data[0].correo,
+      departament: data[0].departament,
+      rol: data[0].rol,
+      ...inputs,
     }
-    makeUserAdmin(makeAdminBody)
-      .then(data => {
-        data.username && setSuccess(true)
-        resetShowStates()
-        fetchData()
-      })
-      .catch(error => setError(true))
+    editUser(formatData).then(data => {
+      data.user && setSuccess(true)
+      resetShowStates()
+      fetchData()
+    })
   }
 
   const resetAltersStates = () => {
@@ -95,7 +96,7 @@ export const AdminManagement = () => {
       text: "Editar",
       style: "user-admin-edit__button",
       onClick: () => onClickButton('edit'),
-      show: true
+      show: data && data[0].rol !== null
     },
     {
       text: "Quitar administrador",
@@ -110,19 +111,19 @@ export const AdminManagement = () => {
       text: "Nombre",
       style: "user-admin-edit__button",
       onChange: (e) => onChangeEditInput(e, 'name'),
-      show: true
+      show: data && data[0].rol === 0
     },
     {
       text: "Apellido Paterno",
       style: "user-admin-edit__button",
       onChange: (e) => onChangeEditInput(e, 'lastName'),
-      show: true
+      show: data && data[0].rol === 0
     },
     {
       text: "Apellido Materno",
       style: "user-admin-edit__button",
       onChange: (e) => onChangeEditInput(e, 'secondLastName'),
-      show: true
+      show: data && data[0].rol === 0
     },
     {
       text: "Rol",
@@ -159,7 +160,7 @@ export const AdminManagement = () => {
     }
   ]
 
-  const renderInputs = (options, onSubmit) => {
+  const renderInputs = (options, inputs) => {
     return (
       <div>
         <div>
@@ -173,7 +174,7 @@ export const AdminManagement = () => {
           ))}
         </div>
         <div>
-          <Button onClick={onSubmit}>Confirmar</Button>
+          <Button onClick={() => onSubmit(inputs)}>Confirmar</Button>
         </div>
       </div>
     )
@@ -202,8 +203,8 @@ export const AdminManagement = () => {
         data={data}
         columns={adminManagementTableColumn}
       />
-      {showEditInputs && renderInputs(editAdminOptions)}
-      {showAddAdminInputs && renderInputs(addAdminInputs, onSubmitAddAdmin)}
+      {showEditInputs && renderInputs(editAdminOptions, editInputs)}
+      {showAddAdminInputs && renderInputs(addAdminInputs, addInputs)}
       {error &&
         <Alert
           message="Error"
