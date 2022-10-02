@@ -191,7 +191,7 @@ def createProducto(body):
 
 @csrf_exempt
 def getRecurso(req): # Individual or all resources
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'resourceType' in body.keys():
