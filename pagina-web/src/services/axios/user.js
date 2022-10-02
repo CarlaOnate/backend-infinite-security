@@ -36,6 +36,11 @@ export const editUser = async (userData) => {
   return data
 }
 
+export const deleteUser = async (userId) => {
+  const { data } = await service.post('/delete-user', userId)
+  return data
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }

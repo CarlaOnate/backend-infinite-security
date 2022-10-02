@@ -46,6 +46,7 @@ export const AdminManagement = () => {
   }
 
   const onSearch = value => {
+    resetAltersStates()
     getUser({value}).then(data => {
       if(data.warning) {
         setWarning({ msg: data.warning })
@@ -145,7 +146,7 @@ export const AdminManagement = () => {
     }
   ]
 
-  const addAdminInputs = [
+  const addAdminOptions = [
     {
       text: "Rol",
       style: "user-admin-edit__button",
@@ -204,7 +205,7 @@ export const AdminManagement = () => {
         columns={adminManagementTableColumn}
       />
       {showEditInputs && renderInputs(editAdminOptions, editInputs)}
-      {showAddAdminInputs && renderInputs(addAdminInputs, addInputs)}
+      {showAddAdminInputs && renderInputs(addAdminOptions, addInputs)}
       {error &&
         <Alert
           message="Error"

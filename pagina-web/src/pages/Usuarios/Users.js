@@ -1,16 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Button } from 'antd'
 import { AdminManagement } from './AdminManagement'
+import { UserManagement } from './UserManagement'
 
-export const Users = () => {
+export const Users = props => {
+  const { userIsAdmin } = props;
+
+  const [ menuSelection, setMenuSelection ] = useState()
+
+  const shouldShowAdminManagement = userIsAdmin;
+
+  const onClickOption = (selection) => {
+    setMenuSelection(selection)
+  }
+
+  const showUserList = menuSelection === 'user-list'
+  const showAdminManagement = menuSelection === 'admin-management'
+  const showUserManagement = menuSelection === 'user-management'
+
   return (
     <section>
       <div>
-        <div><button>Usuarios</button></div>
-        <div><button>Manejo de administradores</button></div>
-        <div><button>Manejo de usuarios</button></div>
+        <div><Button onClick={() => onClickOption('user-list')}> Usuarios </Button></div>
+        <div><Button onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>
+        <div><Button onClick={() => onClickOption('user-management')}> Manejo de usuarios </Button></div>
       </div>
       <div>
-        <AdminManagement />
+        {shouldShowAdminManagement && showAdminManagement && <AdminManagement />}
+        {/* {showUserList && <AdminManagement />} */}
+        {showUserManagement && <UserManagement />}
       </div>
     </section>
   )

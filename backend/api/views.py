@@ -117,7 +117,6 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 #Edit user or admin
 @csrf_exempt
 def editUserAdmin(req):
-  print(req.user.id)
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
@@ -132,7 +131,15 @@ def editUserAdmin(req):
   correo = body["email"]
   rol = body["rol"]
 
-  if (rol == 0): rol = None;
+  #if (rol == 0): rol = None;
+
+  if 'unblockDate' in body.keys() and 'blockDate' in body.keys():
+    usuario.fechaBloqueo = body['blockDate']
+    usuario.fechaDesbloqueo = body['unblockDate']
+
+  if 'activate' in body.keys():
+    usuario.fechaBloqueo = None
+    usuario.fechaDesbloqueo = None
 
   usuario.nombre = nombre
   usuario.correo = correo
@@ -339,13 +346,15 @@ def deleteLugar(body):
 
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
-  usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiar por la función de Carla para detectar qe usuario esta logueado
-  #Asi se edita un usuario y se edita bien
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+
+  usuario = Usuario.objects.get(id = body["id"])
   usuario.deletedAt = datetime.today()
   usuario.verified = 0
-  usuario.correo = "Eliminado"
-  usuario.password = "Eliminado"
   usuario.save()
+  
   return JsonResponse({"user": usuario.id})
 
 @csrf_exempt
