@@ -1,7 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import '../../scss/styles.scss';
 import { useLocation } from "react-router-dom";
+import tecLogo from '../../images/tecLogo.png';
+import '../../scss/styles.scss';
 
 const Navbar = (props) => {
 
@@ -40,8 +41,7 @@ const Navbar = (props) => {
     return(
         <nav>
             <div className="navbar">
-                <img src = '../../images/logo-tec.jpg' alt="Logo tec"/>
-
+                <img src = {tecLogo} alt="Tecnológic de Monterrey Logo+"/>
                 <div className="Cajita">
                     
                     {

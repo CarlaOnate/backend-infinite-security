@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import {UserProvider} from './context/userContext';
 import 'antd/dist/antd.css'
 import './Estilos/General.css'
+import './scss/styles.scss';
 import moment from 'moment'
 moment.locale('es-mx')
 
