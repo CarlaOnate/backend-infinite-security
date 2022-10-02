@@ -1,7 +1,7 @@
 import React from "react";
 import Boton from "./Boton"
-import CajaNumeros from "./CajasNumeros"
-import CajaImagen from "./CajaImagen";
+import CajaNumeros from "./NumberBox"
+import CajaImagen from "./ImageBox";
 import '../Estilos/Pantallaprincipal.css'
 
 const Pantallaprincipal = ()=>{
