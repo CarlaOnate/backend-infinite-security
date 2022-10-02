@@ -1,7 +1,9 @@
 from dis import code_info
+from itertools import filterfalse
 from django.http import JsonResponse
+from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
-from django.db.models import Count, Value as V
+from django.db.models import Count, Q
 from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
@@ -125,6 +127,8 @@ def editUserAdmin(req):
   apellido2 = req.POST["secondLastName"]
   departamento = req.POST["departament"]
   rol = req.POST["rol"]
+
+  if (rol == 0): rol = None;
 
   usuario.nombre = nombre
   usuario.apellidoPaterno = apellido
@@ -339,19 +343,43 @@ def deleteUser(req):
   usuario.save()
   return JsonResponse({"user": usuario.id})
 
-@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
-def getuseritself(req):
-  usuario = Usuario.objects.get(id = req.POST["id"]) #Cambiarlo por metodo de Carla
-  usuarios = {
-    "nombre": usuario.nombre,
-    "apellidoPaterno": usuario.apellidoPaterno,
-    "apellidoMaterno": usuario.apellidoMaterno,
-    "genero": usuario.genero,
-    "estado":usuario.oficio,
-    "correo":usuario.correo,
-    "fechaNacimiento": usuario.fechaNacimiento,
-  }
-  return JsonResponse(usuarios)
+@csrf_exempt
+def getuseritself(req): # Regresa cualquier user, por id o el loggeado
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  searchById = False
+  if 'value' in body.keys():
+    try:
+      valueId = int(body['value'])
+      if valueId: searchById = True
+    except:
+      searchById = False
+    if searchById: usuario = Usuario.objects.get(pk=body['value'])
+    else: usuario = Usuario.objects.get(username__contains=body['value'])
+    if usuario != None:
+      print(usuario.id)
+      usuarioDict = {
+        "pk": usuario.id,
+        "username": usuario.username,
+        "genero": usuario.genero,
+        "departamento": usuario.departament,
+        "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],
+        "correo": usuario.correo,
+        "fechaDesbloqueo": usuario.fechaDesbloqueo,
+        "rol": usuario.rol,
+        "estatus": calculateUserStatus(usuario)
+      }
+      return JsonResponse(usuarioDict)
+    else:
+      return JsonResponse({"warning": "No se encontro ese usuario"})
+  else:
+    return JsonResponse({"error": "Argumentos invalidos"})
+
+def calculateUserStatus(user):
+  userStatus = "Activo"
+  if user.fechaDesbloqueo and timezone.make_aware(datetime.today()) < user.fechaDesbloqueo : userStatus = "Bloqueado"
+  if user.deletedAt != None: userStatus = "Eliminado"
+  return userStatus
 
 # Estadistica
 @csrf_exempt

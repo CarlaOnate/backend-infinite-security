@@ -11,8 +11,9 @@ import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
 import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
 import { UserContext } from './context/userContext'
 import { Stats } from './pages/Stats/Stats'
+import { Users } from './pages/Usuarios/Users';
 
-function Routing(props) {
+function Routing() {
   const { user } = useContext(UserContext)
   const userLoggedIn = user.id !== null;
   const userIsAdmin = user.rol !== null;
@@ -54,6 +55,7 @@ function Routing(props) {
     <>
       <Route  exact path="/historial-reservas" element={<HistorialReservas {...authProps} />}/>
       <Route  exact path="/estadisticas" element={<Stats {...authProps} />}/>
+      <Route  exact path="/usuarios" element={<Users {...authProps} />}/>
     </>
   )
 

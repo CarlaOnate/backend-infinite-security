@@ -1,0 +1,19 @@
+.tag {
+  border-radius: 10px;
+  font-size: 12px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+.usuario-activo {
+  background-color: #F8A357;
+}
+
+.usuario-bloqueado {
+  background-color: #6335B1;
+}
+
+.usuario-eliminado {
+  background-color: #f0452c;
+}

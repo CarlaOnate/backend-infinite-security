@@ -26,6 +26,12 @@ export const getAdminStats = async (filter) => {
   return data
 }
 
+export const getUser = async (user) => {
+  console.log('axios user =>', user)
+  const { data } = await service.post('/getuseritself-user', user)
+  return data
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }
