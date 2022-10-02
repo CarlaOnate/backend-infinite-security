@@ -122,9 +122,9 @@ def editUserAdmin(req):
   #En el req debe de venir nombre, rol, departamento, apellidos maternos y paternos
 
   #Asi se edita un usuario y se edita bien
-  nombre = req.POST["name"]
+  """ nombre = req.POST["name"]
   apellido = req.POST["lastName"]
-  apellido2 = req.POST["secondLastName"]
+  apellido2 = req.POST["secondLastName"] """
   departamento = req.POST["departament"]
   rol = req.POST["rol"]
 
@@ -357,7 +357,8 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if searchById: usuario = Usuario.objects.get(pk=body['value'])
     else: usuario = Usuario.objects.get(username__contains=body['value'])
     if usuario != None:
-      print(usuario.id)
+      rolName = 'Usuario'
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol][1]
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
@@ -367,6 +368,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "correo": usuario.correo,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
         "rol": usuario.rol,
+        "rolName": rolName,
         "estatus": calculateUserStatus(usuario)
       }
       return JsonResponse(usuarioDict)

@@ -3,14 +3,13 @@ import { Button, Input, Table } from 'antd'
 const { Search } = Input
 
 export const SearchData = props => {
-  // TODO: Render custom search option, render custom buttons with onlick, after onlick is managed outside this component
-  const { buttons, onSearch, renderAlert, data, columns } = props;
+  const { title, buttons, onSearch, renderAlert, data = [], columns = [] } = props;
 
   return (
     <div className='search-data'>
       {renderAlert()}
       <div className='search-data__search-bar'>
-        <label>Nombre o ID de Usuario o Administrador</label>
+        <label>{title}</label>
         <Search
           placeholder="Nombre, ID de usuario"
           allowClear
@@ -26,8 +25,10 @@ export const SearchData = props => {
         />
       </div>
       <div className='search-data__buttons'>
-        {buttons.map(button => (
-          <Button key={button.text} className={button.style} onClick={button.onClick}> {button.text} </Button>
+        {data.length > 0 && buttons.map(button => (
+          <div key={button.text}>
+            {button.show && <Button className={button.style} onClick={button.onClick}> {button.text} </Button>}
+          </div>
         ))}
       </div>
     </div>

@@ -24,6 +24,11 @@ export const adminManagementTableColumn = [
     key: 'username',
   },
   {
+    title: 'Rol',
+    dataIndex: 'rolName',
+    key: 'rolName',
+  },
+  {
     title: 'Estatus',
     render: renderEstatus,
     key: 'estatus',
