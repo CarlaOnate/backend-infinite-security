@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client';
 import Routing from './Routing';
 import reportWebVitals from './reportWebVitals';
 import {UserProvider} from './context/userContext';
-import 'antd/dist/antd.css'
-import './Estilos/General.css'
+import 'antd/dist/antd.css';
+//import './Estilos/General.css';
 import './scss/styles.scss';
-import moment from 'moment'
-moment.locale('es-mx')
+import moment from 'moment';
+moment.locale('es-mx');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
