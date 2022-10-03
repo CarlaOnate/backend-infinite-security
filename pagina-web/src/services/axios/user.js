@@ -17,8 +17,42 @@ export const signup = async user => {
 }
 
 export const historial = async (filter) => {
-  console.log('HISTORIAL FILTER =>', filter)
   const { data } = await service.post('/historial/', filter)
+  return data
+}
+
+export const getAdminStats = async (filter) => {
+  const { data } = await service.post('/estadistica-general', filter)
+  return data
+}
+
+export const getUsers = async (user) => {
+  const { data } = await service.get('/users', user)
+  return data
+}
+
+export const getUser = async (user) => {
+  const { data } = await service.post('/getuseritself-user', user)
+  return data
+}
+
+export const editUser = async (userData) => {
+  const { data } = await service.post('/edit-user', userData)
+  return data
+}
+
+export const deleteUser = async (userId) => {
+  const { data } = await service.post('/delete-user', userId)
+  return data
+}
+
+export const userStats = async (userId) => {
+  const { data } = await service.post('/estadistica-user', userId)
+  return data
+}
+
+export const userHistorial = async (userId) => {
+  const { data } = await service.post('/user/historial/', userId)
   return data
 }
 

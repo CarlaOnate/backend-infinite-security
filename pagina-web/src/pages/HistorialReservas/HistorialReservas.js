@@ -58,7 +58,6 @@ export const HistorialReservas = props => {
 
   const fetchData = filter => {
     historial(filter).then(data => {
-      console.log(data)
       setData(data.values)
     }).catch(e => console.log(e))
   }
@@ -106,7 +105,7 @@ export const HistorialReservas = props => {
       <div className='full-table'>
         <Table
           columns={tableColumns}
-          data={data}
+          dataSource={data}
         />
       </div>
       <button className='button-right'>

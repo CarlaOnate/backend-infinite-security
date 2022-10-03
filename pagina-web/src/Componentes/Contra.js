@@ -15,19 +15,13 @@ const Aumentar = {}
 
 const Contra = (props) => {
     const [vistas, setVistas] = useState(0)
-
     const navigate = useLocation()
-
-    console.log(navigate.pathname)
-
     const paths = {
         IniciarSesion: navigate.pathname === '/IniciarSesion' && 'navActivo',
     }
 
     const Aumentar = () => {
         setVistas(vistas + 1);
-        console.log(vistas);
-        console.log("Presionado")
     }
 
     const Vista1 = () => {
@@ -126,7 +120,6 @@ const Contra = (props) => {
         
         <div>
             
-            {console.log(vistas)}
             {vistas === 0 && Vista1()}
             {vistas === 1 && Vista2()}
             {vistas === 2 && Vista3()}
