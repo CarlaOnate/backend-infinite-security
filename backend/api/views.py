@@ -101,7 +101,7 @@ def reservaJSONResponse(reservas):
 @login_required
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   if req.body:
-    if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+    # if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     body_unicode = req.body.decode('utf-8')
     body = json.loads(body_unicode)
     userId = body['id']
