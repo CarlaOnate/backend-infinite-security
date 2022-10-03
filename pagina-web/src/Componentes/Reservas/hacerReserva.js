@@ -109,7 +109,7 @@ const HacerReserva = () => {
   const items = lugares.pisosDropdown
 
   const subirDatos = () => {
-    if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] != undefined || enviado['Cantidad'] != 0))){
+    if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
       
       crearReserva(enviado).then(navigates('/')).catch()
     
@@ -119,7 +119,7 @@ const HacerReserva = () => {
   }
 
   const subirDatos2 = () => {
-    if((enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] != undefined || enviado['Cantidad'] != 0))){
+    if((enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
       
       crearReserva(enviado).then(navigates('/')).catch()
     
