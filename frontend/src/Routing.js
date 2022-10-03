@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { UserContext } from './context/userContext'
 
 import Contra from './components/Contra';
-import { Navbar } from './components/navbar/Navbar';
+import { Navbar } from './components/navbar/navbar';
 import Pantallaprincipal from './components/pantallaPrincipal';
 import Reservas from './components/Reservas';
 import Registrarse from './components/Registrarse';

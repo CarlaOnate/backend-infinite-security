@@ -100,8 +100,8 @@ def reservaJSONResponse(reservas):
 @csrf_exempt
 @login_required
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   if req.body:
+    if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     body_unicode = req.body.decode('utf-8')
     body = json.loads(body_unicode)
     userId = body['id']
@@ -535,8 +535,6 @@ def getUserMostReservedCategories(body):
     productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
   return JsonResponse({"value": productsResponse, "graphCols": ["Categoria",  "Cantidad"] })
 
-
-
 def getElementResponse(element, tipo):
   elementDict = None
 
@@ -599,7 +597,6 @@ def DeleteReserva(req):
   idReserva.deletedAt = datetime.today()
   idReserva.save()
   return JsonResponse({"Recurso": idReserva.id})
-
 
 # Authentication
 @csrf_exempt

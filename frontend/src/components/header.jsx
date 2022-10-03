@@ -7,8 +7,6 @@ export const Header = (props) => {
     <header className="header">
       <img className="header__logo" src = {tecLogo} alt="Tecnológic de Monterrey Logo"/>
       <Navbar />
-      {userLoggedIn && <NavLink className='navbar__option'>PROFILE</NavLink>}
-      <div className="header__profile"></div>
     </header>
   );
 };
