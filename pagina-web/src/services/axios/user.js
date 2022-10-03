@@ -26,6 +26,11 @@ export const getAdminStats = async (filter) => {
   return data
 }
 
+export const getUsers = async (user) => {
+  const { data } = await service.get('/users', user)
+  return data
+}
+
 export const getUser = async (user) => {
   const { data } = await service.post('/getuseritself-user', user)
   return data

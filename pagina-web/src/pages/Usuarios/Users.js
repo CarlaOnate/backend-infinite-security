@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button } from 'antd'
 import { AdminManagement } from './AdminManagement'
 import { UserManagement } from './UserManagement'
+import { UserList } from './UserList'
 
 export const Users = props => {
   const { userIsAdmin } = props;
@@ -27,7 +28,7 @@ export const Users = props => {
       </div>
       <div>
         {shouldShowAdminManagement && showAdminManagement && <AdminManagement />}
-        {/* {showUserList && <AdminManagement />} */}
+        {showUserList && <UserList />}
         {showUserManagement && <UserManagement />}
       </div>
     </section>

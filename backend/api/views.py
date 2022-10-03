@@ -1,5 +1,6 @@
 from dis import code_info
 from itertools import filterfalse
+from xmlrpc.client import UNSUPPORTED_ENCODING
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
@@ -118,8 +119,35 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 # Get all users
 @csrf_exempt
 def getUsers(req):
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  # TODO: Opcional, agregar al query cuenta de total de reservas
   allUsers = Usuario.objects.filter(deletedAt=None).all()
-  return JsonResponse({"msg": "User not logged in"})
+  usersResponse = []
+  for user in allUsers:
+    serializedUser = getUserJson(user)
+    usersResponse.append(serializedUser)
+  return JsonResponse({ "values": usersResponse })
+
+def getUserJson(user):
+  rolName = 'Usuario'
+  if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol][1]
+  usuarioDict = {
+    "pk": user.id,
+    "username": user.username,
+    "nombre": user.nombre,
+    "apellidoPaterno": user.apellidoPaterno,
+    "apellidoMaterno": user.apellidoMaterno,
+    "genero": user.genero,
+    "departament": user.departament,
+    "oficio": user.OFICIO_ENUM[user.oficio][1],
+    "correo": user.correo,
+    "verified": user.verified,
+    "fechaDesbloqueo": user.fechaDesbloqueo,
+    "rol": user.rol,
+    "rolName": rolName,
+    "estatus": calculateUserStatus(user)
+  }
+  return usuarioDict
 
 
 #Edit user or admin
