@@ -2,6 +2,9 @@ import { Input } from 'antd';
 import React from 'react';
 import '../Estilos/InputText.css'
 
-const Texto = (props) => <Input className='Input' size="large" placeholder={props.mensaje}  />; 
+const Texto = (props) => {
+    return(<Input onChange={props.onChange} className='Input' size="large" placeholder={props.mensaje}  />)
+    
+} 
 
 export default Texto;

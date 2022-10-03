@@ -243,7 +243,7 @@ def createProducto(body):
 
 @csrf_exempt
 def getRecurso(req): # Individual or all resources
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'resourceType' in body.keys():
@@ -254,6 +254,7 @@ def getRecurso(req): # Individual or all resources
   else:
     return JsonResponse({"error": "Resource type not present"})
 
+@csrf_exempt
 def getProducto(body):
   if 'id' in body.keys(): #single product
     producto = Producto.objects.get(pk=body['id'])
@@ -562,15 +563,21 @@ def getElementResponse(element, tipo):
 def createReserva(req):
   #Se le pasa el id del usuario con el metodo de Carla
   #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  print(body)
   idUsuario = Usuario.objects.get(id = 1)
   codigoReserva = random.randint(1, 1000000000000)
-  fechaInicio = req.POST["FechaInicio"]
-  fechaFinal = req.POST["fechaFinal"]
-  status = req.POST["status"]
-  comentarios = req.POST["comentarios"]
-  horaI = req.POST["horaI"]
-  horaF = req.POST["horaF"]
-  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, estatus = status, comentarios = comentarios)
+  fechaInicio = body["FechaInicio"]
+  fechaFinal = body["fechaFinal"]
+  # comentarios =body["comentarios"]
+  horaI = body["horaI"]
+  horaF = body["horaF"]
+  idLugar = body["Salon"]
+  idProducto = body["Productos"]
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
@@ -662,14 +669,14 @@ def sendVerificationEmail(body):
     subject,
     'Ingresa este codigo en la aplicación: ' + codigo,
     'inifniteseguridadapp@outlook.com',
-    [body["email"]]
+    [body["email"]],
   )
   email.send()
   return JsonResponse({"msg": "Correo enviado"})
 
 @csrf_exempt
 def verifyUser(req):
-  if user.changePasswordCode != -1:
+  if req.user.changePasswordCode != -1:
     user = req.user
     user.verified = True
     user.save()

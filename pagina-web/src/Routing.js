@@ -8,11 +8,12 @@ import Reservas from './Componentes/Reservas';
 import IniciarSesion from './Componentes/IniciarSesion';
 import Registrarse from './Componentes/Registrarse';
 import RegistrarseCodigo from './Componentes/RegistrarseCodigo';
+import { ComponentWithContext } from './pages/ComponentWithContext';
+import Borrarcuenta from './Componentes/BorrarCuenta';
+import PerfilUsuario from './Componentes/PerfilUsuario';
+import BorrarCuentaAdmin from './Componentes/BorrarCuentaAdmin'
 import { HistorialReservas } from './pages/HistorialReservas/HistorialReservas';
-import { UserContext } from './context/userContext'
-import { Stats } from './pages/Stats/Stats'
-import { Users } from './pages/Usuarios/Users';
-
+import HacerReserva from './Componentes/Reservas/hacerReserva';
 function Routing() {
   const { user } = useContext(UserContext)
   const userLoggedIn = user.id !== null;

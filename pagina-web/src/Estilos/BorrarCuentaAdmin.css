@@ -1,0 +1,22 @@
+.ContenedorGeneralBorrarCuentaAdmin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.TituloBorrarCuentaAdmin{
+    color: rgb(223, 89, 53);
+}
+.CheckboxesBorrarCuentaAdmin{
+    display:flex;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.ConenedorContenidoBorrarCuentaAdmin{
+    display: flex;
+    justify-content: space-between;
+}
