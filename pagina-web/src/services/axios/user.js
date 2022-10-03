@@ -51,6 +51,18 @@ export const getRecursos = async user => {
   return regreso
 }
 
+//Para crear la reserva
+export const postReserva = async user => {
+  await service.post('/create-reserva', user)
+  // const { data } = await service.post('/create-reserva', user)
+  // const regreso = JSON.parse(data.value)[0]
+  // const regreso2 = Object.keys(regreso).map(key=>{
+  //   regreso[key]= JSON.parse(regreso[key])
+  //   //console.log(regreso[key])
+  // })
+  // return regreso
+}
+
 export const historial = async (filter) => {
   console.log('HISTORIAL FILTER =>', filter)
   const { data } = await service.post('/historial/', filter)

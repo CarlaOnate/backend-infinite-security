@@ -7,32 +7,15 @@ import { getRecursos } from "../../services/axios/user";
 
 
 const PantallaReserva1 = (props) => {
-
-    const [pantallainterior, setPantallainterior] = useState(1);
-
-    const [itemName, setItemName] = useState("Select User Name");
-    const [itemName2, setItemName2] = useState("Select User Name");
     
+    const [pantallainterior, setPantallainterior] = useState(1);
+    const [piso, setPiso] = useState();
+    const [salon, setSalon] = useState("Select User Name");
+    const [salonesMostrar, setSalonesMostrar] = useState("");
 
     const onChange = (e) => {
-        console.log("cambio a " + e.target.value)
         setPantallainterior(e.target.value);
     };
-
-    // const items=[
-    //     {
-    //       key: '1',
-    //       label: 'Item 1',
-    //     },
-    //     {
-    //       key: '2',
-    //       label: 'Item 2',
-    //     },
-    //     {
-    //       key: '3',
-    //       label: 'Item 3',
-    //     },
-    // ]
 
     const menu = (
         <Menu 
@@ -40,23 +23,65 @@ const PantallaReserva1 = (props) => {
           defaultSelectedKeys={['3']}
           items = {props.items}
           onClick = {({key}) => {
-            setItemName(props.items.find((elm) => elm.key === key).key);
+            setPiso(props.items.find((elm) => elm.key === key).key);
           }}
+          
         />
     );
+
     const menu2 = (
         <Menu 
           selectable
           defaultSelectedKeys={['3']}
-          items = {props.items}
+          items = {salonesMostrar}
           onClick = {({key}) => {
-            setItemName2(props.items.find((elm) => elm.key === key).key);
+            setSalon(salonesMostrar.find((elm) => elm.key === key).key);
           }}
         />
     );
 
-    props.enviado["Piso"] = itemName;
-    props.enviado["Salon"] = itemName2;
+    useEffect(() =>{
+        const generarArreglo = (piso) =>{
+
+            const filtrado = {
+                "resourceType": "Lugar",
+                "byFloor": true
+            }
+    
+            getRecursos(filtrado).then((response) => {
+                // console.log(response)
+                // console.log(props.enviado)
+                const salones = response[piso];
+                const salonesMostrar = []
+                salones.map(element => {
+                    // console.log("Aqui")
+                    // console.log(element.fields.salon)
+                    // console.log(element)
+                    // console.log("Comprobando")
+                    // console.log(element.pk)
+                    salonesMostrar.push({
+                        key: `${element.pk}`,
+                        label: `${element.fields.salon}`
+                    })
+                })
+    
+                // console.log("Aqui")
+                // console.log(salonesMostrar)
+                setSalonesMostrar(salonesMostrar)
+                setSalon("No aplica")
+    
+            }).catch((error) =>{
+                console.log("error pantalla reserva 1")
+            })
+    
+        }
+        generarArreglo(piso)
+
+    }, [piso])
+    
+    props.enviado["Piso"] = piso;
+    props.enviado["Salon"] = salon;
+    //console.log(props.enviado)
     console.log(props.enviado)
     
     if(pantallainterior === 2){

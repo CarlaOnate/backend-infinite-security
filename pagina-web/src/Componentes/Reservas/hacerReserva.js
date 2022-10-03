@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Radio } from 'antd';
 import PantallaReserva1 from "./PantallaReserva1";
-import PantallaReserva2 from "./PantallaReserva2";
+import MenuInterno from "./menuInterno";
 import { TimePicker } from 'antd';
 import { DatePicker } from 'antd';
-import { getRecursos } from "../../services/axios/user";
+import { getRecursos, crearReserva } from "../../services/axios/user";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const { RangePicker } = DatePicker;
 
@@ -12,35 +14,33 @@ const { RangePicker } = DatePicker;
 const HacerReserva = () => {
   const [pantalla, setPantalla] = useState(1);
   const [dataLugares, setDataLugares ] = useState();
-
+  const navigates = useNavigate()
   var enviado = {};
   var enviado2 = {};
   const [inputs, setInputs] = useState();
   const [ lugares, setLugares ] = useState({ pisosDropdown: [], salonesDropdown: [] });
-
+  const [aviso, setAviso] = useState(0)
 
   const onChange = (e) => {
     setPantalla(e.target.value);
   };
 
   const onChangeFecha = (date, dateString) => {
-    console.log(date[0].format("YYYY-MM-DD"));
-    console.log(date[1].format("YYYY-MM-DD"));
+    //console.log(date[0].format("YYYY-MM-DD"));
+    //console.log(date[1].format("YYYY-MM-DD"));
 
-    enviado["fechaInicio"] = date[0].format("YYYY-MM-DD");
+    enviado["FechaInicio"] = date[0].format("YYYY-MM-DD");
     enviado["fechaFinal"] = date[1].format("YYYY-MM-DD");
 
     console.log(enviado)
   }
 
   const onChangeHora = (date, dateString) => {
-    console.log(date[0].format("HH:mm"));
-    console.log(date[1].format("HH:mm"));
 
-    enviado["horaInicio"] = date[0].format("HH:mm");
-    enviado["horaFinal"] = date[1].format("HH:mm");
+    enviado["horaI"] = date[0].format("HH:mm");
+    enviado["horaF"] = date[1].format("HH:mm");
 
-    console.log(enviado)
+    //console.log(enviado)
   }
 
   const createDropdownData = (response) => {
@@ -60,11 +60,12 @@ const HacerReserva = () => {
   }
 
   useEffect(() => {
+
     // Funcion para llamar a back tiene que estar dentro de useEffect, esto para que solo se llame esta funcion 1 vez cuando el componente se esta montando
     // Podrías tener diferentes funciones como llamarLuagres, llamarProudctos
     // O hacer funciones fuera que cada una llame el getRecurso con un filtrado diferente y todas las pones dentro de llamarLista
     const llamarLista = () => {
-      console.log('LLAMR LISTA')
+      //console.log('LLAMR LISTA')
 
       const filtrado = {
         "resourceType": "Lugar",
@@ -72,8 +73,11 @@ const HacerReserva = () => {
       }
   
       getRecursos(filtrado).then((response) => {
+        console.log(response)
+
         // Obtienes un array con las llaves del obj response que son los pisos [1, 2, 3]
         const pisos = Object.keys(response);
+        //console.log(pisos)
         // Iteras los pisos
         pisos.map(key => {
           // Cada array que este dentro de los pisos lo ciclas
@@ -85,9 +89,11 @@ const HacerReserva = () => {
           }))
           // Sobreescribes el response para que en ese piso lo valores esten como los acomodaste
           response[key] = formattedRoom
+          //console.log(response[key])
         })
         // llamas funcion para crear [{}] de key value para cada piso (en este caso)
         createDropdownData(response)
+
         // Guardas el response porque maybe luego lo necesitas
         // SINO LO NECESITAS TONS QUITA ESTO Y QUITA ESTE ESTADO
         setDataLugares(response)
@@ -99,8 +105,30 @@ const HacerReserva = () => {
     llamarLista()
   },[])
 
-  console.log('lugares =>', lugares)
-  const items = []
+  //console.log('lugares =>', lugares)
+  const items = lugares.pisosDropdown
+
+  const subirDatos = () => {
+    if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] != undefined || enviado['Cantidad'] != 0))){
+      
+      crearReserva(enviado).then(navigates('/')).catch()
+    
+    }else{
+      setAviso(1);
+    }
+  }
+
+  const subirDatos2 = () => {
+    if((enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] != undefined || enviado['Cantidad'] != 0))){
+      
+      crearReserva(enviado).then(navigates('/')).catch()
+    
+    }else{
+      setAviso(1);
+    }
+  }
+
+
   return (
     <div>
 
@@ -110,12 +138,30 @@ const HacerReserva = () => {
       </Radio.Group>
 
       {pantalla === 1 && <PantallaReserva1 enviado = {enviado} items = {items}/>}
-      {pantalla === 2 && <PantallaReserva2 enviado = {enviado2}/>}
+      {pantalla === 2 && <MenuInterno enviado = {enviado2}/>}
 
 
       <TimePicker.RangePicker onChange={onChangeHora} />
 
       <RangePicker onChange={onChangeFecha} />
+
+      
+      {pantalla === 1 &&
+        <button onClick={subirDatos}>
+          Reservar
+        </button>
+      }
+      
+
+      {pantalla === 2 &&
+        <button onClick={subirDatos2}>
+          Reservar productos
+        </button>
+      }
+      
+      
+
+      {aviso === 1 && <p>La reserva no se realizara ya que faltan campos por llenar</p>}
 
     </div>
   )
