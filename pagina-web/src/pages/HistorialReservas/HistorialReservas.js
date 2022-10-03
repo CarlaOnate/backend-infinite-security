@@ -105,7 +105,7 @@ export const HistorialReservas = props => {
       <div className='full-table'>
         <Table
           columns={tableColumns}
-          data={data}
+          dataSource={data}
         />
       </div>
       <button className='button-right'>

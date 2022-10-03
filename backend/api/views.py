@@ -99,18 +99,19 @@ def reservaJSONResponse(reservas):
 @csrf_exempt
 @login_required
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
-  fields = [ el.name for el in Reserva._meta.get_fields() ]
+  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   if req.body:
-    if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-    userId = req.POST["usuario"]
+    body_unicode = req.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    userId = body['id']
     user = Usuario.objects.get(pk=userId)
-    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio").datetimes()
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+    reservas = Reserva.objects.filter(idUsuario=user).order_by("fechaInicio")
+    serializedReservas = reservaJSONResponse(reservas)
+    return JsonResponse({"values": serializedReservas}, safe=False)
   elif req.user:
     reservas = Reserva.objects.filter(idUsuario=req.user).order_by("fechaInicio")
-    serializedReservas = serializers.serialize('json', reservas)
-    return JsonResponse({"values": serializedReservas, "columns": fields}, safe=False)
+    serializedReservas = reservaJSONResponse(reservas)
+    return JsonResponse({"values": serializedReservas}, safe=False)
   else:
     return JsonResponse({"msg": "User not logged in"})
 
@@ -466,8 +467,8 @@ def getUserStatistic(req):
   if 'graph' in body.keys():
     graphType = body['graph']
     if graphType == "Producto": return getUserMostReservedProducts(body)
-    elif graphType == "Lugar": return getMostReservedPlaces(body)
-    elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+    elif graphType == "Lugar": return getUserMostReservedPlace(body)
+    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body)
   else: return JsonResponse({"error": "Graph type not valid"})
 
 def getUserMostReservedProducts(body):
@@ -481,6 +482,31 @@ def getUserMostReservedProducts(body):
     serializedPlace = getElementResponse(product, 'Producto')
     productsResponse.append({"recurso": serializedPlace, "count": product.count})
   return JsonResponse({ "value": productsResponse, "graphCols": ["Producto",  "Cantidad"] })
+
+def getUserMostReservedPlace(body):
+  user = body['id']
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  mostReservedPlaces = Lugar.objects.filter(deletedAt=None, reserva__idUsuario=user, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today()))).annotate(count=Count('id')).order_by('-count')[:5]
+  placesResponse = []
+  for place in mostReservedPlaces:
+    serializedPlace = getElementResponse(place, 'Lugar')
+    placesResponse.append({"recurso": serializedPlace, "count": place.count})
+  return JsonResponse({ "value": placesResponse, "graphCols": ["Lugar",  "Cantidad"] })
+
+def getUserMostReservedCategories(body):
+  user = body['id']
+  timePeriod = body['timeRange']
+  numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
+  datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
+  productosEnReservas = Producto.objects.filter(deletedAt=None, reserva__idUsuario=user, reserva__createdAt__range=(datetimeRange, timezone.make_aware(datetime.today())))[:5]
+  mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
+  productsResponse = []
+  for category in mostReservedCategories:
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+  return JsonResponse({"value": productsResponse, "graphCols": ["Categoria",  "Cantidad"] })
+
 
 
 def getElementResponse(element, tipo):
@@ -499,9 +525,10 @@ def getElementResponse(element, tipo):
   if tipo == 'Lugar':
     elementDict = {
       "id": element.pk,
-      "nombre": element.nombre,
-      "categoria": Producto.PRODUCT_CATEGORIES[element.categoria][1],
-      "cantidadSolicitada": element.cantidadSolicitada
+      "piso": element.piso,
+      "salon": element.salon,
+      "detalles": element.detalles,
+      "capacidad": element.capacidad,
     }
   return elementDict
 

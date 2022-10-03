@@ -4,8 +4,8 @@ import { SearchData } from '../../Componentes/SearchData'
 import { getUser, editUser, deleteUser } from '../../services/axios/user'
 import { adminManagementTableColumn } from './userFixtures'
 import  '../../Estilos/admin-management.css'
-import { UserReservations } from './UserReservations'
-import { UserStats } from './UserStats'
+import { OneUserReservation } from './OneUserReservation'
+import { OneUserStats } from './OneUserStats'
 const { RangePicker } = DatePicker;
 
 export const UserManagement = () => {
@@ -71,8 +71,6 @@ export const UserManagement = () => {
       }
       editUser(formatData)
         .then(data => {
-          console.log('data =>', data)
-          console.log('data =>', data.user)
           if (data.user) setSuccess(true)
           resetShowStates()
           fetchData()
@@ -84,7 +82,6 @@ export const UserManagement = () => {
       const userId = { id: data[0].pk }
       deleteUser(userId)
         .then(data => {
-          console.log('data =>', data)
           data.user && setSuccess(true)
           resetShowStates()
           fetchData()
@@ -167,10 +164,6 @@ export const UserManagement = () => {
     )
   }
 
-
-  console.log(showUserDetails)
-
-
   return (
     <div>
       {!showUserDetails && (<>
@@ -205,8 +198,8 @@ export const UserManagement = () => {
             <Button onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
           </>)}
         </>)}
-        {showUserDetails === 'stats' && <UserStats user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
-        {showUserDetails === 'reservations' && <UserReservations user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
+        {showUserDetails === 'stats' && <OneUserStats user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
+        {showUserDetails === 'reservations' && <OneUserReservation user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
     </div>
   )
 }
