@@ -4,6 +4,8 @@ import { SearchData } from '../../Componentes/SearchData'
 import { getUser, editUser, deleteUser } from '../../services/axios/user'
 import { adminManagementTableColumn } from './userFixtures'
 import  '../../Estilos/admin-management.css'
+import { UserReservations } from './UserReservations'
+import { UserStats } from './UserStats'
 const { RangePicker } = DatePicker;
 
 export const UserManagement = () => {
@@ -13,9 +15,14 @@ export const UserManagement = () => {
   const [ error, setError ] = useState(false)
   const [ warning, setWarning ] = useState({ msg: "" })
   const [ success, setSuccess ] = useState(false)
+  const [ showUserDetails, setShowUserDetails ] = useState()
 
   const fetchData = () => {
     data && onSearch(data[0].pk)
+  }
+
+  const onClickUserDetails = (type) => {
+    setShowUserDetails(type)
   }
 
   const onClickButton = buttonType => {
@@ -160,34 +167,46 @@ export const UserManagement = () => {
     )
   }
 
+
+  console.log(showUserDetails)
+
+
   return (
     <div>
-      <SearchData
-        title="Nombre o ID de Usuario"
-        buttons={searchTableActions}
-        onSearch={onSearch}
-        renderAlert={renderWarning}
-        data={data}
-        columns={adminManagementTableColumn}
-      />
-      {showBlockInputs && renderInputs(blockOptions, blockInputs)}
-      {error &&
-        <Alert
-          message="Error"
-          description="Hubo un error, inténtalo mas tarde"
-          type="error"
-          showIcon
-          afterClose={resetAltersStates}
-          closable
-        />}
-       {success &&
-        <Alert
-          message="Se hizo el cambio con exito"
-          type="success"
-          showIcon
-          afterClose={resetAltersStates}
-          closable
-        />}
+      {!showUserDetails && (<>
+        <SearchData
+          title="Nombre o ID de Usuario"
+          buttons={searchTableActions}
+          onSearch={onSearch}
+          renderAlert={renderWarning}
+          data={data}
+          columns={adminManagementTableColumn}
+        />
+        {showBlockInputs && renderInputs(blockOptions, blockInputs)}
+        {error &&
+          <Alert
+            message="Error"
+            description="Hubo un error, inténtalo mas tarde"
+            type="error"
+            showIcon
+            afterClose={resetAltersStates}
+            closable
+          />}
+        {success &&
+          <Alert
+            message="Se hizo el cambio con exito"
+            type="success"
+            showIcon
+            afterClose={resetAltersStates}
+            closable
+          />}
+          {data && (<>
+            <Button onClick={() => onClickUserDetails('reservations')}> Historial Reservas </Button>
+            <Button onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
+          </>)}
+        </>)}
+        {showUserDetails === 'stats' && <UserStats user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
+        {showUserDetails === 'reservations' && <UserReservations user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
     </div>
   )
 }

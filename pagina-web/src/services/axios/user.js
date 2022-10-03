@@ -41,6 +41,12 @@ export const deleteUser = async (userId) => {
   return data
 }
 
+export const userStats = async (userId) => {
+  // const dummy = { graph: 'Producto', timeRange: 'year', id: 10 }
+  const { data } = await service.post('/estadistica-user', userId)
+  return data
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }
