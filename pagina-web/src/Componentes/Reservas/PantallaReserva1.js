@@ -91,7 +91,7 @@ const PantallaReserva1 = (props) => {
     }
 
     return(
-        <div>
+        <div className="HacerReservaCentral">
 
             <Dropdown overlay={menu}>
                 <Typography.Link >
@@ -111,12 +111,16 @@ const PantallaReserva1 = (props) => {
                 </Typography.Link>
             </Dropdown>
             <br></br>
-
+            
+            <p>¿Requiere algun recurso extra?</p>
             <Radio.Group onChange={onChange} value={pantallainterior}>
                 <Radio value={1}>Si </Radio>
                 <Radio value={2}>No</Radio>
             </Radio.Group>
 
+            <br></br>
+
+            <p>Equipo seleccionado</p>
             {pantallainterior === 1 && <MenuInterno  enviado = {props.enviado}/>}
 
         </div>

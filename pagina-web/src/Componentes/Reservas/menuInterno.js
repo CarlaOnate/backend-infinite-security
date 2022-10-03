@@ -195,7 +195,8 @@ const MenuInterno = (props) =>{
   console.log(props.enviado)
 
     return(
-        <div>
+        <div className="HacerReservaCentral">
+          
             <Dropdown overlay={menu}>
                 <Typography.Link>
                 <Space>

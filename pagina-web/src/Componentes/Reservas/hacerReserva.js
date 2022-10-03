@@ -6,7 +6,7 @@ import { TimePicker } from 'antd';
 import { DatePicker } from 'antd';
 import { getRecursos, crearReserva } from "../../services/axios/user";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import '../../Estilos/hacerReserva.css'
 
 const { RangePicker } = DatePicker;
 
@@ -130,38 +130,56 @@ const HacerReserva = () => {
 
 
   return (
-    <div>
 
-      <Radio.Group onChange={onChange} value={pantalla}>
-        <Radio value={1}>Lugar</Radio>
-        <Radio value={2}>Producto</Radio>
-      </Radio.Group>
+    <div className="SeccionGeneralHacerReservas">
 
-      {pantalla === 1 && <PantallaReserva1 enviado = {enviado} items = {items}/>}
-      {pantalla === 2 && <MenuInterno enviado = {enviado2}/>}
+      <div className="HacerReservaIzquierda">
+        <button className="CodigoPeque">Crear Reservas</button>
+        <button className="CodigoPeque">Mis Reservas</button>
+        <button className="CodigoPeque">Manejo de Reservas</button>
+      </div>
 
-
-      <TimePicker.RangePicker onChange={onChangeHora} />
-
-      <RangePicker onChange={onChangeFecha} />
-
+      <div className="HacerReservaCentral">
+            
+        <h1 className="tituloHacerReserva">¿Qué quieres reservar?</h1>
       
-      {pantalla === 1 &&
-        <button onClick={subirDatos}>
-          Reservar
-        </button>
-      }
+        <Radio.Group onChange={onChange} value={pantalla} >
+          <Radio value={1}>Lugar</Radio>
+          <Radio value={2}>Producto</Radio>
+        </Radio.Group>
+
+        {pantalla === 1 && <PantallaReserva1 enviado = {enviado} items = {items}/>}
+        {pantalla === 2 && <MenuInterno enviado = {enviado2}/>}
+            
+      </div>
+
+      <div className="HacerReservaDerecha">
+        <h1 className="tituloHacerReserva">¿Cuando es la reserva?</h1>
+
+        <RangePicker onChange={onChangeFecha} />
+
+        <h1 className="tituloHacerReserva">¿A que hora es la reserva?</h1>
+
+        <TimePicker.RangePicker onChange={onChangeHora} />
+        
+
+        <div className="BotonHacerReservaDerecha">
+          {pantalla === 1 &&
+            <button className= "CodigoPeque" onClick={subirDatos}>
+              Reservar
+            </button>
+          }
+          {pantalla === 2 &&
+            <button className= "CodigoPeque" onClick={subirDatos2}>
+              Reservar productos
+            </button>
+          }
+        </div>
+        
+      </div>
       
 
-      {pantalla === 2 &&
-        <button onClick={subirDatos2}>
-          Reservar productos
-        </button>
-      }
-      
-      
-
-      {aviso === 1 && <p>La reserva no se realizara ya que faltan campos por llenar</p>}
+      {aviso === 1 && <p className="AdvertenciaHacer Reserva">La reserva no se realizara ya que faltan campos por llenar</p>}
 
     </div>
   )
