@@ -404,14 +404,21 @@ def getMostReservedCategories(body):
 def createReserva(req):
   #Se le pasa el id del usuario con el metodo de Carla
   #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  print(body)
   idUsuario = Usuario.objects.get(id = 1)
   codigoReserva = random.randint(1, 1000000000000)
-  fechaInicio = req.POST["FechaInicio"]
-  fechaFinal = req.POST["fechaFinal"]
-  comentarios = req.POST["comentarios"]
-  horaI = req.POST["horaI"]
-  horaF = req.POST["horaF"]
-  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = comentarios)
+  fechaInicio = body["FechaInicio"]
+  fechaFinal = body["fechaFinal"]
+  # comentarios =body["comentarios"]
+  horaI = body["horaI"]
+  horaF = body["horaF"]
+  idLugar = body["Salon"]
+  idProducto = body["Productos"]
+
+  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
