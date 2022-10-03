@@ -1,7 +1,7 @@
 import React from 'react';
 import { userOptions, adminOptions, notLoggedOptions } from './navbarOptions';
 import { NavLink, useLocation } from 'react-router-dom';
-
+import '../../styles/navbar.css';
 export const Navbar = (props) => {
   const { pathName } = useLocation();
   const { userLoggedIn, userIsAdmin } = props;
