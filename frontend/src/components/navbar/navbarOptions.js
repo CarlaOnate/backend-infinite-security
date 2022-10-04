@@ -1,19 +1,19 @@
 export const adminOptions = [
-  { text: "Historial reservas", to: "/reserves-history" },
-  { text: "Estadísticas", to: "/statistics" },
-  { text: "Recursos", to: "/resources" },
-  { text: "Usuarios", to: "/users" },
-  { text: "Reservas", to: "/reserves" },
-  { text: "Conoce el HUB", to: "/" }
+  { text: "Historial reservas", to: "/reserves-history", className: 'navbar__option' ,selectedClassName: 'navbar__option--selected'},
+  { text: "Estadísticas", to: "/statistics", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Recursos", to: "/resources", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Usuarios", to: "/users", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Reservas", to: "/reserves", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Conoce el HUB", to: "/", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
 ]
 
 export const userOptions = [
-  { text: "Estadísticas", to: "/statistics" },
-  { text: "Conoce el HUB", to: "/" }
+  { text: "Estadísticas", to: "/statistics", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Conoce el HUB", to: "/", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
 ]
 
 export const notLoggedOptions = [
-  { text: "Inicio", to: "/" },
-  { text: "Reservas", to: "/reserves" },
-  { text: "Iniciar Sesión", to: "/login" },
+  { text: "Inicio", to: "/", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Reservas", to: "/reserves", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
+  { text: "Iniciar Sesión", to: "/login", className: 'navbar__option',  selectedClassName: 'navbar__option--selected' },
 ]

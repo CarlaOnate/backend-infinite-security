@@ -14,6 +14,7 @@ import RecoverPasswordImage from './images/recoverPassword.png';
 
 import { Stats } from './pages/statistics/Stats';
 import { HistorialReservas } from './pages/reservesHistory/ReservesHistory';
+import { Profile } from './pages/Profile';
 
 
 function Routing(props) {
@@ -25,39 +26,43 @@ function Routing(props) {
   const showAdminRoutes = userIsAdmin;
 
   const authProps = {
+    userId: user.id,
     userLoggedIn,
-    userIsAdmin
+    userIsAdmin,
+    userIsGeneralAdmin: user.rol === 0
   };
 
   const renderAuthRoutes = (authProps) => (
     <>
-      <Route path='/login' element = {<IniciarSesion {...authProps} />}/>
-      <Route  exact path="/recover-password" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
-      <Route exact path="/sing-up" element={<Registrarse {...authProps} />}/>
+      <Route path='login' element = {<IniciarSesion {...authProps} />}/>
+      <Route  exact path="recover-password" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+      <Route exact path="sing-up" element={<Registrarse {...authProps} />}/>
     </>
   );
 
   const renderPublicRoutes = (authProps) => (
     <>
       <Route path='/' element={<Pantallaprincipal {...authProps} />}/>
-      <Route path='/reserves' element={<Reservas {...authProps} />}/>
+      <Route path='reserves' element={<Reservas {...authProps} />}/>
     </>
   );
 
   const renderUserRoutes = (authProps) => {
     return (
       <>
-        <Route  exact path="/delete-account" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
-        <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
-        <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
+        <Route  exact path="delete-account" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+        <Route  exact path="graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+        <Route  exact path="statistics" element={<Stats {...authProps} />}/>
+        <Route  exact path="perfil" element={<Profile {...authProps} />}/>
       </>
     );
   };
 
   const renderAdminRoutes = (authProps) => (
     <>
-      <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
-      <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
+      <Route  exact path="reserves-history" element={<HistorialReservas {...authProps} />}/>
+      <Route  exact path="statistics" element={<Stats {...authProps} />}/>
+      <Route  exact path="perfil" element={<Profile {...authProps} />}/>
     </>
   );
 
