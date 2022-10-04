@@ -421,6 +421,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "departament": usuario.departament,
         "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],
         "correo": usuario.correo,
+        "fechaNacimiento": usuario.fechaNacimiento,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
         "rol": usuario.rol,
         "rolName": rolName,
