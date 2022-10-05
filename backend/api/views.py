@@ -619,8 +619,6 @@ def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   user = Usuario.objects.get(correo=body['email'])
-  print(user)
-  print(user.deletedAt)
   if user.deletedAt != None: return HttpResponseForbidden()
   email = body['email']
   password = body["password"]

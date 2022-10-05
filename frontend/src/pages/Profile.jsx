@@ -1,4 +1,4 @@
-import { Button, DatePicker, Spin, Input, Radio, Alert } from 'antd';
+import { Button, DatePicker, Spin, Input, Radio, Alert, Popconfirm } from 'antd';
 import React, { useEffect, useContext } from 'react'
 import { useState } from 'react';
 import { getUser, editUser, deleteUser, logout } from '../services/axios/user';
@@ -7,14 +7,13 @@ import { UserContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
 
 export const Profile = props => {
-  const { userLoggedIn, userIsGeneralAdmin, userId } = props;
+  const { userIsGeneralAdmin, userId } = props;
 
   const [ data, setData ] = useState()
   const [ error, setError ] = useState(false)
   const [ success, setSuccess ] = useState(false)
   const [ editInputs, setEditInputs ] = useState({})
   const [ editValues, setEditValues ] = useState(false)
-  const [ checkboxes, setCheckboxes ] = useState({})
 
   const { setUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -95,8 +94,6 @@ export const Profile = props => {
 
   const loading = !data
 
-  console.log(data)
-
   return (
     <section>
       {loading && <Spin />}
@@ -144,7 +141,15 @@ export const Profile = props => {
           <div>
             <Button onClick={onClickEdit}>Editar</Button>
             <Button onClick={onClickLogout}>Cerrar sesión</Button>
-            {showDeleteAccount && <Button onClick={onClickDeleteAccount}>Eliminar cuenta</Button>}
+            {showDeleteAccount &&
+              <Popconfirm
+                title="¿Estas seguro?"
+                okText="Sí, eliminar cuenta"
+                cancelText="No"
+                onConfirm={onClickDeleteAccount}>
+                Eliminar cuenta
+              </Popconfirm>
+            }
           </div>
         )}
         </>)}
