@@ -558,6 +558,29 @@ def getElementResponse(element, tipo):
     }
   return elementDict
 
+
+def getReserva(req):
+  print(req.body)
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  print(body)
+  if 'value' in body.keys():
+    try:
+      valueId = int(body['value'])
+      if valueId: searchById = True
+    except:
+      searchById = False
+    if searchById: reserva = Reserva.objects.filter(pk=body['value'])[:1]
+    else: reserva = Usuario.objects.filter(codigoReserva__contains=body['value'])[:1]
+    if reserva.exists():
+      reserva = reserva[0]
+      reservaJson = reservaJSONResponse(reserva)
+      return JsonResponse(reservaJson)
+    else:
+      return JsonResponse({"warning": "No se encontro esa reserva"})
+  return JsonResponse({"Recurso": "Recurso.id"})
+
+
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def createReserva(req):
   #Se le pasa el id del usuario con el metodo de Carla
@@ -574,9 +597,7 @@ def createReserva(req):
   horaF = body["horaF"]
   idLugar = body["Salon"]
   idProducto = body["Productos"]
-
   Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
@@ -613,7 +634,7 @@ def loginUser(req):
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
-    login(req, authenticatedUser) #set user in req.user
+    login(req, authenticatedUser) # set user in req.user
     return JsonResponse({"user": req.user.id})
   else:
     return JsonResponse({"error": "invalid credentials"})
@@ -679,7 +700,7 @@ def verifyUser(req):
     user = req.user
     user.verified = True
     user.save()
-    return JsonResponse({"msg": "Usuario verificado exitosamente"})
+    #return JsonResponse({"msg": "Usuario verificado exitosamente"})
   else:
     return JsonResponse({"error": "No se ha iniciado proceso de cambio de verificación de correo"})
 
@@ -707,6 +728,7 @@ def verifyCode(req): # Called from front after sending code via email - email mu
   user = Usuario.objects.get(correo=email)
   if user.changePasswordCode == code:
     user.changePasswordCode = -1 # Set to -1 to flag that the code has been used
+    user.verified = True
     user.save()
     return JsonResponse({"msg": "Codigo correcto"})
   else:

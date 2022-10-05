@@ -23,6 +23,8 @@ urlpatterns = [
   path('delete-resource', views.deleteResource, name='deleteResource'),
   path('estadistica-general', views.getGeneralStatistic, name='getGeneralStatistic'),
   path('estadistica-user', views.getUserStatistic, name='getUserStatistic'),
+  # Reservas
+  path('get-reserva', views.getReserva, name='getReserva'),
   path('create-reserva', views.createReserva, name='createReserva'),
   path('update-reserva', views.updateReserva, name='updateReserva'),
   path('Delete-reserva', views.DeleteReserva, name='DeleteReserva'),
