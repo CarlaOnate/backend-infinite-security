@@ -1,0 +1,20 @@
+.CajaNumeros{
+    display: flex;
+    gap: 20px;
+}
+
+.Caja{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(249, 165, 81);
+    color: white;
+    height: 40px;
+    width: 40px;
+
+}
+
+.Texto{
+    width: 200px;
+    height: min-content;
+}

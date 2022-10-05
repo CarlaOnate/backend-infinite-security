@@ -56,6 +56,56 @@ export const userHistorial = async (userId) => {
   return data
 }
 
+export const crearUsuario = async user => {
+  const { data } = await service.post('/create-user', user)
+  return data
+}
+
+export const sendEmail = async user => {
+  const { data } = await service.post('/email', user)
+  return data
+}
+
+export const verificar = async user => {
+  const { data } = await service.post('/verify-code', user)
+  return data
+}
+
+export const verificarUsuario = async user => {
+  const { data } = await service.post('/verify-user', user)
+  return data
+}
+
+//Para crear la reserva
+export const crearReserva = async user => {
+  const { data } = await service.post('/create-reserva', user)
+  return data
+}
+
+//Para crear llamar a los recursos y toda la info
+export const getRecursos = async user => {
+  const { data } = await service.post('/get-resource', user)
+  const regreso = JSON.parse(data.value)[0]
+  const regreso2 = Object.keys(regreso).map(key=>{
+    regreso[key]= JSON.parse(regreso[key])
+    //console.log(regreso[key])
+  })
+
+  return regreso
+}
+
+//Para crear la reserva
+export const postReserva = async user => {
+  await service.post('/create-reserva', user)
+  // const { data } = await service.post('/create-reserva', user)
+  // const regreso = JSON.parse(data.value)[0]
+  // const regreso2 = Object.keys(regreso).map(key=>{
+  //   regreso[key]= JSON.parse(regreso[key])
+  //   //console.log(regreso[key])
+  // })
+  // return regreso
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }

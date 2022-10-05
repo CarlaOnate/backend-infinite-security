@@ -4,7 +4,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: yellow;
+    /* background-color: yellow; */
 }
 
 .navbar__option {
@@ -12,7 +12,7 @@
     flex-direction: row;
     align-items: center;
     gap: 40px;
-    background-color: red;
+    /* background-color: red; */
 }
 
 .navbar__option--selected {

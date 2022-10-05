@@ -1,10 +1,10 @@
 import React from "react";
-import DatePicker2 from "./DatePicker";
+import DatePicker2 from "../components/DatePicker";
 import '../Estilos/Registrarse.css'
-import Inputmio from './InputTexto';
+import Inputmio from '../components/InputTexto';
 import { Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import CheckBox from "./CheckBox";
+import CheckBox from "../components/CheckBox";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const Registrarse = () => {
 
     const paths = {
         RegistrarseCodigo: navigate.pathname === '/RegistrarseCodigo',
-        IniciarSesion: navigate.pathname === '/IniciarSesion'
+        IniciarSesion: navigate.pathname === '/login'
     };
 
     return(
@@ -31,7 +31,7 @@ const Registrarse = () => {
                     <div className="TituloIniciarSesion">Registrarse</div>
 
                     <div>
-                        <NavLink to="/IniciarSesion" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
+                        <NavLink to="/login" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
                     </div>
 
                 </div>

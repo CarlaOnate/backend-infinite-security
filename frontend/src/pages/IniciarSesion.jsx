@@ -1,9 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import InputTexto from './InputTexto'
-import Button from "./Button";
-import '../Estilos/IniciarSesion.css'
+import InputTexto from '../components/InputTexto'
+import Button from "../components/Button";
 
 const IniciarSesion = () =>{
     
@@ -11,7 +10,7 @@ const IniciarSesion = () =>{
 
     const paths = {
         Registrarse: navigate.pathname === '/Registrarse',
-        RecuperarContra: navigate.pathname === '/RecuperarContra'
+        RecuperarContra: navigate.pathname === '/recover-password'
     }
 
     return(
@@ -46,7 +45,7 @@ const IniciarSesion = () =>{
                        <Button texto = "Iniciar Sesion" clase= "CodigoPeque"/>
                         
                         <div className="LinkContraseña">
-                            <NavLink to="/RecuperarContra" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
+                            <NavLink to="/recover-password" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
                         </div>
                     </div>
 

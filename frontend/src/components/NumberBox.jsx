@@ -2,12 +2,12 @@ import React from "react";
 
 const NumberBox = (props) =>{
   return(
-    <div className="imageBox">
-      <div className="imageBox__number">
-        {props.number}
+    <div className="CajaNumeros">
+      <div className="Caja">
+        {props.numero}
       </div>
-      <div className="imageBox__text">
-        {props.text}
+      <div className="Texto">
+        {props.texto}
       </div>
     </div>
   );

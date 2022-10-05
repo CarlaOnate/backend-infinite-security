@@ -1,8 +1,8 @@
 import React , {useState} from 'react';
 import '../Estilos/imagenes.css'
 import '../Estilos/Contra.css'
-import Cajatexto from './InputTexto'
-import Button from './Button'
+import Cajatexto from '../components/InputTexto'
+import Button from '../components/Button'
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Input } from 'antd';
@@ -15,7 +15,7 @@ const Contra = (props) => {
     const [vistas, setVistas] = useState(0)
     const navigate = useLocation()
     const paths = {
-        IniciarSesion: navigate.pathname === '/IniciarSesion' && 'navActivo',
+        IniciarSesion: navigate.pathname === '/login' && 'navActivo',
     }
 
     const Aumentar = () => {
@@ -109,7 +109,7 @@ const Contra = (props) => {
 
 
                         <button className='Codigo' onClick={() => Aumentar()}>
-                            <NavLink to="/" className={paths.home}>Actualizar</NavLink>
+                            <NavLink to="/login" className={paths.home}>Actualizar</NavLink>
                         </button>
 
                     </div>
