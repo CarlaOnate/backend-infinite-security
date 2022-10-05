@@ -82,30 +82,20 @@ export const crearReserva = async user => {
   return data
 }
 
-//Para crear llamar a los recursos y toda la info
 export const getRecursos = async user => {
   const { data } = await service.post('/get-resource', user)
   const regreso = JSON.parse(data.value)[0]
   const regreso2 = Object.keys(regreso).map(key=>{
     regreso[key]= JSON.parse(regreso[key])
-    //console.log(regreso[key])
   })
 
   return regreso
 }
 
-//Para crear la reserva
 export const postReserva = async user => {
   await service.post('/create-reserva', user)
-  // const { data } = await service.post('/create-reserva', user)
-  // const regreso = JSON.parse(data.value)[0]
-  // const regreso2 = Object.keys(regreso).map(key=>{
-  //   regreso[key]= JSON.parse(regreso[key])
-  //   //console.log(regreso[key])
-  // })
-  // return regreso
 }
 
-export const logout = async() => {
-  return await service.get('/logout')
+export const logout = async () => {
+  return await service.get('/logout-user')
 }

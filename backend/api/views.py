@@ -1,8 +1,7 @@
 from dis import code_info
 from itertools import filterfalse
 from xmlrpc.client import UNSUPPORTED_ENCODING
-from django.http import JsonResponse
-from django.shortcuts import HttpResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from .models import Usuario, Producto, Reserva, Lugar
 from django.db.models import Count, Q
 from django.db.models.functions import Coalesce
@@ -167,7 +166,14 @@ def editUserAdmin(req):
   correo = body["email"]
   rol = body["rol"]
 
-  #if (rol == 0): rol = None;
+  if 'dateOfBirth' in body.keys():
+    usuario.fechaNacimiento = body['dateOfBirth']
+  
+  if 'gender' in body.keys():
+    usuario.genero = body['gender']
+  
+  if 'work' in body.keys():
+    usuario.oficio = body['work']
 
   if 'unblockDate' in body.keys() and 'blockDate' in body.keys():
     usuario.fechaBloqueo = body['blockDate']
@@ -388,7 +394,7 @@ def deleteUser(req):
   body = json.loads(body_unicode)
 
   usuario = Usuario.objects.get(id = body["id"])
-  usuario.deletedAt = datetime.today()
+  usuario.deletedAt = timezone.make_aware(datetime.today())
   usuario.verified = 0
   usuario.save()
 
@@ -420,7 +426,9 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "genero": usuario.genero,
         "departament": usuario.departament,
         "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],
+        "oficioNumber": usuario.oficio,
         "correo": usuario.correo,
+        "fechaNacimiento": usuario.fechaNacimiento,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
         "rol": usuario.rol,
         "rolName": rolName,
@@ -610,6 +618,8 @@ def DeleteReserva(req):
 def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
+  user = Usuario.objects.get(correo=body['email'])
+  if user.deletedAt != None: return HttpResponseForbidden()
   email = body['email']
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
