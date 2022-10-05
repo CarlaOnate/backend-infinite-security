@@ -56,9 +56,9 @@ function Routing(props) {
     return (
       <>
         {/* <Route  exact path="/delete-account" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/> */}
-
         
-
+        <Route exact path="/BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/> {/*Esto no es lo que hizo carla*/}
+        
         <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
 
         <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
@@ -68,8 +68,6 @@ function Routing(props) {
 
   const renderAdminRoutes = (authProps) => (
     <>
-
-      <Route exact path="/BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
 
       <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
       <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
