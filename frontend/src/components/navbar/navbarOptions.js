@@ -3,7 +3,7 @@ export const adminOptions = [
   { text: "Estadísticas", to: "/statistics" },
   { text: "Recursos", to: "/resources" },
   { text: "Usuarios", to: "/users" },
-  { text: "Reservas", to: "/hacerReserva" },
+  { text: "Reservas", to: "/reservation" },
   { text: "Conoce el HUB", to: "/" }
 ]
 

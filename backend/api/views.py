@@ -46,7 +46,6 @@ def getHistorial(req): # historial reservas -> solo para admins
   except:
       return JsonResponse({ "error": "Campos no validos"})
 
-
 def reservaJSONResponse(reservas):
   reservaJson = []
   for reserva in reservas:
