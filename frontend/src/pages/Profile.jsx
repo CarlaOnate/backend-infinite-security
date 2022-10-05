@@ -1,34 +1,100 @@
-import { Button, DatePicker, Spin, Input, Radio } from 'antd';
-import React, { useEffect } from 'react'
+import { Button, DatePicker, Spin, Input, Radio, Alert } from 'antd';
+import React, { useEffect, useContext } from 'react'
 import { useState } from 'react';
-import { getUser } from '../services/axios/user';
+import { getUser, editUser, deleteUser, logout } from '../services/axios/user';
 import moment from 'moment';
+import { UserContext } from '../context/userContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Profile = props => {
   const { userLoggedIn, userIsGeneralAdmin, userId } = props;
 
   const [ data, setData ] = useState()
   const [ error, setError ] = useState(false)
+  const [ success, setSuccess ] = useState(false)
+  const [ editInputs, setEditInputs ] = useState({})
   const [ editValues, setEditValues ] = useState(false)
-  const [ checkbod, setCheckbox ] = useState()
+  const [ checkboxes, setCheckboxes ] = useState({})
+
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const disableInputs = !editValues;
   const showDeleteAccount = !userIsGeneralAdmin
 
   useEffect(() => {
-    getUser({ value: 11 })
+    getUser({ value: userId })
     .then(data => {
       const fechaNacimiento = moment(data.fechaNacimiento)
       setData({ ...data, fechaNacimiento })
-      setCheckbox(data.genero)
-      setCheckbox(data.oficio)
       })
-      .catch(error => setError(true))
-    }, [userId])
+      .catch(() => setError(true))
+  }, [userId])
+
+  const onClickEdit = () => setEditValues(true)
+
+  const onClickLogout = () => {
+    logout()
+      .then(data => {
+        setUser(prev => ({ ...prev, user: null, id: null, rol: null }))
+        if (data.msg) navigate('/')
+      })
+      .catch(() => setError(true))
+  }
+
+  const onClickDeleteAccount = () => {
+    deleteUser({ id: data.pk })
+      .then(async data => {
+        if (data.user) {
+          setSuccess(true)
+          await logout();
+          setUser(prev => ({ ...prev, user: null, id: null, rol: null }))
+        }
+      })
+  }
+
+  const onChangeEditValue = (value, type) => {
+    if (value.target !== null) {
+      const { target } = value;
+      return setEditInputs(prev => ({
+        ...prev,
+        [type]: target.value,
+      }))
+    }
+    setEditInputs(prev => ({
+      ...prev,
+      [type]: value
+    }))
+  }
+
+  const resetAltersStates = () => {
+    setError(false)
+    setSuccess(false)
+  }
+
+  const onSubmitEdit = () => {
+    const defaultRequest = {
+      id: data.pk,
+      name: data.nombre,
+      lastName: data.apellidoPaterno,
+      secondLastName: data.apellidoMaterno,
+      departament: data.departament,
+      email: data.correo,
+      rol: data.rol
+    }
+    editUser({ ...defaultRequest, ...editInputs })
+      .then(data => {
+        if (data.user) setSuccess(true)
+      })
+      .catch(err => {
+        setEditInputs({})
+        setError(true)
+      })
+    setEditValues(false)
+  }
 
   const loading = !data
 
-  console.log(userLoggedIn, userIsGeneralAdmin)
   console.log(data)
 
   return (
@@ -40,27 +106,23 @@ export const Profile = props => {
           <div>
             <div>
               <label>Correo:</label>
-              <Input disabled={disableInputs} value={data.correo}/>
-            </div>
-            <div>
-              <label>Password:</label>
-              <Input disabled={disableInputs} value={data.password} />
+              <Input disabled defaultValue={data.correo}/>
             </div>
             <div>
               <label>Fecha de nacimiento:</label>
-              <DatePicker defaultValue={data.fechaNacimiento}/>
+              <DatePicker disabled={disableInputs} defaultValue={data.fechaNacimiento} onChange={e => onChangeEditValue(e, 'dateOfBirth')}/>
             </div>
           </div>
           <div>
             <div>
               <label>Nombre:</label>
-              <Input disabled={disableInputs} value={data.nombre} />
-              <Input disabled={disableInputs} value={data.lastName}/>
-              <Input disabled={disableInputs} value={data.secondLastName} />
+              <Input disabled={disableInputs} defaultValue={data.nombre} onChange={e => onChangeEditValue(e, 'name')}/>
+              <Input disabled={disableInputs} defaultValue={data.apellidoPaterno} onChange={e => onChangeEditValue(e, 'lastName')}/>
+              <Input disabled={disableInputs} defaultValue={data.apellidoMaterno} onChange={e => onChangeEditValue(e, 'secondLastName')}/>
             </div>
             <div>
               <label>Género:</label>
-              <Radio.Group disabled={disableInputs} >
+              <Radio.Group defaultValue={data.genero} onChange={e => onChangeEditValue(e, 'gender')} disabled={disableInputs} >
                 <Radio value={1}>Masculino</Radio>
                 <Radio value={2}>Femenimo</Radio>
                 <Radio value={3}>Otro</Radio>
@@ -68,7 +130,7 @@ export const Profile = props => {
             </div>
             <div>
               <label>Oficio:</label>
-              <Radio.Group>
+              <Radio.Group defaultValue={data.oficioNumber} onChange={e => onChangeEditValue(e, 'work')} disabled={disableInputs}>
                 <Radio value={1}>Profesor</Radio>
                 <Radio value={2}>Estudiante</Radio>
                 <Radio value={3}>Investigador</Radio>
@@ -77,12 +139,32 @@ export const Profile = props => {
             </div>
           </div>
         </div>
-        <div>
-          <Button>Editar</Button>
-          <Button>Cerrar sesión</Button>
-          {showDeleteAccount && <Button>Eliminar cuenta</Button>}
-        </div>
+        {editValues && (<Button onClick={onSubmitEdit}>Confirmar cambios</Button>)}
+        {!editValues && (
+          <div>
+            <Button onClick={onClickEdit}>Editar</Button>
+            <Button onClick={onClickLogout}>Cerrar sesión</Button>
+            {showDeleteAccount && <Button onClick={onClickDeleteAccount}>Eliminar cuenta</Button>}
+          </div>
+        )}
         </>)}
+      {error &&
+        <Alert
+          message="Error"
+          description="Hubo un error, inténtalo mas tarde"
+          type="error"
+          showIcon
+          afterClose={resetAltersStates}
+          closable
+        />}
+      {success &&
+        <Alert
+          message="Se hizo el cambio con exito"
+          type="success"
+          showIcon
+          afterClose={resetAltersStates}
+          closable
+        />}
     </section>
   )
 }

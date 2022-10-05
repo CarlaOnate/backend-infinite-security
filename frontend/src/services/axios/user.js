@@ -56,6 +56,6 @@ export const userHistorial = async (userId) => {
   return data
 }
 
-export const logout = async() => {
-  return await service.get('/logout')
+export const logout = async () => {
+  return await service.get('/logout-user')
 }
