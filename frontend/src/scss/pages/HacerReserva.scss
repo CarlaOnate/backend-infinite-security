@@ -2,7 +2,8 @@
     display: flex;
     align-items: center;
     padding-top: 10%;
-    column-gap: 40px;
+    // column-gap: 40px;
+    justify-content: space-around;
 }
 .HacerReservaIzquierda{
     display: flex;
@@ -16,6 +17,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .HacerReservaDerecha{
@@ -33,5 +35,5 @@
 }
 
 .tituloHacerReserva{
-    color: #F9A551;
+    color: #F24726;
 }

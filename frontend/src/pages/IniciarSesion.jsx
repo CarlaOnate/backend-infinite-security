@@ -10,7 +10,7 @@ const IniciarSesion = () =>{
 
     const paths = {
         Registrarse: navigate.pathname === '/Registrarse',
-        RecuperarContra: navigate.pathname === '/RecuperarContra'
+        RecuperarContra: navigate.pathname === '/recover-password'
     }
 
     return(
@@ -45,7 +45,7 @@ const IniciarSesion = () =>{
                        <Button texto = "Iniciar Sesion" clase= "CodigoPeque"/>
                         
                         <div className="LinkContraseña">
-                            <NavLink to="/RecuperarContra" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
+                            <NavLink to="/recover-password" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
                         </div>
                     </div>
 

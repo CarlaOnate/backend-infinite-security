@@ -14,7 +14,7 @@ const Registrarse = () => {
 
     const paths = {
         RegistrarseCodigo: navigate.pathname === '/RegistrarseCodigo',
-        IniciarSesion: navigate.pathname === '/IniciarSesion'
+        IniciarSesion: navigate.pathname === '/login'
     };
 
     return(
@@ -31,7 +31,7 @@ const Registrarse = () => {
                     <div className="TituloIniciarSesion">Registrarse</div>
 
                     <div>
-                        <NavLink to="/IniciarSesion" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
+                        <NavLink to="/login" className={paths.IniciarSesion}> Iniciar Sesion </NavLink>
                     </div>
 
                 </div>

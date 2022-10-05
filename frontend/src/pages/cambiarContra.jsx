@@ -15,7 +15,7 @@ const Contra = (props) => {
     const [vistas, setVistas] = useState(0)
     const navigate = useLocation()
     const paths = {
-        IniciarSesion: navigate.pathname === '/IniciarSesion' && 'navActivo',
+        IniciarSesion: navigate.pathname === '/login' && 'navActivo',
     }
 
     const Aumentar = () => {
@@ -109,7 +109,7 @@ const Contra = (props) => {
 
 
                         <button className='Codigo' onClick={() => Aumentar()}>
-                            <NavLink to="/" className={paths.home}>Actualizar</NavLink>
+                            <NavLink to="/login" className={paths.home}>Actualizar</NavLink>
                         </button>
 
                     </div>
