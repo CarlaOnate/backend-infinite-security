@@ -1,8 +1,8 @@
 import React , {useState} from 'react';
 import '../Estilos/imagenes.css'
 import '../Estilos/Contra.css'
-import Cajatexto from './InputTexto'
-import Button from './Button'
+import Cajatexto from '../components/InputTexto'
+import Button from '../components/Button'
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Input } from 'antd';

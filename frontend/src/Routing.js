@@ -2,19 +2,19 @@ import React, { useContext } from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { UserContext } from './context/userContext'
 
-import Contra from './components/Contra';
+import Contra from './pages/cambiarContra';
 import { Navbar } from './components/navbar/Navbar';
-import Pantallaprincipal from './components/pantallaPrincipal';
-import Reservas from './components/Reservas';
-import Registrarse from './components/Registrarse';
-import IniciarSesion from './components/IniciarSesion';
-import RegistrarseCodigo from './components/RegistrarseCodigo';
+import Pantallaprincipal from './pages/pantallaPrincipal';
+import Reservas from './pages/Reserves';
+import Registrarse from './pages/Registrarse';
+import IniciarSesion from './pages/IniciarSesion';
+// import RegistrarseCodigo from './components/RegistrarseCodigo';
 
 import RecoverPasswordImage from './images/recoverPassword.png';
 
 import { Stats } from './pages/statistics/Stats';
 import { HistorialReservas } from './pages/reservesHistory/ReservesHistory';
-
+import HacerReservas from './pages/Reservas/hacerReservas'
 
 function Routing(props) {
   const { user } = useContext(UserContext);
@@ -58,6 +58,8 @@ function Routing(props) {
     <>
       <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
       <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
+      <Route  exact path="/hacer-reserva" element={<HacerReservas {...authProps} />}/>
+
     </>
   );
 

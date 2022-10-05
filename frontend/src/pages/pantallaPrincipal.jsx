@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "./Button";
-import CajaNumeros from "./NumberBox"
-import CajaImagen from "./ImageBox";
+import Button from "../components/Button";
+import CajaNumeros from "../components/NumberBox"
+import CajaImagen from "../components/ImageBox";
 import '../Estilos/Pantallaprincipal.css'
 
 const Pantallaprincipal = ()=>{
@@ -39,7 +39,7 @@ const Pantallaprincipal = ()=>{
                         Somos una organización líder en ciberseguridad.
                     </section>
                     <section className="Txt">
-                        Apoyamos a crear una sociendad más segura
+                        Apoyamos a crear una sociedad más segura
                     </section>
                 </div>
 

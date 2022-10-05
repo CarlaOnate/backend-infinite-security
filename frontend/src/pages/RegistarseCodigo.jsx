@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Button from './Button';
-import Input from './InputTexto'
+import Button from '../components/Button';
+import Input from '../components/InputTexto'
 import '../Estilos/RegistroCodigo.css'
 
 const RegistrarseCodigo = () =>{

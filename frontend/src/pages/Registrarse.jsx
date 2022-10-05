@@ -1,10 +1,10 @@
 import React from "react";
-import DatePicker2 from "./DatePicker";
+import DatePicker2 from "../components/DatePicker";
 import '../Estilos/Registrarse.css'
-import Inputmio from './InputTexto';
+import Inputmio from '../components/InputTexto';
 import { Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import CheckBox from "./CheckBox";
+import CheckBox from "../components/CheckBox";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 

@@ -1,9 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import InputTexto from './InputTexto'
-import Button from "./Button";
-import '../Estilos/IniciarSesion.css'
+import InputTexto from '../components/InputTexto'
+import Button from "../components/Button";
 
 const IniciarSesion = () =>{
     
