@@ -1,7 +1,7 @@
 import React , {useContext, useState} from "react";
 import { Navigate, NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import InputTexto from './InputTexto'
+import InputTexto from '../components/InputTexto'
 import '../Estilos/IniciarSesion.css'
 import {login} from '../services/axios/user.js'
 import {UserContext} from '../context/userContext'

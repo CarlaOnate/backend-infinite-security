@@ -36,7 +36,7 @@ function Routing(props) {
 
   const renderAuthRoutes = (authProps) => (
     <>
-      <Route path='/login' element = {<IniciarSesion {...authProps} />}/>{/*Para la pestaña de login o de inicio de sesion*/}
+      <Route exact path='/login' element = {<IniciarSesion {...authProps} />}/>{/*Para la pestaña de login o de inicio de sesion*/}
       <Route  exact path="/recover-password" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>{/*Para la pestaña de recuperar contraseña*/}
       <Route exact path="/Registrarse" element={<Registrarse {...authProps} />}/> {/*Para la pestaña de Registrarse*/}
       <Route exact path="/RegistrarseCodigo" element={<RegistrarseCodigo {...authProps} />}/> {/*para ir a registrarse donde te pide el código codigo*/}
@@ -58,9 +58,9 @@ function Routing(props) {
         
         <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
         {/* <Route  exact path="delete-account" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/> */}
-        <Route  exact path="graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
-        <Route  exact path="statistics" element={<Stats {...authProps} />}/>
-        <Route  exact path="perfil" element={<Profile {...authProps} />}/>
+        <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
+        <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
+        <Route  exact path="/perfil" element={<Profile {...authProps} />}/>
       </>
     );
   };
