@@ -1,5 +1,6 @@
 @mixin button($color) {
     background-color: $color;
+    border-radius: 4%
 }
 
 .standarButton {

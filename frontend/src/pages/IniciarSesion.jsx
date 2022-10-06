@@ -1,7 +1,6 @@
 import React , {useContext, useState} from "react";
 import { Navigate, NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
-import InputTexto from './InputTexto'
 import '../Estilos/IniciarSesion.css'
 import {login} from '../services/axios/user.js'
 import {UserContext} from '../context/userContext'
@@ -10,7 +9,7 @@ import { Button, Input } from "antd";
 const IniciarSesion = () => {
 
     const [inputs, setInputs] = useState();
-    const {user, setUser} = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     const navigates = useNavigate()
 
     const handelInputs = (e, tipo) => {
@@ -23,7 +22,6 @@ const IniciarSesion = () => {
     }
 
     const onClickLogin = () =>{
-      console.log('LOGIN')
         const loginbody = {
             "email":inputs[1],
             "password":inputs[2]
@@ -40,14 +38,11 @@ const IniciarSesion = () => {
         }).catch()
     }
 
-    //console.log(inputs)
-    //console.log(user)
-
     const navigate = useLocation()
 
     const paths = {
         Registrarse: navigate.pathname === '/Registrarse',
-        RecuperarContra: navigate.pathname === '/recover-password'
+        RecuperarContra: navigate.pathname === '/RecuperarContra'
     }
 
     return(
@@ -80,7 +75,7 @@ const IniciarSesion = () => {
                     <div className="BotonLinkfinal">
                        <Button onClick={onClickLogin} className="CodigoPeque">Iniciar sesión</Button>
                         <div className="LinkContraseña">
-                            <NavLink to="/recover-password" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
+                            <NavLink to="/RecuperarContra" className={paths.RecuperarContra}> Recuperar Contraseña </NavLink>
                         </div>
                     </div>
 

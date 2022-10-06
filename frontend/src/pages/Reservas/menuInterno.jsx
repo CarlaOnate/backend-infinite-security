@@ -37,46 +37,29 @@ const MenuInterno = (props) =>{
       }
 
       getRecursos(filtrado).then((response) => {
-        
-        console.log(response)
-        // console.log(response[categoria])
         const categoriaMostrar = [];
-
         const categoriasPrevias = Object.keys(response);
-
         categoriasPrevias.map(element => {
-
-          //console.log(element)
-          
           if(response[element].length !== 0){
-            
             const categoriaParcial = element;
-
             categoriaMostrar.push({
-
               key: element,
               label: `${categoriaParcial}`
             })
-
           }
-
         });
 
-        console.log(categoriaMostrar)
         setcategoriaMostrar(categoriaMostrar);
         setCategoría('No aplica')
         setCantidadSeleccionada('No aplica')
         setNombre('No aplica')
-        }).catch((error) =>{
-            console.log("error pantalla reserva 2.2")
         })
-
       }
       generarArreglo()
 
   }, [])
 
-  useEffect(() =>{ //Ya sirve y es para dar las cantidades
+  useEffect(() =>{ 
     const generarArreglo = (categoria) =>{
 
       const filtrado = {
@@ -85,44 +68,30 @@ const MenuInterno = (props) =>{
       }
 
       getRecursos(filtrado).then((response) => {
-        
-        // console.log(categoria)
-        // console.log(response[categoria])
         const cantidadesMostrar = [];
-
-        if(response[categoria].lenght === 0){
+        if(response[categoria].length === 0){
           setCantidades(0)
         }else{
           let contador = 0;
           const categoriaElegida = response[categoria];
           categoriaElegida.map(element => {
-
             contador = contador + 1;
-            
             cantidadesMostrar.push({
               key: `${contador}`,
               label: `${contador}`
             })
-
           });
 
           setCantidades(cantidadesMostrar);
           setCantidadSeleccionada('No aplica')
         }
-
-        //setSalonesMostrar(salonesMostrar)
-        //setSalon("No aplica")
-
-        }).catch((error) =>{
-            console.log("error pantalla reserva 2.1")
         })
-
       }
       generarArreglo(categoria)
 
   }, [categoria])
 
-  useEffect(() =>{ //Ya sirve y es para dar los nombres
+  useEffect(() =>{ 
     const generarArreglo = (categoria) =>{
 
       const filtrado = {
@@ -131,35 +100,23 @@ const MenuInterno = (props) =>{
       }
 
       getRecursos(filtrado).then((response) => {
-        //console.log(response)
         const nombreMostrar = [];
-
         const categoriaElegida = categoria
         response[categoria].map(element => {
-            // console.log("Comprobando")
-            // console.log(element.pk)
-
           nombreMostrar.push({
             key: `${element.pk}`,
             label: `${element.fields.nombre}`
           })
-
         });
-
-        setNombreMostrar(nombreMostrar);
-        setCantidadSeleccionada('No aplica')
-
-        }).catch((error) =>{
-            console.log("error pantalla reserva 2.3")
+          setNombreMostrar(nombreMostrar);
+          setCantidadSeleccionada('No aplica')
         })
-
       }
       generarArreglo(categoria)
-
   }, [categoria])
 
 
-  const menu = (//Ya sirve
+  const menu = (
     <Menu 
       selectable
       items = {categoriaMostrar}
@@ -169,8 +126,8 @@ const MenuInterno = (props) =>{
     />
   );
 
-  const menu2 = (//Ya sirve
-    <Menu 
+  const menu2 = (
+    <Menu
       selectable
       items = {cantidadesMostrar}
       onClick = {({key}) => {
@@ -192,11 +149,9 @@ const MenuInterno = (props) =>{
   props.enviado["Categoria"] = categoria;
   props.enviado["Cantidad"] = cantidadSeleccionada;
   props.enviado["Productos"] = nombre;
-  console.log(props.enviado)
 
     return(
         <div className="HacerReservaCentral">
-          
             <Dropdown overlay={menu}>
                 <Typography.Link>
                 <Space>
