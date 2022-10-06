@@ -149,7 +149,7 @@ def getUserJson(user):
 #Edit user or admin
 @csrf_exempt
 def editUserAdmin(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   usuario = Usuario.objects.get(id = body['id'])
@@ -400,7 +400,7 @@ def deleteLugar(body):
 
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
 
@@ -442,6 +442,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "fechaNacimiento": usuario.fechaNacimiento,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
         "rol": usuario.rol,
+        "verified": usuario.verified,
         "rolName": rolName,
         "estatus": calculateUserStatus(usuario)
       }
@@ -654,7 +655,7 @@ def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   user = Usuario.objects.get(correo=body['email'])
-  if user.deletedAt != None: return HttpResponseForbidden()
+  #if user.deletedAt != None: return HttpResponseForbidden()
   email = body['email']
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
