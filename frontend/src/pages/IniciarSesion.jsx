@@ -14,7 +14,6 @@ const IniciarSesion = () => {
 
     const handelInputs = (e, tipo) => {
         const {target} = e
-        //console.log(target.value)
         setInputs(prep => ({
             ...prep,
             [tipo]:target.value

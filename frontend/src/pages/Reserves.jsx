@@ -1,8 +1,18 @@
 import React from "react";
 import Button from "../components/Button";
 import '../Estilos/Reservas.css'
+import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const Reservas = () => {
+
+    const navigate = useLocation()
+
+    const paths = {
+        home: navigate.pathname === '/login'
+    };
+    
     return (
         <div>
 
@@ -17,7 +27,11 @@ const Reservas = () => {
                             Desarrolla tus habilidades al máximo
                         </section>
                         
-                        <Button texto = "Registrate y reserva ya" clase = 'CodigoPeque'/>
+                        {/* <Button texto = "Registrate y reserva ya" clase = 'CodigoPeque'/> */}
+
+                        <button className="CodigoPeque">
+                            <NavLink to="/login" className={paths.home}>Registrate y reserva ya!!</NavLink> 
+                        </button>
 
                     </div>
 
