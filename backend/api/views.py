@@ -662,9 +662,13 @@ def loginUser(req):
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) # set user in req.user
-    return JsonResponse({"user": req.user.id})
+    userDict = {
+      "user": req.user.id,
+      "rol": req.user.rol
+    }
+    return JsonResponse(userDict)
   else:
-    return JsonResponse({"error": "invalid credentials"})
+    return JsonResponse({ "error": "invalid credentials" })
 
 @csrf_exempt
 def createUser(req): # Add email validation

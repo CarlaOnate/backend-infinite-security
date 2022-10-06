@@ -4,15 +4,8 @@ import CajaNumeros from "../components/NumberBox"
 import CajaImagen from "../components/ImageBox";
 import '../Estilos/Pantallaprincipal.css'
 import { NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 const Pantallaprincipal = ()=>{
-
-    const navigate = useLocation()
-
-    const paths = {
-        home: navigate.pathname === 'reserves'
-    };
 
     return(
         <div>
@@ -27,9 +20,8 @@ const Pantallaprincipal = ()=>{
                         </section>
                         
                         <button className="CodigoPeque">
-                            <NavLink to="reserves" className={paths.home}>Descubre más</NavLink> 
+                            <NavLink to="reserves">Descubre más</NavLink>
                         </button>
-                        {/* <Button texto = "Descubre más" clase = 'CodigoPeque'/> */}
                     </div>
 
                 </section>
@@ -38,7 +30,7 @@ const Pantallaprincipal = ()=>{
             <div className="ContenedorCajaNaranja">
                 <section className="CajaNaranja">
                     <div>Porque la seguridad siempre es lo primero.</div>
-                    <div>Descubre porque somos la mejor institución en ciberseguridad.</div>      
+                    <div>Descubre porque somos la mejor institución en ciberseguridad.</div>
                 </section>
             </div>
             
