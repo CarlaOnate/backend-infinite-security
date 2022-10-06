@@ -67,9 +67,7 @@ export const AdminStats = () => {
   }, [data])
 
   const removeGraphSelection = (type) => {
-    // Remove button selection
     setSelectedButtons(prev => ({...prev, [type]: false}))
-    // Remove graph data from that button
     setSelectedGraphs(prev => ({
       ...prev,
       [type]: false,
@@ -79,12 +77,10 @@ export const AdminStats = () => {
 
   const addGraphSelection = (type) => {
     if (selectedGraphs.count < 2) {
-      // Add button selection
       setSelectedButtons(prev=> ({
         ...prev,
         [type]: true,
       }))
-      // Add graph to selection graph
       setSelectedGraphs(prev => ({
         ...prev,
         [type]: formattedData[type].data,
@@ -103,7 +99,6 @@ export const AdminStats = () => {
       <section className='stats-container'>
         <div className='stats-top'>
           <h1>Estadistica</h1>
-          <button>D</button>
         </div>
         <div>
           <div className='stats-options'>

@@ -73,17 +73,11 @@ export const UserStats = () => {
     }
   }
 
-
-
-  console.log(data) //asdfasdfa
-
-
   return (
     <>
       <section className='stats-container'>
         <div className='stats-top'>
           <h1>Estadistica</h1>
-          <button>Descargar</button>
         </div>
         <div className='stats-options'>
           {Object.keys(formattedData).map(key => (

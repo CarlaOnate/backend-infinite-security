@@ -1,5 +1,5 @@
 import React , {useContext, useState} from "react";
-import { Navigate, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import '../Estilos/IniciarSesion.css'
 import {login} from '../services/axios/user.js'
