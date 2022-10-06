@@ -5,9 +5,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space, Typography } from 'antd';
 import { getRecursos } from "../../services/axios/user";
 
-
 const PantallaReserva1 = (props) => {
-    
     const [pantallainterior, setPantallainterior] = useState(1);
     const [piso, setPiso] = useState();
     const [salon, setSalon] = useState("Select User Name");
@@ -18,19 +16,18 @@ const PantallaReserva1 = (props) => {
     };
 
     const menu = (
-        <Menu 
+        <Menu
           selectable
           defaultSelectedKeys={['3']}
           items = {props.items}
           onClick = {({key}) => {
             setPiso(props.items.find((elm) => elm.key === key).key);
           }}
-          
         />
     );
 
     const menu2 = (
-        <Menu 
+        <Menu
           selectable
           defaultSelectedKeys={['3']}
           items = {salonesMostrar}
@@ -47,7 +44,7 @@ const PantallaReserva1 = (props) => {
                 "resourceType": "Lugar",
                 "byFloor": true
             }
-    
+
             getRecursos(filtrado).then((response) => {
                 // console.log(response)
                 // console.log(props.enviado)
@@ -64,16 +61,15 @@ const PantallaReserva1 = (props) => {
                         label: `${element.fields.salon}`
                     })
                 })
-    
+
                 // console.log("Aqui")
                 // console.log(salonesMostrar)
                 setSalonesMostrar(salonesMostrar)
                 setSalon("No aplica")
-    
+
             }).catch((error) =>{
                 console.log("error pantalla reserva 1")
             })
-    
         }
         generarArreglo(piso)
 

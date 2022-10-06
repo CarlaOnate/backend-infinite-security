@@ -1,7 +1,5 @@
-from dis import code_info
-from itertools import filterfalse
-from xmlrpc.client import UNSUPPORTED_ENCODING
-from django.http import HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse, HttpResponseServerError
+from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
 from django.db.models import Count, Q
 from django.db.models.functions import Coalesce
@@ -45,7 +43,6 @@ def getHistorial(req): # historial reservas -> solo para admins
   except:
       return JsonResponse({ "error": "Campos no validos"})
 
-
 def reservaJSONResponse(reservas):
   reservaJson = []
   for reserva in reservas:
@@ -75,7 +72,7 @@ def reservaJSONResponse(reservas):
       "horaInicio": reserva.horaInicio,
       "horaFinal": reserva.horaFinal,
       "estatus": reserva.estatus,
-      "estatusName": Reserva.ESTATUS_ENUM[reserva.estatus][1],
+      "estatusName": Reserva.ESTATUS_ENUM[reserva.estatus - 1][1],
       "comentarios": reserva.comentarios,
       "fechaCreada": reserva.createdAt
     }
@@ -273,6 +270,20 @@ def getProducto(body):
       returnObj[category[1]] = serializers.serialize('json', productos)
     serializedProductos = json.dumps([returnObj])
     return JsonResponse({"value": serializedProductos})
+  elif 'byType' in body.keys():
+    returnObj = {}
+    for type in Producto.PRODUCT_TYPES:
+      productos = Producto.objects.all().filter(deletedAt=None, tipo=type[0])
+      productsList = []
+      for producto in productos:
+        productDict = {
+          "id": producto.pk,
+          "nombre": producto.nombre,
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+        }
+        productsList.append(productDict)
+      returnObj[type[1]] = productsList
+    return JsonResponse({"value": returnObj})
   else:
     productos = Producto.objects.all().filter(deletedAt=None) # return products that havent been deleted
     serializedProductos = serializers.serialize('json', productos)
@@ -496,11 +507,8 @@ def getMostReservedCategories(body):
 @csrf_exempt
 def getUserStatistic(req):
   #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  print(req)
-  print(req.body)
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  # print(body)
   if 'graph' in body.keys():
     graphType = body['graph']
     if graphType == "Producto": return getUserMostReservedProducts(body)
@@ -567,13 +575,33 @@ def getElementResponse(element, tipo):
     }
   return elementDict
 
+@csrf_exempt
+def getReserva(req):
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'value' in body.keys():
+    try:
+      valueId = int(body['value'])
+      if valueId: searchById = True
+    except:
+      searchById = False
+    if searchById: reserva = Reserva.objects.filter(pk=body['value'])[:1]
+    else: reserva = Reserva.objects.filter(codigoReserva__contains=body['value'])[:1]
+    if reserva.exists():
+      reserva = reserva[0]
+      reservaJson = reservaJSONResponse([reserva])[0]
+      return JsonResponse(reservaJson)
+    else:
+      return JsonResponse({"warning": "No se encontro esa reserva"})
+  return JsonResponse({"Recurso": "Recurso.id"})
+
+
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def createReserva(req):
   #Se le pasa el id del usuario con el metodo de Carla
   #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print(body)
   idUsuario = Usuario.objects.get(id = 1)
   codigoReserva = random.randint(1, 1000000000000)
   fechaInicio = body["FechaInicio"]
@@ -583,35 +611,42 @@ def createReserva(req):
   horaF = body["horaF"]
   idLugar = body["Salon"]
   idProducto = body["Productos"]
-
   Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-
   return JsonResponse({"Recurso": Recurso.id})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def updateReserva(req):
-  #Mandar el id de la reserva desde el front?
-  idReserva = Reserva.objects.get(id = 1)
-  #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
-  estatus = req.POST["estatus"]
-  Lugar = req.POST["Lugar"]
-  Producto = req.POST["Producto"]
-  idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
-  idReserva.idUsuario = idUsuario
-  idReserva.estatus = estatus
-  idReserva.idLugar_id = Lugar
-  idReserva.idProducto_id = Producto
-  idReserva.save()
-  return JsonResponse({"Recurso": idReserva.id})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  idReserva = Reserva.objects.filter(pk=body['reserva'])[:1]
+  if idReserva.exists():
+    idReserva = idReserva[0]
+    try:
+      estatus = int(body['estatus'])
+      lugar = Lugar.objects.get(pk=int(body['lugar']))
+      producto = Producto.objects.get(pk=int(body['producto']))
+      idUsuario = Usuario.objects.get(pk=body['usuario'])
+      idReserva.idUsuario = idUsuario
+      idReserva.estatus = estatus
+      idReserva.idLugar_id = lugar
+      idReserva.idProducto_id = producto
+      idReserva.save()
+      return JsonResponse({ "recurso": idReserva.id })
+    except:
+      return JsonResponse({ "warning": "Algun id proporcionado no es valido" })
+  else: return JsonResponse({ "warning": "Algun id proporcionado no es valido" })
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def DeleteReserva(req):
-  #Mandar el id de la reserva desde el front?
-  idReserva = Reserva.objects.get(id = req.POST["id"])
-  idReserva.estatus = 4
-  idReserva.deletedAt = datetime.today()
-  idReserva.save()
-  return JsonResponse({"Recurso": idReserva.id})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  try:
+    idReserva = Reserva.objects.get(pk=body["id"])
+    idReserva.estatus = 4
+    idReserva.save()
+    return JsonResponse({"recurso": idReserva.id})
+  except:
+    return HttpResponseServerError
 
 # Authentication
 @csrf_exempt
@@ -624,7 +659,7 @@ def loginUser(req):
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
-    login(req, authenticatedUser) #set user in req.user
+    login(req, authenticatedUser) # set user in req.user
     return JsonResponse({"user": req.user.id})
   else:
     return JsonResponse({"error": "invalid credentials"})
@@ -690,7 +725,7 @@ def verifyUser(req):
     user = req.user
     user.verified = True
     user.save()
-    return JsonResponse({"msg": "Usuario verificado exitosamente"})
+    #return JsonResponse({"msg": "Usuario verificado exitosamente"})
   else:
     return JsonResponse({"error": "No se ha iniciado proceso de cambio de verificación de correo"})
 
@@ -718,6 +753,7 @@ def verifyCode(req): # Called from front after sending code via email - email mu
   user = Usuario.objects.get(correo=email)
   if user.changePasswordCode == code:
     user.changePasswordCode = -1 # Set to -1 to flag that the code has been used
+    user.verified = True
     user.save()
     return JsonResponse({"msg": "Codigo correcto"})
   else:

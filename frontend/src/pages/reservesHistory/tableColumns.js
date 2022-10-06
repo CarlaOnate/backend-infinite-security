@@ -61,6 +61,12 @@ const renderHorario = (_, record) => {
 
 export const tableColumns = [
   {
+    title: 'ID',
+    dataIndex: ['reserva', 'id'],
+    key: 'idReserva',
+    sorter: (a, b) => a.reserva.id < b.reserva.id,
+  },
+  {
     title: 'Código Reserva',
     dataIndex: ['reserva', 'codigoReserva'],
     key: 'codigoReserva',
