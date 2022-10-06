@@ -27,7 +27,7 @@ urlpatterns = [
   path('get-reserva', views.getReserva, name='getReserva'),
   path('create-reserva', views.createReserva, name='createReserva'),
   path('update-reserva', views.updateReserva, name='updateReserva'),
-  path('Delete-reserva', views.DeleteReserva, name='DeleteReserva'),
+  path('delete-reserva', views.DeleteReserva, name='DeleteReserva'),
   path('logout-user', views.logoutUser, name='logoutUser'),
   # Email auth
   path('email', views.sendEmail, name='sendEmail'),

@@ -1,7 +1,4 @@
-from dis import code_info
-from itertools import filterfalse
-from xmlrpc.client import UNSUPPORTED_ENCODING
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseServerError
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
 from django.db.models import Count, Q
@@ -75,7 +72,7 @@ def reservaJSONResponse(reservas):
       "horaInicio": reserva.horaInicio,
       "horaFinal": reserva.horaFinal,
       "estatus": reserva.estatus,
-      "estatusName": Reserva.ESTATUS_ENUM[reserva.estatus][1],
+      "estatusName": Reserva.ESTATUS_ENUM[reserva.estatus - 1][1],
       "comentarios": reserva.comentarios,
       "fechaCreada": reserva.createdAt
     }
@@ -487,11 +484,8 @@ def getMostReservedCategories(body):
 @csrf_exempt
 def getUserStatistic(req):
   #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  print(req)
-  print(req.body)
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  # print(body)
   if 'graph' in body.keys():
     graphType = body['graph']
     if graphType == "Producto": return getUserMostReservedProducts(body)
@@ -601,28 +595,35 @@ def createReserva(req):
 def updateReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print(req.body)
-  idReserva = Reserva.objects.get(pk=body['reserva'])
-  estatus = int(body['estatus'])
-  Lugar = Lugar.objects.get(pk=int(body['lugar']))
-  Producto = Producto.objects.get(pk=int(body['producto']))
-  idUsuario = Usuario.objects.get(pk=body["usuario"])
-  idReserva.idUsuario = idUsuario
-  idReserva.estatus = Reserva.ESTATUS_ENUM[int(body['estatus']) - 1]
-  idReserva.idLugar_id = Lugar
-  idReserva.idProducto_id = Producto
-  idReserva.save()
-  return JsonResponse({"recurso": "idReserva.id"})
+  idReserva = Reserva.objects.filter(pk=body['reserva'])[:1]
+  if idReserva.exists():
+    idReserva = idReserva[0]
+    try:
+      estatus = int(body['estatus'])
+      lugar = Lugar.objects.get(pk=int(body['lugar']))
+      producto = Producto.objects.get(pk=int(body['producto']))
+      idUsuario = Usuario.objects.get(pk=body['usuario'])
+      idReserva.idUsuario = idUsuario
+      idReserva.estatus = estatus
+      idReserva.idLugar_id = lugar
+      idReserva.idProducto_id = producto
+      idReserva.save()
+      return JsonResponse({ "recurso": idReserva.id })
+    except:
+      return JsonResponse({ "warning": "Algun id proporcionado no es valido" })
+  else: return JsonResponse({ "warning": "Algun id proporcionado no es valido" })
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def DeleteReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  idReserva = Reserva.objects.get(pk=body["id"])
-  idReserva.estatus = 4
-  idReserva.deletedAt = timezone.make_aware(datetime.today())
-  idReserva.save()
-  return JsonResponse({"Recurso": idReserva.id})
+  try:
+    idReserva = Reserva.objects.get(pk=body["id"])
+    idReserva.estatus = 4
+    idReserva.save()
+    return JsonResponse({"recurso": idReserva.id})
+  except:
+    return HttpResponseServerError
 
 # Authentication
 @csrf_exempt
