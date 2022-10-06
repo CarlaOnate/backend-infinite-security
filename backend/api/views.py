@@ -482,7 +482,6 @@ def getMostReservedProducts(body):
   return JsonResponse({"value": productsResponse})
 
 def getMostReservedPlaces(body):
-  print('MOST RESERVED PLACES', body)
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -624,9 +623,6 @@ def updateReserva(req):
       lugar = Lugar.objects.get(pk=int(body['lugar'])) if body['lugar'] != None else None
       producto = Producto.objects.get(pk=int(body['producto'])) if body['producto'] != None else None
       estatus = body['estatus'] if body['estatus'] != None else 1
-
-      print('LUGAR PRODUCTO ESTATUS', lugar, producto, estatus)
-
       idUsuario = Usuario.objects.get(pk=body['usuario'])
       idReserva.idUsuario = idUsuario
       idReserva.estatus = estatus
