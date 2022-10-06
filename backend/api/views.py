@@ -558,12 +558,10 @@ def getElementResponse(element, tipo):
     }
   return elementDict
 
-
+@csrf_exempt
 def getReserva(req):
-  print(req.body)
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print(body)
   if 'value' in body.keys():
     try:
       valueId = int(body['value'])
@@ -571,10 +569,10 @@ def getReserva(req):
     except:
       searchById = False
     if searchById: reserva = Reserva.objects.filter(pk=body['value'])[:1]
-    else: reserva = Usuario.objects.filter(codigoReserva__contains=body['value'])[:1]
+    else: reserva = Reserva.objects.filter(codigoReserva__contains=body['value'])[:1]
     if reserva.exists():
       reserva = reserva[0]
-      reservaJson = reservaJSONResponse(reserva)
+      reservaJson = reservaJSONResponse([reserva])[0]
       return JsonResponse(reservaJson)
     else:
       return JsonResponse({"warning": "No se encontro esa reserva"})
@@ -587,7 +585,6 @@ def createReserva(req):
   #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  print(body)
   idUsuario = Usuario.objects.get(id = 1)
   codigoReserva = random.randint(1, 1000000000000)
   fechaInicio = body["FechaInicio"]
@@ -602,26 +599,28 @@ def createReserva(req):
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def updateReserva(req):
-  #Mandar el id de la reserva desde el front?
-  idReserva = Reserva.objects.get(id = 1)
-  #Mandar el id del lugar y el del usuario y del producto desde el front como en la semana tec?
-  estatus = req.POST["estatus"]
-  Lugar = req.POST["Lugar"]
-  Producto = req.POST["Producto"]
-  idUsuario = Usuario.objects.get(id = req.POST["Idusuario"])
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  print(req.body)
+  idReserva = Reserva.objects.get(pk=body['reserva'])
+  estatus = int(body['estatus'])
+  Lugar = Lugar.objects.get(pk=int(body['lugar']))
+  Producto = Producto.objects.get(pk=int(body['producto']))
+  idUsuario = Usuario.objects.get(pk=body["usuario"])
   idReserva.idUsuario = idUsuario
-  idReserva.estatus = estatus
+  idReserva.estatus = Reserva.ESTATUS_ENUM[int(body['estatus']) - 1]
   idReserva.idLugar_id = Lugar
   idReserva.idProducto_id = Producto
   idReserva.save()
-  return JsonResponse({"Recurso": idReserva.id})
+  return JsonResponse({"recurso": "idReserva.id"})
 
 @csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
 def DeleteReserva(req):
-  #Mandar el id de la reserva desde el front?
-  idReserva = Reserva.objects.get(id = req.POST["id"])
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  idReserva = Reserva.objects.get(pk=body["id"])
   idReserva.estatus = 4
-  idReserva.deletedAt = datetime.today()
+  idReserva.deletedAt = timezone.make_aware(datetime.today())
   idReserva.save()
   return JsonResponse({"Recurso": idReserva.id})
 
