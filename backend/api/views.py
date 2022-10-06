@@ -270,6 +270,20 @@ def getProducto(body):
       returnObj[category[1]] = serializers.serialize('json', productos)
     serializedProductos = json.dumps([returnObj])
     return JsonResponse({"value": serializedProductos})
+  elif 'byType' in body.keys():
+    returnObj = {}
+    for type in Producto.PRODUCT_TYPES:
+      productos = Producto.objects.all().filter(deletedAt=None, tipo=type[0])
+      productsList = []
+      for producto in productos:
+        productDict = {
+          "id": producto.pk,
+          "nombre": producto.nombre,
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+        }
+        productsList.append(productDict)
+      returnObj[type[1]] = productsList
+    return JsonResponse({"value": returnObj})
   else:
     productos = Producto.objects.all().filter(deletedAt=None) # return products that havent been deleted
     serializedProductos = serializers.serialize('json', productos)
