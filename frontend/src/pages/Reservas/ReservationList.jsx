@@ -17,7 +17,7 @@ export const ReservationList = props => {
   }, [])
 
   return (
-    <section>
+    <section className='TablaReservas'>
       {error &&
         <Alert
           message="Error"

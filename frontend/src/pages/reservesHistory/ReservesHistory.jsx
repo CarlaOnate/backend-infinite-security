@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from '../../components/Table';
 import { historial } from '../../services/axios/user';
 import { Dropdown } from './Dropdown';
@@ -64,7 +64,6 @@ export const HistorialReservas = props => {
     }
     fetch()
   }, [])
-
   const handleDropdownItem = ({ key }) => {
     setDropdownItem(key)
   }
