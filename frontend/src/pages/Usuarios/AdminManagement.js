@@ -1,6 +1,6 @@
 import { Input, Alert, Button} from 'antd'
 import React, { useState } from 'react'
-import { SearchData } from '../../Componentes/SearchData'
+import { SearchData } from '../../components/SearchData'
 import { getUser, editUser } from '../../services/axios/user'
 import { adminManagementTableColumn } from './userFixtures'
 import  '../../Estilos/admin-management.css'

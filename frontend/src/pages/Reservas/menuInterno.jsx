@@ -8,9 +8,9 @@ const MenuInterno = (props) =>{
   const [categoriaMostrar, setcategoriaMostrar] = useState("No aplica")
   const [categoria, setCategoría] = useState("No aplica");
   const [cantidadesMostrar, setCantidades] = useState("0");
-  const [cantidadSeleccionada, setCantidadSeleccionada] = useState('No aplica')
+  const [cantidadSeleccionada, setCantidadSeleccionada] = useState(null)
 
-  const [nombre, setNombre] = useState('No aplica')
+  const [nombre, setNombre] = useState(null)
   const [nombreMostrar, setNombreMostrar] = useState("No aplica");
 
   const items=[
@@ -50,9 +50,9 @@ const MenuInterno = (props) =>{
         });
 
         setcategoriaMostrar(categoriaMostrar);
-        setCategoría('No aplica')
-        setCantidadSeleccionada('No aplica')
-        setNombre('No aplica')
+        setCategoría(null)
+        setCantidadSeleccionada(null)
+        setNombre(null)
         })
       }
       generarArreglo()
@@ -83,7 +83,7 @@ const MenuInterno = (props) =>{
           });
 
           setCantidades(cantidadesMostrar);
-          setCantidadSeleccionada('No aplica')
+          setCantidadSeleccionada(null)
         }
         })
       }
@@ -109,7 +109,7 @@ const MenuInterno = (props) =>{
           })
         });
           setNombreMostrar(nombreMostrar);
-          setCantidadSeleccionada('No aplica')
+          setCantidadSeleccionada(null)
         })
       }
       generarArreglo(categoria)

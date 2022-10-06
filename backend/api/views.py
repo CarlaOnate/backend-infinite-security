@@ -1,14 +1,12 @@
-from django.http import JsonResponse, HttpResponseServerError
+from django.http import JsonResponse, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
-from django.db.models import Count, Q
-from django.db.models.functions import Coalesce
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
 from datetime import datetime, timedelta
 from django.utils import timezone
 import random
@@ -23,19 +21,20 @@ def testingAPI(req):
 # Historial reservas
   # Admin
 @csrf_exempt
-def getHistorial(req): # historial reservas -> solo para admins
+def getHistorial(req):
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   try:
-    if req.body != None:
+    if bool(req.body):
       body_unicode = req.body.decode('utf-8')
       body = json.loads(body_unicode)
-      column = body["column"]
-      value = body["value"]
-      columnText = column + '__contains'
-      reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
-      #Format response
-      serializedReserva =  reservaJSONResponse(reservas)
-      return JsonResponse({"values": serializedReserva}, safe=False)
+      if 'column' in body.keys() and 'value' in body.keys():
+        column = body["column"]
+        value = body["value"]
+        columnText = column + '__contains'
+        reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+        #Format response
+        serializedReserva =  reservaJSONResponse(reservas)
+        return JsonResponse({"values": serializedReserva}, safe=False)
     else:
       reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
       serializedReserva = reservaJSONResponse(reservas)
@@ -427,7 +426,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if usuario.exists():
       usuario = usuario[0]
       rolName = 'Usuario'
-      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol][1]
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol-1][1]#Aqui se le resta 1
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
@@ -469,6 +468,7 @@ def getGeneralStatistic(req):
     if graphType == "Producto": return getMostReservedProducts(body)
     elif graphType == "Lugar": return getMostReservedPlaces(body)
     elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+    else: return HttpResponseBadRequest
   else: return JsonResponse({"error": "Graph type not valid"})
 
 def getMostReservedProducts(body):
@@ -483,6 +483,7 @@ def getMostReservedProducts(body):
   return JsonResponse({"value": productsResponse})
 
 def getMostReservedPlaces(body):
+  print('MOST RESERVED PLACES', body)
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -597,13 +598,11 @@ def getReserva(req):
   return JsonResponse({"Recurso": "Recurso.id"})
 
 
-@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+@csrf_exempt
 def createReserva(req):
-  #Se le pasa el id del usuario con el metodo de Carla
-  #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  idUsuario = Usuario.objects.get(id = 1)
+  idUsuario = Usuario.objects.get(pk=req.user.id)
   codigoReserva = random.randint(1, 1000000000000)
   fechaInicio = body["FechaInicio"]
   fechaFinal = body["fechaFinal"]
@@ -615,7 +614,7 @@ def createReserva(req):
   Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
   return JsonResponse({"Recurso": Recurso.id})
 
-@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+@csrf_exempt
 def updateReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
@@ -623,14 +622,17 @@ def updateReserva(req):
   if idReserva.exists():
     idReserva = idReserva[0]
     try:
-      estatus = int(body['estatus'])
-      lugar = Lugar.objects.get(pk=int(body['lugar']))
-      producto = Producto.objects.get(pk=int(body['producto']))
+      lugar = Lugar.objects.get(pk=int(body['lugar'])) if body['lugar'] != None else None
+      producto = Producto.objects.get(pk=int(body['producto'])) if body['producto'] != None else None
+      estatus = body['estatus'] if body['estatus'] != None else 1
+
+      print('LUGAR PRODUCTO ESTATUS', lugar, producto, estatus)
+
       idUsuario = Usuario.objects.get(pk=body['usuario'])
       idReserva.idUsuario = idUsuario
       idReserva.estatus = estatus
-      idReserva.idLugar_id = lugar
-      idReserva.idProducto_id = producto
+      idReserva.idLugar = lugar
+      idReserva.idProducto = producto
       idReserva.save()
       return JsonResponse({ "recurso": idReserva.id })
     except:
@@ -661,9 +663,13 @@ def loginUser(req):
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) # set user in req.user
-    return JsonResponse({"user": req.user.id})
+    userDict = {
+      "user": req.user.id,
+      "rol": req.user.rol
+    }
+    return JsonResponse(userDict)
   else:
-    return JsonResponse({"error": "invalid credentials"})
+    return JsonResponse({ "error": "invalid credentials" })
 
 @csrf_exempt
 def createUser(req): # Add email validation

@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from '../../components/Table';
-import { UserContext } from '../../context/userContext';
 import { historial } from '../../services/axios/user';
 import { Dropdown } from './Dropdown';
 import { tableColumns } from './tableColumns';
-import { Input } from 'antd';
+import { Input, Alert } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
 import '../../Estilos/historial-reservas.css';
@@ -49,12 +48,9 @@ const dropdownItems = [
 ]
 
 export const HistorialReservas = props => {
-  const { history } = props;
-  const { user } = useContext(UserContext)
   const [ data, setData ] = useState()
+  const [ error, setError ] = useState(false)
   const [ dropdownItem, setDropdownItem ] = useState()
-
-  if (user.rol) history.push('/login')
 
   const fetchData = filter => {
     historial(filter).then(data => {
@@ -68,7 +64,6 @@ export const HistorialReservas = props => {
     }
     fetch()
   }, [])
-
   const handleDropdownItem = ({ key }) => {
     setDropdownItem(key)
   }
@@ -82,6 +77,10 @@ export const HistorialReservas = props => {
       filterObj = { column: dropdownItems[dropdownItem].dbname, value }
     }
     fetchData(filterObj)
+  }
+
+  const resetAltersStates = () => {
+    setError(false)
   }
 
   return (
@@ -102,6 +101,17 @@ export const HistorialReservas = props => {
           />
         </div>
       </div>
+      {error &&
+        <div>
+          <Alert
+            message="Error"
+            description="Hubo un error, inténtalo mas tarde"
+            type="error"
+            showIcon
+            afterClose={resetAltersStates}
+            closable/>
+        </div>
+      }
       <div className='full-table'>
         <Table
           columns={tableColumns}

@@ -36,7 +36,7 @@ export const AdminStats = () => {
           }
           if (key === 'lugares') {
             columnData = ["Lugares", "Cantidad"]
-            return columns.push([`${el.recurso.piso}, ${el.recruso.salon}`, el.count])
+            return columns.push([`Piso ${el.recurso.piso}, Salon ${el.recurso.salon}`, el.count])
           }
           if (key === 'categorias') {
             columnData = ["Categorias", "Cantidad"]
@@ -60,7 +60,7 @@ export const AdminStats = () => {
 
     if (Object.keys(data).length === 0) {
       getAdminStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
-      getAdminStats({ graph: 'Lugar ', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
+      getAdminStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
       getAdminStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
     }
     formatGraphObject()

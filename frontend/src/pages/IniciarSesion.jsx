@@ -29,9 +29,8 @@ const IniciarSesion = () => {
         login(loginbody).then(data => {
             setUser(prev =>({
                 ...prev,
-                id: data.id,
-                rol: data.rol,
-                user: data,
+                id: data.user,
+                rol: data.rol
             }))
             navigates('/');
         }).catch()
