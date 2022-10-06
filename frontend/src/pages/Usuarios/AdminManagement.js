@@ -189,8 +189,7 @@ export const AdminManagement = () => {
       afterClose={resetAltersStates}
       showIcon
       closable
-    />
-    )
+    />)
   }
 
   return (

@@ -13,7 +13,7 @@ export const ReservationList = props => {
     .then(data => {
       setData(data.values)
     })
-    .catch(err => setError(true))
+    .catch(() => setError(true))
   }, [])
 
   return (

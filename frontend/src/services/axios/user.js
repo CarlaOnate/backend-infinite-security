@@ -106,6 +106,21 @@ export const postReserva = async user => {
   // return regreso
 }
 
+export const getReserva = async (reserva) => {
+  const { data } = await service.post('/get-reserva', reserva)
+  return data
+}
+
+export const updateReserva = async (reserva) => {
+  const { data } = await service.post('/update-reserva', reserva)
+  return data
+}
+
+export const deleteReserva = async (reserva) => {
+  const { data } = await service.post('/delete-reserva', reserva)
+  return data
+}
+
 export const logout = async() => {
   return await service.get('/logout')
 }
