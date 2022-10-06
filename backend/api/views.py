@@ -160,7 +160,9 @@ def editUserAdmin(req):
   apellido2 = body["secondLastName"]
   departamento = body["departament"]
   correo = body["email"]
-  rol = body["rol"]
+
+  if 'rol' in body.keys():
+    rol = body["rol"]
 
   if 'dateOfBirth' in body.keys():
     usuario.fechaNacimiento = body['dateOfBirth']
@@ -297,13 +299,17 @@ def getLugar(body):
     returnObj = {}
     for piso in Lugar.PISOS_ENUM:
       lugares = Lugar.objects.all().filter(deletedAt=None, piso=piso[0]) # return lugares that havent been deleted
-      returnObj[piso[0]] = serializers.serialize('json', lugares)
-    serializedLugares = json.dumps([returnObj])
-    return JsonResponse({"value": serializedLugares})
+      lugaresList = []
+      for lugar in lugares:
+        lugaresList.append(getElementResponse(lugar, 'Lugar'))
+        returnObj[piso[0]] = lugaresList
+    return JsonResponse({"value": returnObj})
   else:
-    lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
-    serializedLugares = serializers.serialize('json', lugares)
-    return JsonResponse({"value": serializedLugares})
+    lugares = Lugar.objects.all().filter(deletedAt=None)
+    lugaresList = []
+    for lugar in lugares:
+      lugaresList.append(getElementResponse(lugar, 'Lugar'))
+    return JsonResponse({"value": lugaresList}, safe=False)
 
 
 @csrf_exempt
@@ -426,7 +432,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if usuario.exists():
       usuario = usuario[0]
       rolName = 'Usuario'
-      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol-1][1]#Aqui se le resta 1
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol - 1][1]
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
@@ -507,18 +513,20 @@ def getMostReservedCategories(body):
 # Estadisticas de 1 solo user
 @csrf_exempt
 def getUserStatistic(req):
-  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'graph' in body.keys():
     graphType = body['graph']
-    if graphType == "Producto": return getUserMostReservedProducts(body)
-    elif graphType == "Lugar": return getUserMostReservedPlace(body)
-    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body)
+
+    if 'id' in body.keys(): userId = body['id']
+    else: userId = req.user.id
+
+    if graphType == "Producto": return getUserMostReservedProducts(body, userId)
+    elif graphType == "Lugar": return getUserMostReservedPlace(body, userId)
+    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body, userId)
   else: return JsonResponse({"error": "Graph type not valid"})
 
-def getUserMostReservedProducts(body):
-  user = body['id']
+def getUserMostReservedProducts(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -529,8 +537,7 @@ def getUserMostReservedProducts(body):
     productsResponse.append({"recurso": serializedPlace, "count": product.count})
   return JsonResponse({ "value": productsResponse, "graphCols": ["Producto",  "Cantidad"] })
 
-def getUserMostReservedPlace(body):
-  user = body['id']
+def getUserMostReservedPlace(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -541,8 +548,7 @@ def getUserMostReservedPlace(body):
     placesResponse.append({"recurso": serializedPlace, "count": place.count})
   return JsonResponse({ "value": placesResponse, "graphCols": ["Lugar",  "Cantidad"] })
 
-def getUserMostReservedCategories(body):
-  user = body['id']
+def getUserMostReservedCategories(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))

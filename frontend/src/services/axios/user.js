@@ -23,6 +23,7 @@ export const historial = async (filter) => {
 
 export const getAdminStats = async (filter) => {
   const { data } = await service.post('/estadistica-general', filter)
+  console.log('user axios DATA', data)
   return data
 }
 
