@@ -507,18 +507,20 @@ def getMostReservedCategories(body):
 # Estadisticas de 1 solo user
 @csrf_exempt
 def getUserStatistic(req):
-  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'graph' in body.keys():
     graphType = body['graph']
-    if graphType == "Producto": return getUserMostReservedProducts(body)
-    elif graphType == "Lugar": return getUserMostReservedPlace(body)
-    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body)
+
+    if 'id' in body.keys(): userId = body['id']
+    else: userId = req.user.id
+
+    if graphType == "Producto": return getUserMostReservedProducts(body, userId)
+    elif graphType == "Lugar": return getUserMostReservedPlace(body, userId)
+    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body, userId)
   else: return JsonResponse({"error": "Graph type not valid"})
 
-def getUserMostReservedProducts(body):
-  user = body['id']
+def getUserMostReservedProducts(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -529,8 +531,7 @@ def getUserMostReservedProducts(body):
     productsResponse.append({"recurso": serializedPlace, "count": product.count})
   return JsonResponse({ "value": productsResponse, "graphCols": ["Producto",  "Cantidad"] })
 
-def getUserMostReservedPlace(body):
-  user = body['id']
+def getUserMostReservedPlace(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -541,8 +542,7 @@ def getUserMostReservedPlace(body):
     placesResponse.append({"recurso": serializedPlace, "count": place.count})
   return JsonResponse({ "value": placesResponse, "graphCols": ["Lugar",  "Cantidad"] })
 
-def getUserMostReservedCategories(body):
-  user = body['id']
+def getUserMostReservedCategories(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))

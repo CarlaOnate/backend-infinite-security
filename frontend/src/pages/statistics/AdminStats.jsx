@@ -29,7 +29,7 @@ export const AdminStats = () => {
       Object.keys(data).forEach(key => {
         const columns = []
         let columnData
-        data[key].forEach(el => {
+        data && data[key].forEach(el => {
           if (key === 'productos') {
             columnData = ["Productos", "Cantidad"]
             return columns.push([el.recurso.nombre, el.count])

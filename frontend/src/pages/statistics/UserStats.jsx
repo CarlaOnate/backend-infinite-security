@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from 'antd';
 import { Chart } from "react-google-charts";
-import { getAdminStats } from '../../services/axios/user';
+import { userStats } from '../../services/axios/user';
 
 const dataDefaultTexts = {
   lugares: {
@@ -28,7 +28,7 @@ export const UserStats = () => {
       data && Object.keys(data).forEach(key => {
         const columns = []
         let columnData
-        data[key].forEach(el => {
+        data && data[key].forEach(el => {
           if (key === 'productos') {
             columnData = ["Productos", "Cantidad"]
             return columns.push([el.recurso.nombre, el.count])
@@ -58,9 +58,9 @@ export const UserStats = () => {
     }
 
     if (Object.keys(data).length === 0) {
-      getAdminStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
-      getAdminStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
-      getAdminStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
+      userStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
+      userStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
+      userStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
     }
     formatGraphObject()
   }, [data])
