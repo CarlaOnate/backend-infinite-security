@@ -416,7 +416,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if usuario.exists():
       usuario = usuario[0]
       rolName = 'Usuario'
-      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol][1]
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol-1][1]#Aqui se le resta 1
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
