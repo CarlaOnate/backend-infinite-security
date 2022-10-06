@@ -621,14 +621,17 @@ def updateReserva(req):
   if idReserva.exists():
     idReserva = idReserva[0]
     try:
-      estatus = int(body['estatus'])
-      lugar = Lugar.objects.get(pk=int(body['lugar']))
-      producto = Producto.objects.get(pk=int(body['producto']))
+      lugar = Lugar.objects.get(pk=int(body['lugar'])) if body['lugar'] != None else None
+      producto = Producto.objects.get(pk=int(body['producto'])) if body['producto'] != None else None
+      estatus = body['estatus'] if body['estatus'] != None else 1
+
+      print('LUGAR PRODUCTO ESTATUS', lugar, producto, estatus)
+
       idUsuario = Usuario.objects.get(pk=body['usuario'])
       idReserva.idUsuario = idUsuario
       idReserva.estatus = estatus
-      idReserva.idLugar_id = lugar
-      idReserva.idProducto_id = producto
+      idReserva.idLugar = lugar
+      idReserva.idProducto = producto
       idReserva.save()
       return JsonResponse({ "recurso": idReserva.id })
     except:

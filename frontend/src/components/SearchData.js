@@ -11,7 +11,7 @@ export const SearchData = props => {
       <div className='search-data__search-bar'>
         <label>{title}</label>
         <Search
-          placeholder="Nombre, ID de usuario"
+          placeholder={title}
           enterButton="Buscar"
           size="medium"
           onSearch={onSearch}
