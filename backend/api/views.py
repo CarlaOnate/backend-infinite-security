@@ -160,7 +160,9 @@ def editUserAdmin(req):
   apellido2 = body["secondLastName"]
   departamento = body["departament"]
   correo = body["email"]
-  rol = body["rol"]
+
+  if 'rol' in body.keys():
+    rol = body["rol"]
 
   if 'dateOfBirth' in body.keys():
     usuario.fechaNacimiento = body['dateOfBirth']
@@ -297,13 +299,17 @@ def getLugar(body):
     returnObj = {}
     for piso in Lugar.PISOS_ENUM:
       lugares = Lugar.objects.all().filter(deletedAt=None, piso=piso[0]) # return lugares that havent been deleted
-      returnObj[piso[0]] = serializers.serialize('json', lugares)
-    serializedLugares = json.dumps([returnObj])
-    return JsonResponse({"value": serializedLugares})
+      lugaresList = []
+      for lugar in lugares:
+        lugaresList.append(getElementResponse(lugar, 'Lugar'))
+        returnObj[piso[0]] = lugaresList
+    return JsonResponse({"value": returnObj})
   else:
-    lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
-    serializedLugares = serializers.serialize('json', lugares)
-    return JsonResponse({"value": serializedLugares})
+    lugares = Lugar.objects.all().filter(deletedAt=None)
+    lugaresList = []
+    for lugar in lugares:
+      lugaresList.append(getElementResponse(lugar, 'Lugar'))
+    return JsonResponse({"value": lugaresList}, safe=False)
 
 
 @csrf_exempt
@@ -426,7 +432,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if usuario.exists():
       usuario = usuario[0]
       rolName = 'Usuario'
-      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol-1][1]#Aqui se le resta 1
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol - 1][1]
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
