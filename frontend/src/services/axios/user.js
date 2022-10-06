@@ -7,9 +7,9 @@ const service = axios.create({ baseURL, headers: {
 withCredentials: true })
 
 // Add here user api endpoints
-export const login = async user => {
-  const fixedData = { email: "1234", password: "1234" }
-  return await service.post('/login-user', fixedData)
+export const login = async (user) => {
+  //const fixedData = { email: "1234", password: "1234"  //Se cambia por los datos dinamicos
+  return await service.post('/login-user', user)
 }
 
 export const signup = async user => {

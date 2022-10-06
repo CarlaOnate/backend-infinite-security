@@ -55,3 +55,17 @@
     font-size: medium;
     padding: 10px;
 }
+.FechaProfile{
+    display: flex;
+    /* justify-content: space-between; */
+    gap: 1rem;
+}
+
+.CorreoProfile{
+    padding-bottom: 2rem;
+}
+.TituloCajaProfile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

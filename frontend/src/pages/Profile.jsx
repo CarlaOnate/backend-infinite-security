@@ -95,29 +95,31 @@ export const Profile = props => {
   const loading = !data
 
   return (
-    <section>
+    <section className='SeccionGlobalProfile'>
       {loading && <Spin />}
       {!loading && (<>
-        <div><h1>Mi perfil</h1></div>
-        <div>
+        <div className='TituloCajaProfile'><h1 className='TituloProfile'>Mi perfil</h1></div>
+        <div className='SeccionContenidoProfile'>
           <div>
-            <div>
+            <div className='CorreoProfile'>
               <label>Correo:</label>
               <Input disabled defaultValue={data.correo}/>
             </div>
-            <div>
+            <div className='FechaProfile'>
               <label>Fecha de nacimiento:</label>
               <DatePicker disabled={disableInputs} defaultValue={data.fechaNacimiento} onChange={e => onChangeEditValue(e, 'dateOfBirth')}/>
             </div>
           </div>
+
           <div>
-            <div>
+            <div className='NombresProfile'>
               <label>Nombre:</label>
               <Input disabled={disableInputs} defaultValue={data.nombre} onChange={e => onChangeEditValue(e, 'name')}/>
               <Input disabled={disableInputs} defaultValue={data.apellidoPaterno} onChange={e => onChangeEditValue(e, 'lastName')}/>
               <Input disabled={disableInputs} defaultValue={data.apellidoMaterno} onChange={e => onChangeEditValue(e, 'secondLastName')}/>
             </div>
-            <div>
+            
+            <div className='GeneroProfile'>
               <label>Género:</label>
               <Radio.Group defaultValue={data.genero} onChange={e => onChangeEditValue(e, 'gender')} disabled={disableInputs} >
                 <Radio value={1}>Masculino</Radio>
@@ -138,9 +140,11 @@ export const Profile = props => {
         </div>
         {editValues && (<Button onClick={onSubmitEdit}>Confirmar cambios</Button>)}
         {!editValues && (
-          <div>
-            <Button onClick={onClickEdit}>Editar</Button>
-            <Button onClick={onClickLogout}>Cerrar sesión</Button>
+          <div className='BotonesProfile'>
+
+            <Button className = 'CodigoPeque' onClick={onClickEdit}>Editar</Button>
+
+            <Button className = 'Codigoverde' onClick={onClickLogout}>Cerrar sesión</Button>
             {showDeleteAccount &&
               <Popconfirm
                 title="¿Estas seguro?"
