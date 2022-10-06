@@ -25,7 +25,7 @@ export const UserStats = () => {
 
   useEffect(() => {
     const formatGraphObject = () => {
-      Object.keys(data).forEach(key => {
+      data && Object.keys(data).forEach(key => {
         const columns = []
         let columnData
         data[key].forEach(el => {
@@ -35,7 +35,7 @@ export const UserStats = () => {
           }
           if (key === 'lugares') {
             columnData = ["Lugares", "Cantidad"]
-            return columns.push([`${el.recurso.piso}, ${el.recruso.salon}`, el.count])
+            return columns.push([`${el.recurso.piso}, ${el.recurso.salon}`, el.count])
           }
           if (key === 'categorias') {
             columnData = ["Categorias", "Cantidad"]
@@ -59,7 +59,7 @@ export const UserStats = () => {
 
     if (Object.keys(data).length === 0) {
       getAdminStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
-      getAdminStats({ graph: 'Lugar ', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
+      getAdminStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
       getAdminStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
     }
     formatGraphObject()
@@ -72,6 +72,11 @@ export const UserStats = () => {
       setSelectedButton(type)
     }
   }
+
+
+
+  console.log(data) //asdfasdfa
+
 
   return (
     <>
