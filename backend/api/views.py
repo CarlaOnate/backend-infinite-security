@@ -125,7 +125,7 @@ def getUsers(req):
 
 def getUserJson(user):
   rolName = 'Usuario'
-  if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol][1]
+  if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol - 1][1]
   usuarioDict = {
     "pk": user.id,
     "username": user.username,
