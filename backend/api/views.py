@@ -85,7 +85,7 @@ def reservaJSONResponse(reservas):
     else:
       userDict = {
         "nombre": reserva.idUsuario.username,
-        "rol": Usuario.ROL_ENUM[reserva.idUsuario.rol][1],
+        "rol": Usuario.ROL_ENUM[reserva.idUsuario.rol-1][1],
         "id": reserva.idUsuario.pk
       }
     reservaJson.append({"reserva": reservaDict, "usuario": userDict, "producto": productoDict, "lugar": lugarDict})
