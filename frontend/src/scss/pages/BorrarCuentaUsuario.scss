@@ -1,0 +1,17 @@
+.BorrarCuentaUserGeneral{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 40px;
+    padding-top: 5%;
+}
+.TituloBorrarCuentaUser, .SubtituloBorrarCuentaUser{
+    color: rgb(223, 89, 53);
+}
+.Botones{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 40px;
+}

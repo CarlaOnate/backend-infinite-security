@@ -1,10 +1,19 @@
 import React from "react";
-import Button from "./Button";
-import CajaNumeros from "./NumberBox"
-import CajaImagen from "./ImageBox";
+import Button from "../components/Button";
+import CajaNumeros from "../components/NumberBox"
+import CajaImagen from "../components/ImageBox";
 import '../Estilos/Pantallaprincipal.css'
+import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Pantallaprincipal = ()=>{
+
+    const navigate = useLocation()
+
+    const paths = {
+        home: navigate.pathname === 'reserves'
+    };
+
     return(
         <div>
             <div className="PrimeraSeccion">
@@ -17,7 +26,10 @@ const Pantallaprincipal = ()=>{
                             Primera intitución especializada en la ciberseguridad mexicana
                         </section>
                         
-                        <Button texto = "Descubre más" clase = 'CodigoPeque'/>
+                        <button className="CodigoPeque">
+                            <NavLink to="reserves" className={paths.home}>Descubre más</NavLink> 
+                        </button>
+                        {/* <Button texto = "Descubre más" clase = 'CodigoPeque'/> */}
                     </div>
 
                 </section>
@@ -39,7 +51,7 @@ const Pantallaprincipal = ()=>{
                         Somos una organización líder en ciberseguridad.
                     </section>
                     <section className="Txt">
-                        Apoyamos a crear una sociendad más segura
+                        Apoyamos a crear una sociedad más segura
                     </section>
                 </div>
 

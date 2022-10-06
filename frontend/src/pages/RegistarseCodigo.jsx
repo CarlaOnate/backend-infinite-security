@@ -1,8 +1,8 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import Button from './Button';
-import Input from './InputTexto'
+import Button from '../components/Button';
+import Input from '../components/InputTexto'
 import '../Estilos/RegistroCodigo.css'
 
 const RegistrarseCodigo = () =>{
@@ -11,7 +11,7 @@ const RegistrarseCodigo = () =>{
 
     const paths = {
         home: navigate.pathname === '/',
-        IniciarSesion: navigate.pathname === '/IniciarSesion'
+        IniciarSesion: navigate.pathname === '/login'
     };
 
     return(
@@ -31,7 +31,7 @@ const RegistrarseCodigo = () =>{
                     </div>
 
                     <div className="Link1RegistroCodigo">
-                        <NavLink to="/IniciarSesion" className={paths.IniciarSesion}>Iniciar Sesion</NavLink>
+                        <NavLink to="/login" className={paths.IniciarSesion}>Iniciar Sesion</NavLink>
                     </div>
 
                 </div>

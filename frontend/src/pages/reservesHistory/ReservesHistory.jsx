@@ -7,8 +7,11 @@ import { tableColumns } from './tableColumns';
 import { Input } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
-import '../../Estilos/historial-reservas.css';
+import { NavLink } from "react-router-dom";
+import { useLocation, useNavigation } from "react-router-dom";
 const { Search } = Input;
+
+
 
 const dropdownItems = [
   {
@@ -49,12 +52,13 @@ const dropdownItems = [
 ]
 
 export const HistorialReservas = props => {
-  const { history } = props;
+  //const navigate = useNavigation()
+
   const { user } = useContext(UserContext)
   const [ data, setData ] = useState()
   const [ dropdownItem, setDropdownItem ] = useState()
 
-  if (user.rol) history.push('/login')
+  // if (user.rol) navigate('/login')
 
   const fetchData = filter => {
     historial(filter).then(data => {

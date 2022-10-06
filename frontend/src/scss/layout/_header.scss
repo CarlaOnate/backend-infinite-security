@@ -1,0 +1,10 @@
+.header {
+    @include flexbox;
+}
+
+.header__logo {
+    width: 35rem;
+    height: auto;
+    padding: 0.5rem;
+}
+

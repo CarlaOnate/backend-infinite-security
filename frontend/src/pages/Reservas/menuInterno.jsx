@@ -1,0 +1,188 @@
+import React, {useState, useEffect} from "react";
+import { DownOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Space, Typography } from 'antd';
+import { getRecursos } from "../../services/axios/user";
+
+const MenuInterno = (props) =>{
+  
+  const [categoriaMostrar, setcategoriaMostrar] = useState("No aplica")
+  const [categoria, setCategoría] = useState("No aplica");
+  const [cantidadesMostrar, setCantidades] = useState("0");
+  const [cantidadSeleccionada, setCantidadSeleccionada] = useState('No aplica')
+
+  const [nombre, setNombre] = useState('No aplica')
+  const [nombreMostrar, setNombreMostrar] = useState("No aplica");
+
+  const items=[
+    {
+      key: '1',
+      label: 'Item 1',
+    },
+    {
+      key: '2',
+      label: 'Item 2',
+    },
+    {
+      key: '3',
+      label: 'Item 3',
+    },
+  ]
+
+  useEffect(() =>{//Ya sirve y es para desplegar las categorias
+    const generarArreglo = (categoria) =>{
+
+      const filtrado = {
+        "resourceType": "Producto",
+        "byCategory":true
+      }
+
+      getRecursos(filtrado).then((response) => {
+        const categoriaMostrar = [];
+        const categoriasPrevias = Object.keys(response);
+        categoriasPrevias.map(element => {
+          if(response[element].length !== 0){
+            const categoriaParcial = element;
+            categoriaMostrar.push({
+              key: element,
+              label: `${categoriaParcial}`
+            })
+          }
+        });
+
+        setcategoriaMostrar(categoriaMostrar);
+        setCategoría('No aplica')
+        setCantidadSeleccionada('No aplica')
+        setNombre('No aplica')
+        })
+      }
+      generarArreglo()
+
+  }, [])
+
+  useEffect(() =>{ 
+    const generarArreglo = (categoria) =>{
+
+      const filtrado = {
+        "resourceType": "Producto",
+        "byCategory":true
+      }
+
+      getRecursos(filtrado).then((response) => {
+        const cantidadesMostrar = [];
+        if(response[categoria].length === 0){
+          setCantidades(0)
+        }else{
+          let contador = 0;
+          const categoriaElegida = response[categoria];
+          categoriaElegida.map(element => {
+            contador = contador + 1;
+            cantidadesMostrar.push({
+              key: `${contador}`,
+              label: `${contador}`
+            })
+          });
+
+          setCantidades(cantidadesMostrar);
+          setCantidadSeleccionada('No aplica')
+        }
+        })
+      }
+      generarArreglo(categoria)
+
+  }, [categoria])
+
+  useEffect(() =>{ 
+    const generarArreglo = (categoria) =>{
+
+      const filtrado = {
+        "resourceType": "Producto",
+        "byCategory":true
+      }
+
+      getRecursos(filtrado).then((response) => {
+        const nombreMostrar = [];
+        const categoriaElegida = categoria
+        response[categoria].map(element => {
+          nombreMostrar.push({
+            key: `${element.pk}`,
+            label: `${element.fields.nombre}`
+          })
+        });
+          setNombreMostrar(nombreMostrar);
+          setCantidadSeleccionada('No aplica')
+        })
+      }
+      generarArreglo(categoria)
+  }, [categoria])
+
+
+  const menu = (
+    <Menu 
+      selectable
+      items = {categoriaMostrar}
+      onClick = {({key}) => {
+        setCategoría(categoriaMostrar.find((elm) => elm.key === key).key);
+      }}
+    />
+  );
+
+  const menu2 = (
+    <Menu
+      selectable
+      items = {cantidadesMostrar}
+      onClick = {({key}) => {
+        setCantidadSeleccionada(cantidadesMostrar.find((elm) => elm.key === key).key);
+      }}
+    />
+  );
+
+  const menu3 = (
+    <Menu
+      selectable
+      items = {nombreMostrar}
+      onClick = {({key}) => {
+        setNombre(nombreMostrar.find((elm) => elm.key === key).key);
+      }}
+    />
+  );
+
+  props.enviado["Categoria"] = categoria;
+  props.enviado["Cantidad"] = cantidadSeleccionada;
+  props.enviado["Productos"] = nombre;
+
+    return(
+        <div className="HacerReservaCentral">
+            <Dropdown overlay={menu}>
+                <Typography.Link>
+                <Space>
+                    Categoría de Productos
+                    <DownOutlined />
+                </Space>
+                </Typography.Link>
+            </Dropdown>
+
+
+            <Dropdown overlay={menu2}>
+                <Typography.Link>
+                <Space>
+                    Cantidad
+                    <DownOutlined />
+                </Space>
+                </Typography.Link>
+            </Dropdown>
+
+
+            <Dropdown overlay={menu3}>
+                <Typography.Link>
+                <Space>
+                    Productos y/o Licencias
+                    <DownOutlined />
+                </Space>
+                </Typography.Link>
+            </Dropdown>
+
+        </div>
+    )
+}
+
+export default MenuInterno;

@@ -1,9 +1,8 @@
 import React from 'react';
 import { userOptions, adminOptions, notLoggedOptions } from './navbarOptions';
-import { NavLink, useLocation } from 'react-router-dom';
-import '../../styles/navbar.css';
+import { NavLink } from 'react-router-dom';
+
 export const Navbar = (props) => {
-  const { pathName } = useLocation();
   const { userLoggedIn, userIsAdmin } = props;
   const showUserOptions = userLoggedIn && !userIsAdmin;
   const showNotLoggedInOptions = !userLoggedIn;
@@ -11,8 +10,7 @@ export const Navbar = (props) => {
 
   const renderNavbarOptions = options => (
     <>{options.map(option => {
-      const selected = pathName === option.to ? ("--selected") : "";
-      return <NavLink key={option.to} className={`navbar__option${selected}`} to={option.to}> {option.text} </NavLink>})}
+      return <NavLink key={option.to} className={({isActive}) => isActive ? option.selectedClassName : option.className} to={option.to}> {option.text} </NavLink>})}
     </>
   );
 
@@ -21,7 +19,7 @@ export const Navbar = (props) => {
       {showNotLoggedInOptions && renderNavbarOptions(notLoggedOptions)}
       {showUserOptions && renderNavbarOptions(userOptions)}
       {showAdminOptions && renderNavbarOptions(adminOptions)}
-      {userLoggedIn && <NavLink className='navbar__option'>PROFILE</NavLink>}
+      {userLoggedIn && <NavLink to="perfil" className='navbar__option'>PROFILE</NavLink>}
     </nav>
   );
 };

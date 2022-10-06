@@ -7,9 +7,9 @@ const service = axios.create({ baseURL, headers: {
 withCredentials: true })
 
 // Add here user api endpoints
-export const login = async user => {
-  const fixedData = { email: "1234", password: "1234" }
-  return await service.post('/login-user', fixedData)
+export const login = async (user) => {
+  //const fixedData = { email: "1234", password: "1234"  //Se cambia por los datos dinamicos
+  return await service.post('/login-user', user)
 }
 
 export const signup = async user => {
@@ -56,6 +56,61 @@ export const userHistorial = async (userId) => {
   return data
 }
 
-export const logout = async() => {
-  return await service.get('/logout')
+export const crearUsuario = async user => {
+  const { data } = await service.post('/create-user', user)
+  return data
+}
+
+export const sendEmail = async user => {
+  const { data } = await service.post('/email', user)
+  return data
+}
+
+export const verificar = async user => {
+  const { data } = await service.post('/verify-code', user)
+  return data
+}
+
+export const verificarUsuario = async user => {
+  const { data } = await service.post('/verify-user', user)
+  return data
+}
+
+//Para crear la reserva
+export const crearReserva = async user => {
+  const { data } = await service.post('/create-reserva', user)
+  return data
+}
+
+export const getRecursos = async user => {
+  const { data } = await service.post('/get-resource', user)
+  const regreso = JSON.parse(data.value)[0]
+  const regreso2 = Object.keys(regreso).map(key=>{
+    regreso[key]= JSON.parse(regreso[key])
+  })
+
+  return regreso
+}
+
+export const postReserva = async user => {
+  await service.post('/create-reserva', user)
+}
+
+export const logout = async () => {
+  return await service.get('/logout-user')
+}
+
+export const getReserva = async (reserva) => {
+  const { data } = await service.post('/get-reserva', reserva)
+  return data
+}
+
+export const updateReserva = async (reserva) => {
+  const { data } = await service.post('/update-reserva', reserva)
+  return data
+}
+
+export const deleteReserva = async (reserva) => {
+  const { data } = await service.post('/delete-reserva', reserva)
+  return data
 }
