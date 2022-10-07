@@ -23,7 +23,7 @@ const Pantallaprincipal = ()=>{
                         HUB de Ciberseguridad Campus Santa Fe
 
                         <section className="Subtitulo">
-                            Primera intitución especializada en la ciberseguridad mexicana
+                            Primera institución especializada en la ciberseguridad mexicana
                         </section>
                         
                         <button className="CodigoPeque">
