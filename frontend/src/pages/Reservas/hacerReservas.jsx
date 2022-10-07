@@ -52,21 +52,13 @@ const HacerReserva = () => {
         "byFloor": true
       }
       getRecursos(filtrado).then((response) => {
-        const pisos = Object.keys(response);
-        pisos.map(key => {
-          const formattedRoom = response[key].map(room => ({
-            pk: room.pk,
-            ...room.fields
-          }))
-          response[key] = formattedRoom
-        })
-        createDropdownData(response)
+        console.log('RES', response)
+        createDropdownData(response.value)
         setDataLugares(response)
       }).catch((error) => {
         console.log(error);
       })
     }
-
     llamarLista()
   },[])
 
@@ -74,25 +66,21 @@ const HacerReserva = () => {
 
   const subirDatos = () => {
     if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
-      
       crearReserva(enviado)
         .then(data => {
-          console.log(data)
+          console.log('SUBIR DATOS', data)
           //navigates('/')
         })
         .catch()
-    
-    }else{
+    } else {
       setAviso(1);
     }
   }
 
   const subirDatos2 = () => {
     if((enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
-      
       crearReserva(enviado).then(navigates('/')).catch()
-    
-    }else{
+    } else {
       setAviso(1);
     }
   }

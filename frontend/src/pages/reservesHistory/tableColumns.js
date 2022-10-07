@@ -65,54 +65,62 @@ export const tableColumns = [
     dataIndex: ['reserva', 'id'],
     key: 'idReserva',
     sorter: (a, b) => a.reserva.id < b.reserva.id,
+    sortDirections: ['descend'],
   },
   {
     title: 'Código Reserva',
     dataIndex: ['reserva', 'codigoReserva'],
     key: 'codigoReserva',
     sorter: (a, b) => a.reserva.codigoReserva < b.reserva.codigoReserva,
+    sortDirections: ['descend'],
   },
   {
     title: 'Nombre',
     dataIndex: ['usuario', 'nombre'],
     key: 'nombreUsuario',
-    sorter: (a, b) => a.usuario.nombre < b.usuario.nombre
+    sorter: (a, b) =>  a.usuario.nombre < b.usuario.nombre,
+    sortDirections: ['descend'],
   },
   {
     title: 'Producto',
     render: renderProducto,
     key: 'prodcto',
-    sorter: (a, b) => a.producto.nombre < b.producto.nombre
+    sorter: (a, b) => (a.producto && b.producto) && a.producto.nombre < b.producto.nombre,
+    sortDirections: ['descend'],
   },
   {
     title: 'Categoría',
     render: renderCategoria,
     key: 'categoria',
-    sorter: (a, b) => a.producto.categoria < b.producto.categoria
+    sorter: (a, b) => (a.producto && b.producto) && a.producto.categoria < b.producto.categoria,
+    sortDirections: ['descend'],
   },
   {
     title: 'Lugar',
     render: renderLugar,
     key: 'lugar',
-    sorter: (a, b) => a.piso < b.piso
+    sortDirections: ['descend'],
   },
   {
     title: 'Estatus',
     dataIndex: 'reserva.estatus',
     key: 'estatus',
     render: renderEstatus,
-    sorter: (a, b) => a.reserva.estatus < b.reserva.estatus
+    sorter: (a, b) => a.reserva.estatus < b.reserva.estatus,
+    sortDirections: ['descend'],
   },
   {
     title: 'Fecha',
     key: 'fecha',
     render: renderFecha,
-    sorter: (a, b) => moment(a.reserva.fechaInicio) < moment(b.reserva.fechaInicio)
+    sorter: (a, b) => moment(a.reserva.fechaInicio) < moment(b.reserva.fechaInicio),
+    sortDirections: ['descend'],
   },
   {
     title: 'Horario',
     key: 'horario',
     render: renderHorario,
-    sorter: (a, b) => moment(a.reserva.horaInicio) < moment(b.reserva.horaFinal)
+    sorter: (a, b) => moment(a.reserva.horaInicio) < moment(b.reserva.horaFinal),
+    sortDirections: ['descend'],
   },
 ]

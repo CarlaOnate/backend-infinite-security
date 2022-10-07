@@ -46,28 +46,29 @@ const PantallaReserva1 = (props) => {
             }
 
             getRecursos(filtrado).then((response) => {
-                const salones = response[piso];
+
+                const salones = response.value[piso];
                 const salonesMostrar = []
+
                 salones.map(element => {
                     salonesMostrar.push({
-                        key: `${element.pk}`,
-                        label: `${element.fields.salon}`
+                        key: `${element.id}`,
+                        label: `${element.salon}`
                     })
                 })
                 setSalonesMostrar(salonesMostrar)
                 setSalon(null)
 
             }).catch((error) =>{
+                console.log(error)
                 console.log("error pantalla reserva 1")
             })
         }
         generarArreglo(piso)
 
     }, [piso])
-    
     props.enviado["Piso"] = piso;
     props.enviado["Salon"] = salon;
-    console.log(props.enviado)
     
     if(pantallainterior === 2){
         props.enviado["Categoria"] = null;

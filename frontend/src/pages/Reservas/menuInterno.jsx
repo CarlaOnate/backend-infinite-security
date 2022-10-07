@@ -30,17 +30,15 @@ const MenuInterno = (props) =>{
 
   useEffect(() =>{//Ya sirve y es para desplegar las categorias
     const generarArreglo = (categoria) =>{
-
       const filtrado = {
         "resourceType": "Producto",
         "byCategory":true
       }
-
       getRecursos(filtrado).then((response) => {
         const categoriaMostrar = [];
-        const categoriasPrevias = Object.keys(response);
-        categoriasPrevias.map(element => {
-          if(response[element].length !== 0){
+        const categoriasPrevias = Object.keys(response.value);
+        categoriasPrevias && categoriasPrevias.map(element => {
+          if(response.value && response.value[element].length !== 0){
             const categoriaParcial = element;
             categoriaMostrar.push({
               key: element,
@@ -69,12 +67,12 @@ const MenuInterno = (props) =>{
 
       getRecursos(filtrado).then((response) => {
         const cantidadesMostrar = [];
-        if(response[categoria].length === 0){
+        if(response.value && response.value[categoria].length === 0){
           setCantidades(0)
-        }else{
+        } else {
           let contador = 0;
-          const categoriaElegida = response[categoria];
-          categoriaElegida.map(element => {
+          const categoriaElegida = response.value[categoria];
+          categoriaElegida && categoriaElegida.map(() => {
             contador = contador + 1;
             cantidadesMostrar.push({
               key: `${contador}`,
@@ -99,13 +97,13 @@ const MenuInterno = (props) =>{
         "byCategory":true
       }
 
+      
       getRecursos(filtrado).then((response) => {
         const nombreMostrar = [];
-        const categoriaElegida = categoria
-        response[categoria].map(element => {
+        response.value && response.value[categoria].map(element => {
           nombreMostrar.push({
-            key: `${element.pk}`,
-            label: `${element.fields.nombre}`
+            key: `${element.id}`,
+            label: `${element.nombre}`
           })
         });
           setNombreMostrar(nombreMostrar);

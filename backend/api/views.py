@@ -268,9 +268,16 @@ def getProducto(body):
     returnObj = {}
     for category in Producto.PRODUCT_CATEGORIES:
       productos = Producto.objects.all().filter(deletedAt=None, categoria=category[0]) # return Productes that havent been deleted
-      returnObj[category[1]] = serializers.serialize('json', productos)
-    serializedProductos = json.dumps([returnObj])
-    return JsonResponse({"value": serializedProductos})
+      productsList = []
+      for producto in productos:
+        productDict = {
+          "id": producto.pk,
+          "nombre": producto.nombre,
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+        }
+        productsList.append(productDict)
+      returnObj[category[1]] = productsList
+    return JsonResponse({"value": returnObj})
   elif 'byType' in body.keys():
     returnObj = {}
     for type in Producto.PRODUCT_TYPES:
@@ -608,16 +615,19 @@ def createReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   idUsuario = Usuario.objects.get(pk=req.user.id)
-  codigoReserva = random.randint(1, 1000000000000)
-  fechaInicio = body["FechaInicio"]
-  fechaFinal = body["fechaFinal"]
-  # comentarios =body["comentarios"]
-  horaI = body["horaI"]
-  horaF = body["horaF"]
-  idLugar = body["Salon"]
-  idProducto = body["Productos"]
-  Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-  return JsonResponse({"Recurso": Recurso.id})
+  try:
+    codigoReserva = generateCodigoReserva()
+    fechaInicio = body["FechaInicio"]
+    fechaFinal = body["fechaFinal"]
+    # comentarios =body["comentarios"]
+    horaI = body["horaI"]
+    horaF = body["horaF"]
+    idLugar = body["Salon"]
+    idProducto = body["Productos"]
+    Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+    return JsonResponse({"Recurso": Recurso.id})
+  except:
+   return HttpResponseServerError()
 
 @csrf_exempt
 def updateReserva(req):
@@ -784,5 +794,9 @@ def changePassword(req): # Called from front after sending code via email - emai
 
 def generateCodigo():
   return ''.join(random.choice(string.ascii_letters) for x in range(8))
+
+def generateCodigoReserva():
+  return ''.join(random.choice(string.ascii_letters) for x in range(15)).capitalize()
+
 
 
