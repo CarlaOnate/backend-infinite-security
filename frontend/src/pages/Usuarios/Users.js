@@ -20,12 +20,13 @@ export const Users = props => {
   const showUserManagement = menuSelection === 'user-management'
 
   return (
-    <section>
-      <div>
-        <div><Button onClick={() => onClickOption('user-list')}> Usuarios </Button></div>
-        <div><Button onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>
-        <div><Button onClick={() => onClickOption('user-management')}> Manejo de usuarios </Button></div>
+    <section className='SeccionGlobalUsuarios'>
+      <div className='BotonesUsuario'>
+        <div><Button className='CodigoPeque' onClick={() => onClickOption('user-list')}> Usuarios </Button></div>
+        <div><Button className='CodigoPeque' onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>
+        <div><Button className='CodigoPeque' onClick={() => onClickOption('user-management')}> Manejo de usuarios </Button></div>
       </div>
+      
       <div>
         {shouldShowAdminManagement && showAdminManagement && <AdminManagement />}
         {showUserList && <UserList />}

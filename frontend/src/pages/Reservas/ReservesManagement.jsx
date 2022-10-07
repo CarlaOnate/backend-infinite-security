@@ -140,7 +140,7 @@ export const ReservesManagement = () => {
 
   const renderInputs = (options, inputs, type) => {
     return (
-      <div>
+      <div className='TablaReservas'>
         <div>
           {options.map(option => (
             <div key={option.text}>

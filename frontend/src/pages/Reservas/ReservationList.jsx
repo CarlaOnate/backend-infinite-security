@@ -17,7 +17,7 @@ export const ReservationList = props => {
   }, [])
 
   return (
-    <section className='TablaReservas'>
+    <section>
       {error &&
         <Alert
           message="Error"
@@ -28,6 +28,7 @@ export const ReservationList = props => {
           closable
       />}
       <Table
+        size="small"
         columns={ tableColumns }
         dataSource={data || []}
       />
