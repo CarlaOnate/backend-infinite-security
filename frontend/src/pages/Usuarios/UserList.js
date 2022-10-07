@@ -29,6 +29,7 @@ export const UserList = () => {
       <Table
         columns={userListTableColumns}
         dataSource={data || []}
+        scroll = {{y:250}}
       />
     </section>
   )
