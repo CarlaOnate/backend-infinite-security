@@ -15,7 +15,6 @@ const IniciarSesion = () =>{
 
     const handelInputs = (e, tipo) => {
         const {target} = e
-        //console.log(target.value)
         setInputs(prep => ({
             ...prep,
             [tipo]:target.value
@@ -36,9 +35,6 @@ const IniciarSesion = () =>{
             navigates('/');
         }).catch()
     }
-
-    //console.log(inputs)
-    //console.log(user)
 
     const navigate = useLocation()
 

@@ -60,8 +60,7 @@ const PantallaReserva1 = (props) => {
                 setSalon(null)
 
             }).catch((error) =>{
-                console.log(error)
-                console.log("error pantalla reserva 1")
+                console.error("ERROR: PantallaReserva1", error)
             })
         }
         generarArreglo(piso)
