@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Radio } from 'antd';
 import PantallaReserva1 from "./PantallaReserva1";
 import MenuInterno from "./menuInterno";
-import { TimePicker } from 'antd';
+import { TimePicker, Alert } from 'antd';
 import { DatePicker } from 'antd';
 import { getRecursos, crearReserva } from "../../services/axios/user";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,6 +19,14 @@ const HacerReserva = () => {
   const [inputs, setInputs] = useState(); // TODO: No se esta usando
   const [ lugares, setLugares ] = useState({ pisosDropdown: [], salonesDropdown: [] });
   const [aviso, setAviso] = useState(0)
+  const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(false)
+
+
+  const resetAltersStates = () => {
+    setError(false)
+    setSuccess(false)
+  }
 
   const onChange = (e) => {
     setPantalla(e.target.value);
@@ -64,6 +72,27 @@ const HacerReserva = () => {
 
   const items = lugares.pisosDropdown
 
+  const mostrarAlerta = () =>{
+    {aviso === 1 &&
+      <Alert
+        message="Error"
+        description="No se realizó la reserva ya que falta un dato"
+        type="error"
+        showIcon
+        afterClose={resetAltersStates}
+        closable
+      />}
+
+    {aviso !== 1 &&
+      <Alert
+        message="La reserva se aplicó con éxito"
+        type="success"
+        showIcon
+        afterClose={resetAltersStates}
+        closable
+      />}
+  }
+
   const subirDatos = () => {
     if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
       crearReserva(enviado)
@@ -75,6 +104,8 @@ const HacerReserva = () => {
     } else {
       setAviso(1);
     }
+
+    mostrarAlerta()
   }
 
   const subirDatos2 = () => {
@@ -83,6 +114,9 @@ const HacerReserva = () => {
     } else {
       setAviso(1);
     }
+
+    mostrarAlerta()
+
   }
 
 
@@ -128,9 +162,6 @@ const HacerReserva = () => {
         </div>
         
       </div>
-      
-
-      {aviso === 1 && <p className="AdvertenciaHacer Reserva">La reserva no se realizara ya que faltan campos por llenar</p>}
 
     </div>
   )
