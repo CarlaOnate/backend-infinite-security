@@ -18,7 +18,6 @@ import { Stats } from './pages/statistics/Stats';
 import { HistorialReservas } from './pages/reservesHistory/ReservesHistory';
 import { Profile } from './pages/Profile';
 
-
 function Routing(props) {
   const { user } = useContext(UserContext);
   const userLoggedIn = user.id !== null;

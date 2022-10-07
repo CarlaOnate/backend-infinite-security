@@ -669,7 +669,8 @@ def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   user = Usuario.objects.get(correo=body['email'])
-  #if user.deletedAt != None: return HttpResponseForbidden()
+  if user.deletedAt != None: return HttpResponseForbidden()
+  if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
   email = body['email']
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
@@ -710,7 +711,8 @@ def logoutUser(req):
 
 @csrf_exempt
 def getLoggedUser(req):
-  return JsonResponse({"user": req.user.id})
+  if not req.user.is_authenticated: return HttpResponseForbidden()
+  return JsonResponse({ "user": req.user.id, "rol": req.user.rol })
 
 @csrf_exempt
 def sendEmail(req):
