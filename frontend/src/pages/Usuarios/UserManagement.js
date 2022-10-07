@@ -103,19 +103,19 @@ export const UserManagement = () => {
   const searchTableActions = [
     {
       text: "Activar",
-      style: "user-admin-edit__button",
+      style: "Codigoverde",
       onClick: () => onClickButton('activate'),
       show: data && data[0].rol === null
     },
     {
       text: "Bloquear",
-      style: "user-admin-edit__button",
+      style: "CodigoPeque",
       onClick: () => onClickButton('block'),
       show: data && data[0].rol === null
     },
     {
       text: "Eliminar",
-      style: "user-admin-edit__button",
+      style: "Codigorojopeque",
       onClick: () => onClickButton('remove'),
       show: data && data[0].rol === null
     }
@@ -123,7 +123,7 @@ export const UserManagement = () => {
 
   const blockOptions = [
     {
-      text: "Tiempo desactivación",
+      text: "Tiempo desactivación:",
       style: "user-admin-edit__button",
       onChange: (e) => onChangeBlockInputs(e, 'blockedRange'),
       type: 'blockedRange',
@@ -133,7 +133,7 @@ export const UserManagement = () => {
 
   const renderInputs = (options, inputs) => {
     return (
-      <div>
+      <div className='BloquearUserSection'>
         <div>
           {options.map(option => (
             <div key={option.text}>
@@ -144,7 +144,7 @@ export const UserManagement = () => {
             </div>
           ))}
         </div>
-        <div>
+        <div className='BotonConfirmarBloqueo'>
           <Button className = 'CodigoPeque' onClick={() => onSubmit(inputs, 'block')}>Confirmar</Button>
         </div>
       </div>

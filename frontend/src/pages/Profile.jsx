@@ -169,6 +169,7 @@ export const Profile = props => {
           afterClose={resetAltersStates}
           closable
         />}
+      
       {success &&
         <Alert
           message="Se hizo el cambio con exito"

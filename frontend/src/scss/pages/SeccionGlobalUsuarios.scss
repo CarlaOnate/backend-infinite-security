@@ -40,3 +40,22 @@
 .CamposTexto{
     margin-top: 2rem;
 }
+
+.BotonesUser{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 2rem;
+}
+
+.BloquearUserSection{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.BotonConfirmarBloqueo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}

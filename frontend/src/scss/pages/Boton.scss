@@ -52,7 +52,8 @@
     color: rgb(51, 181, 156);
     background-color: white;
     border-color: rgb(51, 181, 156);
-    font-size: medium;
+    font-size: large;
+    height: 40px;
     width: fit-content;
 }
 
@@ -60,10 +61,11 @@
     color: rgb(242, 71, 38);
     background-color: white;
     // color: rgb(242, 71, 38);
+    border-color: rgb(242, 71, 38);
+    border-style: solid;
     height: 40px;
     width: fit-content;
-    font-size: x-large;
-    border: none;
+    font-size: large;
     text-align: center;
 }
 

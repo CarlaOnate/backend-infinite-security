@@ -23,7 +23,7 @@ export const SearchData = props => {
           dataSource={data}
         />
       </div>
-      <div className='search-data__buttons'>
+      <div className='BotonesUser'>
         {data.length > 0 && buttons.map(button => (
           <div key={button.text}>
             {button.show && <Button className={button.style} onClick={button.onClick}> {button.text} </Button>}
