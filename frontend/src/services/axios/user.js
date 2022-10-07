@@ -76,6 +76,11 @@ export const verificarUsuario = async user => {
   return data
 }
 
+export const changePassword = async user => {
+  const { data } = await service.post('/change-password', user)
+  return data
+}
+
 //Para crear la reserva
 export const crearReserva = async user => {
   const { data } = await service.post('/create-reserva', user)
