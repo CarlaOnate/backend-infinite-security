@@ -27,16 +27,12 @@ function Routing(props) {
   const showAuthRoutes = !userLoggedIn;
   const showAdminRoutes = userIsAdmin;
 
-  console.log(user)
-
   const authProps = {
     userId: user.id,
     userLoggedIn,
     userIsAdmin,
     userIsGeneralAdmin: user.rol === 0
   };
-
-  console.log(authProps)
 
   const renderAuthRoutes = (authProps) => (
     <>

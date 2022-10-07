@@ -23,7 +23,6 @@ export const historial = async (filter) => {
 
 export const getAdminStats = async (filter) => {
   const { data } = await service.post('/estadistica-general', filter)
-  console.log('user axios DATA', data)
   return data
 }
 
@@ -85,12 +84,7 @@ export const crearReserva = async user => {
 
 export const getRecursos = async user => {
   const { data } = await service.post('/get-resource', user)
-  const regreso = JSON.parse(data.value)[0]
-  const regreso2 = Object.keys(regreso).map(key=>{
-    regreso[key]= JSON.parse(regreso[key])
-  })
-
-  return regreso
+  return data
 }
 
 export const postReserva = async user => {

@@ -59,8 +59,6 @@ export const ReservesManagement = () => {
         ...inputs,
       }
 
-      console.log(editRequest)
-
       updateReserva(editRequest)
         .then(data => {
           if (data.recurso) setSuccess(true)
