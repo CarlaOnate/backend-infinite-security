@@ -138,7 +138,10 @@ export const Profile = props => {
             </div>
           </div>
         </div>
-        {editValues && (<Button onClick={onSubmitEdit}>Confirmar cambios</Button>)}
+        <div className='BotonConfirmarCambios'>
+          {editValues && (<Button className = 'Codigorojopeque' onClick={onSubmitEdit}>Confirmar cambios</Button>)}
+        </div>
+        
         {!editValues && (
           <div className='BotonesProfile'>
 

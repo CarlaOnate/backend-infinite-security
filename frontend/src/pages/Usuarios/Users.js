@@ -7,7 +7,7 @@ import { UserList } from './UserList'
 export const Users = props => {
   const { userIsAdmin } = props;
 
-  const [ menuSelection, setMenuSelection ] = useState()
+  const [ menuSelection, setMenuSelection ] = useState('user-list')
 
   const shouldShowAdminManagement = userIsAdmin;
 

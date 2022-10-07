@@ -17,3 +17,26 @@
     align-items: center;
     justify-content: space-around;
 }
+
+.BotonesManejoUsuario{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.IngresoDatos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.BotonConfirmarAdmin{
+    margin-top: 2rem;
+}
+
+.CamposTexto{
+    margin-top: 2rem;
+}

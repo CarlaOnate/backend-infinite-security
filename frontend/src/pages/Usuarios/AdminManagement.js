@@ -163,9 +163,9 @@ export const AdminManagement = () => {
   const renderInputs = (options, inputs, type = null) => {
     return (
       <div>
-        <div>
+        <div className='CamposTexto'>
           {options.map(option => (
-            <div key={option.text}>
+            <div className = 'CamposTexto' key={option.text}>
               {option.show && (<>
                 <label> {option.text} </label>
                 <Input onChange={option.onChange} />
@@ -173,8 +173,8 @@ export const AdminManagement = () => {
             </div>
           ))}
         </div>
-        <div>
-          <Button onClick={() => onSubmit(inputs, type)}>Confirmar</Button>
+        <div className='BotonConfirmarAdmin'>
+          <Button className = 'CodigoPeque' onClick={() => onSubmit(inputs, type)}>Confirmar</Button>
         </div>
       </div>
     )
@@ -203,8 +203,11 @@ export const AdminManagement = () => {
         columns={adminManagementTableColumn}
         className = "BotonesTablaAdmin"
       />
-      {showEditInputs && renderInputs(editAdminOptions, editInputs)}
-      {showAddAdminInputs && renderInputs(addAdminOptions, addInputs, 'add')}
+      {/* <div className='IngresoDatos'> */}
+        {showEditInputs && renderInputs(editAdminOptions, editInputs)}
+        {showAddAdminInputs && renderInputs(addAdminOptions, addInputs, 'add')}
+      {/* </div> */}
+      
       {error &&
         <Alert
           message="Error"

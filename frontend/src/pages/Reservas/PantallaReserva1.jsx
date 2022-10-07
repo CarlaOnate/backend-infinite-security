@@ -106,7 +106,6 @@ const PantallaReserva1 = (props) => {
 
             <br></br>
 
-            <p>Equipo seleccionado</p>
             {pantallainterior === 1 && <MenuInterno  enviado = {props.enviado}/>}
 
         </div>
