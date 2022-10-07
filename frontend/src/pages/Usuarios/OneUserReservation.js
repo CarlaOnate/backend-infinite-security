@@ -35,7 +35,7 @@ export const OneUserReservation = props => {
       </>
     )
   }
-  
+
   const renderLugar = (_, record) => {
     const { lugar } = record;
   
@@ -147,7 +147,10 @@ export const OneUserReservation = props => {
         columns={tableColumns}
         dataSource={data}
       />
-      <Button onClick={onClickReturn}> Volver </Button>
+      <div className='BotonVolverRegistroUser'>
+        <Button className='CodigoPeque' onClick={onClickReturn}> Volver </Button>
+      </div>
+      
     </section>
   )
 }

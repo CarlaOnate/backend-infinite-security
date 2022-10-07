@@ -193,10 +193,14 @@ export const UserManagement = () => {
             afterClose={resetAltersStates}
             closable
           />}
-          {data && (<>
-            <Button onClick={() => onClickUserDetails('reservations')}> Historial Reservas </Button>
-            <Button onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
-          </>)}
+
+          <div className='BotonesManejoUsuario'>
+            {data && (<>
+            <Button className='CodigoPeque' onClick={() => onClickUserDetails('reservations')}> Historial Reservas </Button>
+            <Button className='CodigoPeque' onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
+            </>)}
+          </div>
+          
         </>)}
         {showUserDetails === 'stats' && <OneUserStats user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}
         {showUserDetails === 'reservations' && <OneUserReservation user={data[0]} onClickReturn={() => onClickUserDetails(null)} />}

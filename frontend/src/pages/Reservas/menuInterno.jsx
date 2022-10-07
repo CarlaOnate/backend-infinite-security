@@ -8,7 +8,7 @@ const MenuInterno = (props) =>{
   const [categoriaMostrar, setcategoriaMostrar] = useState("No aplica")
   const [categoria, setCategoría] = useState("No aplica");
   const [cantidadesMostrar, setCantidades] = useState("0");
-  const [cantidadSeleccionada, setCantidadSeleccionada] = useState(null)
+  //const [cantidadSeleccionada, setCantidadSeleccionada] = useState(null)
 
   const [nombre, setNombre] = useState(null)
   const [nombreMostrar, setNombreMostrar] = useState("No aplica");
@@ -49,7 +49,7 @@ const MenuInterno = (props) =>{
 
         setcategoriaMostrar(categoriaMostrar);
         setCategoría(null)
-        setCantidadSeleccionada(null)
+        //setCantidadSeleccionada(null)
         setNombre(null)
         })
       }
@@ -57,37 +57,37 @@ const MenuInterno = (props) =>{
 
   }, [])
 
-  useEffect(() =>{ 
-    const generarArreglo = (categoria) =>{
+  // useEffect(() =>{ 
+  //   const generarArreglo = (categoria) =>{
 
-      const filtrado = {
-        "resourceType": "Producto",
-        "byCategory":true
-      }
+  //     const filtrado = {
+  //       "resourceType": "Producto",
+  //       "byCategory":true
+  //     }
 
-      getRecursos(filtrado).then((response) => {
-        const cantidadesMostrar = [];
-        if(response.value && response.value[categoria].length === 0){
-          setCantidades(0)
-        } else {
-          let contador = 0;
-          const categoriaElegida = response.value[categoria];
-          categoriaElegida && categoriaElegida.map(() => {
-            contador = contador + 1;
-            cantidadesMostrar.push({
-              key: `${contador}`,
-              label: `${contador}`
-            })
-          });
+  //     getRecursos(filtrado).then((response) => {
+  //       const cantidadesMostrar = [];
+  //       if(response.value && response.value[categoria].length === 0){
+  //         setCantidades(0)
+  //       } else {
+  //         let contador = 0;
+  //         const categoriaElegida = response.value[categoria];
+  //         categoriaElegida && categoriaElegida.map(() => {
+  //           contador = contador + 1;
+  //           cantidadesMostrar.push({
+  //             key: `${contador}`,
+  //             label: `${contador}`
+  //           })
+  //         });
 
-          setCantidades(cantidadesMostrar);
-          setCantidadSeleccionada(null)
-        }
-        })
-      }
-      generarArreglo(categoria)
+  //         setCantidades(cantidadesMostrar);
+  //         setCantidadSeleccionada(null)
+  //       }
+  //       })
+  //     }
+  //     generarArreglo(categoria)
 
-  }, [categoria])
+  // }, [categoria])
 
   useEffect(() =>{ 
     const generarArreglo = (categoria) =>{
@@ -107,7 +107,7 @@ const MenuInterno = (props) =>{
           })
         });
           setNombreMostrar(nombreMostrar);
-          setCantidadSeleccionada(null)
+          //setCantidadSeleccionada(null)
         })
       }
       generarArreglo(categoria)
@@ -124,15 +124,15 @@ const MenuInterno = (props) =>{
     />
   );
 
-  const menu2 = (
-    <Menu
-      selectable
-      items = {cantidadesMostrar}
-      onClick = {({key}) => {
-        setCantidadSeleccionada(cantidadesMostrar.find((elm) => elm.key === key).key);
-      }}
-    />
-  );
+  // const menu2 = (
+  //   <Menu
+  //     selectable
+  //     items = {cantidadesMostrar}
+  //     onClick = {({key}) => {
+  //       setCantidadSeleccionada(cantidadesMostrar.find((elm) => elm.key === key).key);
+  //     }}
+  //   />
+  // );
 
   const menu3 = (
     <Menu
@@ -145,7 +145,7 @@ const MenuInterno = (props) =>{
   );
 
   props.enviado["Categoria"] = categoria;
-  props.enviado["Cantidad"] = cantidadSeleccionada;
+  // props.enviado["Cantidad"] = cantidadSeleccionada;
   props.enviado["Productos"] = nombre;
 
     return(
@@ -158,17 +158,6 @@ const MenuInterno = (props) =>{
                 </Space>
                 </Typography.Link>
             </Dropdown>
-
-
-            <Dropdown overlay={menu2}>
-                <Typography.Link>
-                <Space>
-                    Cantidad
-                    <DownOutlined />
-                </Space>
-                </Typography.Link>
-            </Dropdown>
-
 
             <Dropdown overlay={menu3}>
                 <Typography.Link>
