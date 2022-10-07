@@ -1,14 +1,12 @@
-from django.http import JsonResponse, HttpResponseServerError, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
-from django.db.models import Count, Q
-from django.db.models.functions import Coalesce
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
 from datetime import datetime, timedelta
 from django.utils import timezone
 import random
@@ -23,19 +21,20 @@ def testingAPI(req):
 # Historial reservas
   # Admin
 @csrf_exempt
-def getHistorial(req): # historial reservas -> solo para admins
+def getHistorial(req):
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   try:
-    if req.body != None:
+    if bool(req.body):
       body_unicode = req.body.decode('utf-8')
       body = json.loads(body_unicode)
-      column = body["column"]
-      value = body["value"]
-      columnText = column + '__contains'
-      reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
-      #Format response
-      serializedReserva =  reservaJSONResponse(reservas)
-      return JsonResponse({"values": serializedReserva}, safe=False)
+      if 'column' in body.keys() and 'value' in body.keys():
+        column = body["column"]
+        value = body["value"]
+        columnText = column + '__contains'
+        reservas = Reserva.objects.filter(**{columnText:value}).order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
+        #Format response
+        serializedReserva =  reservaJSONResponse(reservas)
+        return JsonResponse({"values": serializedReserva}, safe=False)
     else:
       reservas = Reserva.objects.all().order_by("fechaInicio").select_related("idUsuario", "idProducto", "idLugar")
       serializedReserva = reservaJSONResponse(reservas)
@@ -86,7 +85,7 @@ def reservaJSONResponse(reservas):
     else:
       userDict = {
         "nombre": reserva.idUsuario.username,
-        "rol": Usuario.ROL_ENUM[reserva.idUsuario.rol][1],
+        "rol": Usuario.ROL_ENUM[reserva.idUsuario.rol-1][1],
         "id": reserva.idUsuario.pk
       }
     reservaJson.append({"reserva": reservaDict, "usuario": userDict, "producto": productoDict, "lugar": lugarDict})
@@ -126,7 +125,7 @@ def getUsers(req):
 
 def getUserJson(user):
   rolName = 'Usuario'
-  if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol][1]
+  if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol - 1][1]
   usuarioDict = {
     "pk": user.id,
     "username": user.username,
@@ -149,7 +148,7 @@ def getUserJson(user):
 #Edit user or admin
 @csrf_exempt
 def editUserAdmin(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   usuario = Usuario.objects.get(id = body['id'])
@@ -161,7 +160,9 @@ def editUserAdmin(req):
   apellido2 = body["secondLastName"]
   departamento = body["departament"]
   correo = body["email"]
-  rol = body["rol"]
+
+  if 'rol' in body.keys():
+    rol = body["rol"]
 
   if 'dateOfBirth' in body.keys():
     usuario.fechaNacimiento = body['dateOfBirth']
@@ -298,13 +299,17 @@ def getLugar(body):
     returnObj = {}
     for piso in Lugar.PISOS_ENUM:
       lugares = Lugar.objects.all().filter(deletedAt=None, piso=piso[0]) # return lugares that havent been deleted
-      returnObj[piso[0]] = serializers.serialize('json', lugares)
-    serializedLugares = json.dumps([returnObj])
-    return JsonResponse({"value": serializedLugares})
+      lugaresList = []
+      for lugar in lugares:
+        lugaresList.append(getElementResponse(lugar, 'Lugar'))
+        returnObj[piso[0]] = lugaresList
+    return JsonResponse({"value": returnObj})
   else:
-    lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
-    serializedLugares = serializers.serialize('json', lugares)
-    return JsonResponse({"value": serializedLugares})
+    lugares = Lugar.objects.all().filter(deletedAt=None)
+    lugaresList = []
+    for lugar in lugares:
+      lugaresList.append(getElementResponse(lugar, 'Lugar'))
+    return JsonResponse({"value": lugaresList}, safe=False)
 
 
 @csrf_exempt
@@ -400,7 +405,7 @@ def deleteLugar(body):
 
 @csrf_exempt #Ya se borra el usuario
 def deleteUser(req):
-  if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
 
@@ -427,7 +432,7 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
     if usuario.exists():
       usuario = usuario[0]
       rolName = 'Usuario'
-      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol-1][1]#Aqui se le resta 1
+      if usuario.rol != None: rolName = Usuario.ROL_ENUM[usuario.rol - 1][1]
       usuarioDict = {
         "pk": usuario.id,
         "username": usuario.username,
@@ -436,12 +441,13 @@ def getuseritself(req): # Regresa cualquier user, por id o el loggeado
         "apellidoMaterno": usuario.apellidoMaterno,
         "genero": usuario.genero,
         "departament": usuario.departament,
-        "oficio": Usuario.OFICIO_ENUM[usuario.oficio][1],
+        "oficio": Usuario.OFICIO_ENUM[usuario.oficio-1][1],
         "oficioNumber": usuario.oficio,
         "correo": usuario.correo,
         "fechaNacimiento": usuario.fechaNacimiento,
         "fechaDesbloqueo": usuario.fechaDesbloqueo,
         "rol": usuario.rol,
+        "verified": usuario.verified,
         "rolName": rolName,
         "estatus": calculateUserStatus(usuario)
       }
@@ -468,6 +474,7 @@ def getGeneralStatistic(req):
     if graphType == "Producto": return getMostReservedProducts(body)
     elif graphType == "Lugar": return getMostReservedPlaces(body)
     elif graphType == "Producto-categoria": return getMostReservedCategories(body)
+    else: return HttpResponseBadRequest
   else: return JsonResponse({"error": "Graph type not valid"})
 
 def getMostReservedProducts(body):
@@ -506,18 +513,20 @@ def getMostReservedCategories(body):
 # Estadisticas de 1 solo user
 @csrf_exempt
 def getUserStatistic(req):
-  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'graph' in body.keys():
     graphType = body['graph']
-    if graphType == "Producto": return getUserMostReservedProducts(body)
-    elif graphType == "Lugar": return getUserMostReservedPlace(body)
-    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body)
+
+    if 'id' in body.keys(): userId = body['id']
+    else: userId = req.user.id
+
+    if graphType == "Producto": return getUserMostReservedProducts(body, userId)
+    elif graphType == "Lugar": return getUserMostReservedPlace(body, userId)
+    elif graphType == "Producto-categoria": return getUserMostReservedCategories(body, userId)
   else: return JsonResponse({"error": "Graph type not valid"})
 
-def getUserMostReservedProducts(body):
-  user = body['id']
+def getUserMostReservedProducts(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -528,8 +537,7 @@ def getUserMostReservedProducts(body):
     productsResponse.append({"recurso": serializedPlace, "count": product.count})
   return JsonResponse({ "value": productsResponse, "graphCols": ["Producto",  "Cantidad"] })
 
-def getUserMostReservedPlace(body):
-  user = body['id']
+def getUserMostReservedPlace(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -540,8 +548,7 @@ def getUserMostReservedPlace(body):
     placesResponse.append({"recurso": serializedPlace, "count": place.count})
   return JsonResponse({ "value": placesResponse, "graphCols": ["Lugar",  "Cantidad"] })
 
-def getUserMostReservedCategories(body):
-  user = body['id']
+def getUserMostReservedCategories(body, user):
   timePeriod = body['timeRange']
   numberOfDaysToAdd = 7 if timePeriod == 'week' else 30 if timePeriod == 'month' else 365 if timePeriod == 'year' else 7
   datetimeRange = timezone.make_aware(datetime.today() - timedelta(days=numberOfDaysToAdd))
@@ -596,13 +603,11 @@ def getReserva(req):
   return JsonResponse({"Recurso": "Recurso.id"})
 
 
-@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+@csrf_exempt
 def createReserva(req):
-  #Se le pasa el id del usuario con el metodo de Carla
-  #Se le pasa el id del recurso o lugar desde el front, ¿como en la semana tec?
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  idUsuario = Usuario.objects.get(id = 1)
+  idUsuario = Usuario.objects.get(pk=req.user.id)
   codigoReserva = random.randint(1, 1000000000000)
   fechaInicio = body["FechaInicio"]
   fechaFinal = body["fechaFinal"]
@@ -614,7 +619,7 @@ def createReserva(req):
   Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
   return JsonResponse({"Recurso": Recurso.id})
 
-@csrf_exempt #Ya se regresan los datos del usuario para el llenado de los formularios
+@csrf_exempt
 def updateReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
@@ -622,14 +627,14 @@ def updateReserva(req):
   if idReserva.exists():
     idReserva = idReserva[0]
     try:
-      estatus = int(body['estatus'])
-      lugar = Lugar.objects.get(pk=int(body['lugar']))
-      producto = Producto.objects.get(pk=int(body['producto']))
+      lugar = Lugar.objects.get(pk=int(body['lugar'])) if body['lugar'] != None else None
+      producto = Producto.objects.get(pk=int(body['producto'])) if body['producto'] != None else None
+      estatus = body['estatus'] if body['estatus'] != None else 1
       idUsuario = Usuario.objects.get(pk=body['usuario'])
       idReserva.idUsuario = idUsuario
       idReserva.estatus = estatus
-      idReserva.idLugar_id = lugar
-      idReserva.idProducto_id = producto
+      idReserva.idLugar = lugar
+      idReserva.idProducto = producto
       idReserva.save()
       return JsonResponse({ "recurso": idReserva.id })
     except:
@@ -654,15 +659,19 @@ def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   user = Usuario.objects.get(correo=body['email'])
-  if user.deletedAt != None: return HttpResponseForbidden()
+  #if user.deletedAt != None: return HttpResponseForbidden()
   email = body['email']
   password = body["password"]
   authenticatedUser = authenticate(req, correo=email, password=password)
   if authenticatedUser is not None:
     login(req, authenticatedUser) # set user in req.user
-    return JsonResponse({"user": req.user.id})
+    userDict = {
+      "user": req.user.id,
+      "rol": req.user.rol
+    }
+    return JsonResponse(userDict)
   else:
-    return JsonResponse({"error": "invalid credentials"})
+    return JsonResponse({ "error": "invalid credentials" })
 
 @csrf_exempt
 def createUser(req): # Add email validation

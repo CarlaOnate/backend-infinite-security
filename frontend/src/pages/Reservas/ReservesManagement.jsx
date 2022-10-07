@@ -34,7 +34,8 @@ export const ReservesManagement = () => {
 
   const onChangeEditInput = (e, key) => {
     const { target } = e;
-    setEditInputs(prev => ({ ...prev, [key]: target.value }))
+    const value = target.value.trim().length !== 0 ? target.value : null
+    setEditInputs(prev => ({ ...prev, [key]: value }))
   }
 
   const onSearch = value => {
@@ -52,11 +53,14 @@ export const ReservesManagement = () => {
       const editRequest = {
         reserva: data[0].reserva.id,
         estatus: data[0].reserva.estatus,
-        lugar: data[0].lugar.id,
-        producto: data[0].producto.id,
+        lugar: data[0].lugar && data[0].lugar.id,
+        producto: data[0].producto && data[0].producto.id,
         usuario: data[0].usuario.id,
         ...inputs,
       }
+
+      console.log(editRequest)
+
       updateReserva(editRequest)
         .then(data => {
           if (data.recurso) setSuccess(true)
@@ -87,18 +91,21 @@ export const ReservesManagement = () => {
       text: "Producto id",
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'producto'),
+      inputType: "number",
       show: data
     },
     {
       text: "Lugar id",
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'lugar'),
+      inputType: "number",
       show: data
     },
     {
       text: "Estatus (numero)",
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'estatus'),
+      inputType: "number",
       show: data
     },
   ]
@@ -139,7 +146,7 @@ export const ReservesManagement = () => {
             <div key={option.text}>
               {option.show && (<>
                 <label> {option.text} </label>
-                <Input onChange={option.onChange} />
+                <Input type={option.inputType} onChange={option.onChange} />
               </>)}
             </div>
           ))}

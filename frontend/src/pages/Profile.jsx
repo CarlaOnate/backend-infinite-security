@@ -21,9 +21,12 @@ export const Profile = props => {
   const disableInputs = !editValues;
   const showDeleteAccount = !userIsGeneralAdmin
 
+  console.log(userId)
+
   useEffect(() => {
     getUser({ value: userId })
     .then(data => {
+      console.log(data)
       const fechaNacimiento = moment(data.fechaNacimiento)
       setData({ ...data, fechaNacimiento })
       })

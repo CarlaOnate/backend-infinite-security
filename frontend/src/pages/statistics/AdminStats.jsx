@@ -29,14 +29,14 @@ export const AdminStats = () => {
       Object.keys(data).forEach(key => {
         const columns = []
         let columnData
-        data[key].forEach(el => {
+        data && data[key].forEach(el => {
           if (key === 'productos') {
             columnData = ["Productos", "Cantidad"]
             return columns.push([el.recurso.nombre, el.count])
           }
           if (key === 'lugares') {
             columnData = ["Lugares", "Cantidad"]
-            return columns.push([`${el.recurso.piso}, ${el.recruso.salon}`, el.count])
+            return columns.push([`Piso ${el.recurso.piso}, Salon ${el.recurso.salon}`, el.count])
           }
           if (key === 'categorias') {
             columnData = ["Categorias", "Cantidad"]
@@ -60,16 +60,14 @@ export const AdminStats = () => {
 
     if (Object.keys(data).length === 0) {
       getAdminStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
-      getAdminStats({ graph: 'Lugar ', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
+      getAdminStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
       getAdminStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
     }
     formatGraphObject()
   }, [data])
 
   const removeGraphSelection = (type) => {
-    // Remove button selection
     setSelectedButtons(prev => ({...prev, [type]: false}))
-    // Remove graph data from that button
     setSelectedGraphs(prev => ({
       ...prev,
       [type]: false,
@@ -79,12 +77,10 @@ export const AdminStats = () => {
 
   const addGraphSelection = (type) => {
     if (selectedGraphs.count < 2) {
-      // Add button selection
       setSelectedButtons(prev=> ({
         ...prev,
         [type]: true,
       }))
-      // Add graph to selection graph
       setSelectedGraphs(prev => ({
         ...prev,
         [type]: formattedData[type].data,
@@ -103,7 +99,6 @@ export const AdminStats = () => {
       <section className='stats-container'>
         <div className='stats-top'>
           <h1>Estadistica</h1>
-          <button>D</button>
         </div>
         <div>
           <div className='stats-options'>

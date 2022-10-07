@@ -7,9 +7,9 @@ const service = axios.create({ baseURL, headers: {
 withCredentials: true })
 
 // Add here user api endpoints
-export const login = async (user) => {
-  //const fixedData = { email: "1234", password: "1234"  //Se cambia por los datos dinamicos
-  return await service.post('/login-user', user)
+export const login = async user => {
+  const { data } = await service.post('/login-user', user)
+  return data
 }
 
 export const signup = async user => {
@@ -23,6 +23,7 @@ export const historial = async (filter) => {
 
 export const getAdminStats = async (filter) => {
   const { data } = await service.post('/estadistica-general', filter)
+  console.log('user axios DATA', data)
   return data
 }
 

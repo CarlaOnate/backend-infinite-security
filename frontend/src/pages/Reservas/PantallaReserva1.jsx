@@ -46,26 +46,16 @@ const PantallaReserva1 = (props) => {
             }
 
             getRecursos(filtrado).then((response) => {
-                // console.log(response)
-                // console.log(props.enviado)
                 const salones = response[piso];
                 const salonesMostrar = []
                 salones.map(element => {
-                    // console.log("Aqui")
-                    // console.log(element.fields.salon)
-                    // console.log(element)
-                    // console.log("Comprobando")
-                    // console.log(element.pk)
                     salonesMostrar.push({
                         key: `${element.pk}`,
                         label: `${element.fields.salon}`
                     })
                 })
-
-                // console.log("Aqui")
-                // console.log(salonesMostrar)
                 setSalonesMostrar(salonesMostrar)
-                setSalon("No aplica")
+                setSalon(null)
 
             }).catch((error) =>{
                 console.log("error pantalla reserva 1")
@@ -77,13 +67,12 @@ const PantallaReserva1 = (props) => {
     
     props.enviado["Piso"] = piso;
     props.enviado["Salon"] = salon;
-    //console.log(props.enviado)
     console.log(props.enviado)
     
     if(pantallainterior === 2){
-        props.enviado["Categoria"] = "No aplica";
-        props.enviado["Cantidad"] = "No aplica";
-        props.enviado["Productos"] = "No aplica";
+        props.enviado["Categoria"] = null;
+        props.enviado["Cantidad"] = null;
+        props.enviado["Productos"] = null;
     }
 
     return(

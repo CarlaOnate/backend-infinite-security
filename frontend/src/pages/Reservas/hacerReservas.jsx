@@ -36,7 +36,7 @@ const HacerReserva = () => {
 
   const createDropdownData = (response) => {
     const pisosDropdown = []
-    Object.keys(response).map(piso => { 
+    Object.keys(response).map(piso => {
       pisosDropdown.push({
         key: piso,
         label: `Piso ${piso}`
@@ -75,7 +75,12 @@ const HacerReserva = () => {
   const subirDatos = () => {
     if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
       
-      crearReserva(enviado).then(navigates('/')).catch()
+      crearReserva(enviado)
+        .then(data => {
+          console.log(data)
+          //navigates('/')
+        })
+        .catch()
     
     }else{
       setAviso(1);

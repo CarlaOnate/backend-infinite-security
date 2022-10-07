@@ -10,7 +10,7 @@ import Registrarse from './pages/Registrarse';
 import IniciarSesion from './pages/IniciarSesion';
 import RegistrarseCodigo from './pages/RegistarseCodigo';
 import { ReservasMenu } from './pages/Reservas/ReservasMenu';
-import BorrarCuentaUser from './pages/DeleteAccount';
+import { Users } from './pages/Usuarios/Users';
 
 import RecoverPasswordImage from './images/recoverPassword.png';
 
@@ -27,12 +27,16 @@ function Routing(props) {
   const showAuthRoutes = !userLoggedIn;
   const showAdminRoutes = userIsAdmin;
 
+  console.log(user)
+
   const authProps = {
     userId: user.id,
     userLoggedIn,
     userIsAdmin,
     userIsGeneralAdmin: user.rol === 0
   };
+
+  console.log(authProps)
 
   const renderAuthRoutes = (authProps) => (
     <>
@@ -53,9 +57,7 @@ function Routing(props) {
   const renderUserRoutes = (authProps) => {
     return (
       <>
-        <Route exact path="/BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
         <Route  exact path="perfil" element={<Profile {...authProps} />}/>
-        <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
         <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
         <Route  exact path="/perfil" element={<Profile {...authProps} />}/>
       </>
@@ -64,12 +66,11 @@ function Routing(props) {
 
   const renderAdminRoutes = (authProps) => (
     <>
-      <Route exact path="/BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
       <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
       <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
-      <Route exact path="BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
       <Route  exact path="perfil" element={<Profile {...authProps} />}/>
-      <Route exact path="/reservation" element={<ReservasMenu {...authProps} />}/> {/*para ir a registrarse donde te pide el código codigo*/}
+      <Route exact path="/reservation" element={<ReservasMenu {...authProps} />}/>
+      <Route exact path="/users" element={<Users {...authProps} />}/>
     </>
   );
 
