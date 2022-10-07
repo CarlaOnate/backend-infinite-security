@@ -37,6 +37,7 @@ EMAIL_HOST_PASSWORD = "InfiniteSecurity1!"
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -45,6 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders'
+]
+
+CRONJOBS = [
+    ('*/1 * * * *', 'api.update_db.cron.updateDB', '>> update_db.logs')
 ]
 
 MIDDLEWARE = [
