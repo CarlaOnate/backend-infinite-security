@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { NavLink} from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import '../Estilos/RegistroCodigo.css'
 import {verificar, verificarUsuario, login} from '../services/axios/user'
 import { Button, Input } from "antd";
+import {UserContext} from '../context/userContext'
 import { sendEmail } from '../services/axios/user'
 
 
@@ -12,6 +13,7 @@ const RegistrarseCodigo = (props) =>{
     const navigate = useLocation()
     const navigates = useNavigate()
     const [inputs, setInputs] = useState();
+    const { setUser } = useContext(UserContext);
 
     const paths = {
         home: navigate.pathname === '/',
@@ -35,13 +37,23 @@ const RegistrarseCodigo = (props) =>{
           const userLoggedIn = await login(navigate.state.inputs)
           if(userLoggedIn.user) {
             await verificarUsuario()
+            setUser(prev =>({
+              ...prev,
+              id: userLoggedIn.user,
+              rol: userLoggedIn.rol
+            }))
             navigates('/');
           }
         }
     }
 
-    const onClickResendCode = () => {
-
+    const onClickResendCode = async () => {
+      const email = navigate.state.inputs.email
+      const emailObject = {
+          type:"verify-email",
+          email
+      }
+      await sendEmail(emailObject)
     }
 
     return(
@@ -63,7 +75,7 @@ const RegistrarseCodigo = (props) =>{
                 <p>Ingresa el código que se envió a tu correo: </p>
                 <div className="IngresoTextoRegistroCodigo">
                   <Input onChange = {(e) => handelInputs(e,"name")} mensaje = "Ingresa el código"/>
-                  <Button className= "Codigoverde">Reenviar codigo</Button>
+                  <Button className="Codigoverde" onClick={onClickResendCode}>Reenviar codigo</Button>
                 </div>
                 <div className="BotonRegistrarfinalcodigo">
                     <button className="CodigoMediano" onClick={handleStep1}>

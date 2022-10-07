@@ -744,7 +744,7 @@ def verifyUser(req):
     user = req.user
     user.verified = True
     user.save()
-    #return JsonResponse({"msg": "Usuario verificado exitosamente"})
+    return JsonResponse({"msg": "Usuario verificado exitosamente"})
   else:
     return JsonResponse({"error": "No se ha iniciado proceso de cambio de verificación de correo"})
 
