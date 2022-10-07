@@ -98,13 +98,15 @@ export const AdminManagement = () => {
     },
     {
       text: "Editar",
-      style: "user-admin-edit__button",
+      style: "Codigoverde",
+      
       onClick: () => onClickButton('edit'),
       show: data && data[0].rol !== null
     },
     {
       text: "Quitar administrador",
       style: "user-admin-edit__button",
+      
       onClick: () => onClickButton('remove'),
       show: data && data[0].rol === 2
     }
@@ -152,7 +154,7 @@ export const AdminManagement = () => {
   const addAdminOptions = [
     {
       text: "Departamento",
-      style: "user-admin-edit__button",
+      style: "CodigoPeque",
       onChange: (e) => onChangeAddInputs(e, 'departament'),
       show: data && data[0].rol !== 1,
     }
@@ -199,6 +201,7 @@ export const AdminManagement = () => {
         renderAlert={renderWarning}
         data={data}
         columns={adminManagementTableColumn}
+        className = "BotonesTablaAdmin"
       />
       {showEditInputs && renderInputs(editAdminOptions, editInputs)}
       {showAddAdminInputs && renderInputs(addAdminOptions, addInputs, 'add')}

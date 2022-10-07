@@ -47,7 +47,7 @@ export const OneUserStats = props => {
         data={(graphData && graphData.data) || []}
         options={(graphData && graphData.options) || {}}
       />
-      <Button onClick={onClickReturn}>Volver</Button>
+      <Button className= "CodigoPeque" onClick={onClickReturn}>Volver</Button>
     </section>
   )
 }

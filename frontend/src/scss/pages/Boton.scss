@@ -53,8 +53,20 @@
     background-color: white;
     border-color: rgb(51, 181, 156);
     font-size: medium;
-    padding: 10px;
+    width: fit-content;
 }
+
+.Codigorojopeque{
+    color: rgb(242, 71, 38);
+    margin-top: 40px;
+    background-color: white;
+    // color: rgb(242, 71, 38);
+    height: 40px;
+    width: fit-content;
+    font-size: x-large;
+    border: none;
+}
+
 .FechaProfile{
     display: flex;
     /* justify-content: space-between; */
