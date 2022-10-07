@@ -2,10 +2,9 @@ import React, {useState, useContext} from "react";
 import { NavLink} from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import '../Estilos/RegistroCodigo.css'
-import {verificar, verificarUsuario, login} from '../services/axios/user'
+import {verificar, verificarUsuario, login, sendEmail} from '../services/axios/user'
 import { Button, Input } from "antd";
 import {UserContext} from '../context/userContext'
-import { sendEmail } from '../services/axios/user'
 
 
 const RegistrarseCodigo = (props) =>{
