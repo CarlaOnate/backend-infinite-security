@@ -699,7 +699,7 @@ def createUser(req): # Add email validation
     username = name + ' ' + lastName + ' ' + secondLastName
     newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
     # Create user and login at the same time
-    return JsonResponse({"user": newUser.id})
+    return JsonResponse({"user": newUser.id, "rol": req.user.rol})
   except:
     return JsonResponse({"Razon": "El campo no es unico"})
 

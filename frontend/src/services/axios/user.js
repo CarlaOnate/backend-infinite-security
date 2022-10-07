@@ -114,3 +114,8 @@ export const deleteReserva = async (reserva) => {
   const { data } = await service.post('/delete-reserva', reserva)
   return data
 }
+
+export const getLoggedUser = async () => {
+  const { data } = await service.post('/logged-user')
+  return data
+}

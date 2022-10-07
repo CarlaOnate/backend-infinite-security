@@ -71,7 +71,7 @@ const RegistrarseCodigo = (props) =>{
                     </div>
                 </div>
                 <br></br>
-                <p>Ingresa el código que se envió a tu correo: </p>
+                <p>Ingresa el código que se envió a tu correo: {navigate.state.inputs.email}</p>
                 <div className="IngresoTextoRegistroCodigo">
                   <Input onChange = {(e) => handelInputs(e,"name")} mensaje = "Ingresa el código"/>
                   <Button className="Codigoverde" onClick={onClickResendCode}>Reenviar codigo</Button>
