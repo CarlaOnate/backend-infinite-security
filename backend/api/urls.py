@@ -17,8 +17,6 @@ urlpatterns = [
   path('create-resource', views.createRecurso, name='createRecurso'),
   #Manda los recursos
   path('get-resource', views.getRecurso, name='getRecurso'),
-  #path('get-producto', views.getProducto, name='getProducto'),
-
   path('update-resource', views.updateRecurso, name='updateRecurso'),
   path('delete-resource', views.deleteResource, name='deleteResource'),
   path('estadistica-general', views.getGeneralStatistic, name='getGeneralStatistic'),

@@ -2,10 +2,9 @@ import React, {useState, useContext} from "react";
 import { NavLink} from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import '../Estilos/RegistroCodigo.css'
-import {verificar, verificarUsuario, login} from '../services/axios/user'
+import {verificar, verificarUsuario, login, sendEmail} from '../services/axios/user'
 import { Button, Input } from "antd";
 import {UserContext} from '../context/userContext'
-import { sendEmail } from '../services/axios/user'
 
 
 const RegistrarseCodigo = (props) =>{
@@ -72,7 +71,7 @@ const RegistrarseCodigo = (props) =>{
                     </div>
                 </div>
                 <br></br>
-                <p>Ingresa el código que se envió a tu correo: </p>
+                <p>Ingresa el código que se envió a tu correo: {navigate.state.inputs.email}</p>
                 <div className="IngresoTextoRegistroCodigo">
                   <Input onChange = {(e) => handelInputs(e,"name")} mensaje = "Ingresa el código"/>
                   <Button className="Codigoverde" onClick={onClickResendCode}>Reenviar codigo</Button>

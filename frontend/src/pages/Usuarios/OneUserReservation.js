@@ -11,7 +11,7 @@ export const OneUserReservation = props => {
   const fetchData = filter => {
     userHistorial(filter).then(data => {
       setData(data.values)
-    }).catch(e => console.log(e))
+    }).catch(e => console.error(e))
   }
 
   useEffect(() => {

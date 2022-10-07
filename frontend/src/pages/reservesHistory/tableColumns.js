@@ -9,9 +9,7 @@ const renderEstatus = (_, record) => {
     4: 'cancelado',
   }
   return (
-    <>
-      <div className={`tag ${statusClass[estatus]}`}><p>{estatusName}</p></div>
-    </>
+    <div key={`${estatusName}+${record.reserva.codigoReserva}`} className={`tag ${statusClass[estatus]}`}><p>{estatusName}</p></div>
   )
 }
 
@@ -21,7 +19,7 @@ const renderLugar = (_, record) => {
   if (!lugar) return <p>\</p>
 
   return (
-    <p>Piso {lugar.piso}, Salón {lugar.salon}</p>
+    <p key={`${lugar.piso}+${lugar.salon}+${record.reserva.codigoReserva}`}>Piso {lugar.piso}, Salón {lugar.salon}</p>
   )
 }
 
@@ -31,7 +29,7 @@ const renderProducto = (_, record) => {
   if (!producto) return <p>\</p>
 
   return (
-    <p>{producto.nombre}</p>
+    <p key={`${producto.nombre}+${record.reserva.codigoReserva}`}>{producto.nombre}</p>
   )
 }
 
@@ -41,21 +39,21 @@ const renderCategoria = (_, record) => {
   if (!producto) return <p>\</p>
 
   return (
-    <p>{producto.categoria}</p>
+    <p key={`${producto.categoria}+${record.reserva.codigoReserva}`}>{producto.categoria}</p>
   )
 }
 
 const renderFecha = (_, record) => {
   const { reserva: {fechaInicio, fechafinal }} = record;
   return (
-    <p>{moment(fechaInicio).format('ll')} - {moment(fechafinal).format('ll')}</p>
+    <p key={`${fechaInicio}${fechafinal}+${record.reserva.codigoReserva}`}>{moment(fechaInicio).format('ll')} - {moment(fechafinal).format('ll')}</p>
   )
 }
 
 const renderHorario = (_, record) => {
   const { reserva: {horaInicio, horaFinal }} = record;
   return (
-    <p>{horaInicio} - {horaFinal}</p>
+    <p key={`${horaInicio}${horaFinal}+${record.reserva.codigoReserva}`}>{horaInicio} - {horaFinal}</p>
   )
 }
 
@@ -113,7 +111,7 @@ export const tableColumns = [
     title: 'Fecha',
     key: 'fecha',
     render: renderFecha,
-    sorter: (a, b) => moment(a.reserva.fechaInicio) < moment(b.reserva.fechaInicio),
+    sorter: (a, b) => moment(a.reserva.fechaInicio) <= moment(b.reserva.fechaFinal),
     sortDirections: ['descend'],
   },
   {

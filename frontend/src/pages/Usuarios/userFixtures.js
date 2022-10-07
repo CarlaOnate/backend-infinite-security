@@ -8,9 +8,7 @@ const renderEstatus = (_, record) => {
     'Eliminado': 'usuario-eliminado'
   }
   return (
-    <>
-      <div className={`tag ${statusClass[estatus]}`}><p>{estatus}</p></div>
-    </>
+    <div key={`${record.username}+${record.pk}`} className={`tag ${statusClass[estatus]}`}><p>{estatus}</p></div>
   )
 }
 
@@ -18,7 +16,7 @@ const renderVerified = (_, record) => {
   const { verified } = record;
   const verifiedIcon = verified ? <CheckCircleFilled/> : <ExclamationCircleFilled />
   return (
-    <div className={`tag ${verified && 'verificado'}`}>{verifiedIcon}</div>
+    <div key={`${record.username}+${record.pk}`} className={`tag ${verified && 'verificado'}`}>{verifiedIcon}</div>
   )
 }
 
