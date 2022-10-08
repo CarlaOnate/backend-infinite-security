@@ -99,10 +99,8 @@ const HacerReserva = props => {
 
   const subirDatos = () => {
     if((enviado['Piso'] !==undefined && enviado['Salon'] !==undefined) || (enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
-      console.log(enviado)
       crearReserva(enviado)
         .then(data => {
-          console.log('SUBIR DATOS =>', data)
           if (data.warning) return setAviso(2)
           if (data.Recurso) return changeMenuOption('reservations-list')
         })
@@ -114,10 +112,8 @@ const HacerReserva = props => {
 
   const subirDatos2 = () => {
     if((enviado['Productos'] !==undefined && enviado['Categoria'] !==undefined && (enviado['Cantidad'] !== undefined || enviado['Cantidad'] !== 0))){
-      console.log(enviado)
       crearReserva(enviado)
         .then(data => {
-          console.log('SUBIR DATOS =>', data)
           if (data.warning) return setAviso(2)
           if (data.Recurso) return changeMenuOption('reservations-list')
         })
