@@ -7,7 +7,7 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from django.db.models import Q
 from django.utils import timezone
 import random
@@ -613,36 +613,35 @@ def getReserva(req):
       return JsonResponse({"warning": "No se encontro esa reserva"})
   return JsonResponse({"Recurso": "Recurso.id"})
 
-
 @csrf_exempt
 def createReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   idUsuario = Usuario.objects.get(pk=req.user.id)
-  #try:
-  codigoReserva = generateCodigoReserva()
-  fechaInicio = body["FechaInicio"]
-  fechaFinal = body["fechaFinal"]
-  # comentarios =body["comentarios"]
-  horaI = body["horaI"]
-  horaF = body["horaF"]
-  idLugar = body["Salon"]
-  idProducto = body["Productos"]
-  if checkSpotAvailable(fechaInicio, fechaFinal, horaI, horaF, idLugar):
-    Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-    return JsonResponse({"Recurso": Recurso.id})
-  else:
-    return JsonResponse({"warning": "Ese lugar no esta disponible"})
-  #except:
-  """ return HttpResponseServerError() """
+  try:
+    codigoReserva = generateCodigoReserva()
+    fechaInicio = body["FechaInicio"]
+    fechaFinal = body["fechaFinal"]
+    horaI = body["horaI"]
+    horaF = body["horaF"]
+    idLugar = body["Salon"]
+    idProducto = body["Productos"]
+    startDate = timezone.make_aware(datetime.strptime(fechaInicio+horaI, '%Y-%m-%d%H:%M'))
+    endDate = timezone.make_aware(datetime.strptime(fechaFinal+horaF, '%Y-%m-%d%H:%M'))
+    print(startDate, endDate)
+    if checkSpotAvailable(startDate, endDate, idLugar):
+      Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+      return JsonResponse({"Recurso": Recurso.id})
+    else:
+      return JsonResponse({"warning": "Ese lugar no esta disponible"})
+  except:
+    return HttpResponseServerError()
 
-def checkSpotAvailable(firstDate, secondDate, firstHour, secondHour, idLugar):
+def checkSpotAvailable(startDate, endDate, idLugar):
+  print(idLugar)
   if idLugar != None:
-    # Revisa que no se reserva un mismo lugar a la mismahora
-    overlapping_slots = Reserva.objects.filter(
-      Q(fechaInicio__lt=firstDate, horaInicio__lt=firstHour, fechaFinal__gt=firstDate, horaFinal__gt=firstHour) |
-      Q(fechaInicio__lt=secondDate, horaInicio__lt=secondHour, fechaFinal__gt=secondDate, horaFinal__gt=secondHour))
-    print(overlapping_slots)
+    print(startDate, endDate)
+    overlapping_slots = Reserva.objects.filter(idLugar_id=idLugar, endDate__gte=startDate, startDate__lte=endDate)
     if overlapping_slots.exists(): return False
     else: return True
 

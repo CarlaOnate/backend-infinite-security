@@ -118,6 +118,8 @@ class Reserva(models.Model):
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
   fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
   fechaFinal = models.DateField()
+  startDate = models.DateTimeField(null=True)
+  endDate = models.DateTimeField(null=True)
   #Para saber las horas de uso
   horaInicio = models.TextField(null = True)
   horaFinal = models.TextField(null = True)
