@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 from datetime import datetime, timedelta
+from django.db.models import Q
 from django.utils import timezone
 import random
 import json
@@ -615,19 +616,32 @@ def createReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   idUsuario = Usuario.objects.get(pk=req.user.id)
-  try:
-    codigoReserva = generateCodigoReserva()
-    fechaInicio = body["FechaInicio"]
-    fechaFinal = body["fechaFinal"]
-    # comentarios =body["comentarios"]
-    horaI = body["horaI"]
-    horaF = body["horaF"]
-    idLugar = body["Salon"]
-    idProducto = body["Productos"]
+  #try:
+  codigoReserva = generateCodigoReserva()
+  fechaInicio = body["FechaInicio"]
+  fechaFinal = body["fechaFinal"]
+  # comentarios =body["comentarios"]
+  horaI = body["horaI"]
+  horaF = body["horaF"]
+  idLugar = body["Salon"]
+  idProducto = body["Productos"]
+  if checkSpotAvailable(fechaInicio, fechaFinal, horaI, horaF, idLugar):
     Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
     return JsonResponse({"Recurso": Recurso.id})
-  except:
-   return HttpResponseServerError()
+  else:
+    return JsonResponse({"warning": "Ese lugar no esta disponible"})
+  #except:
+  """ return HttpResponseServerError() """
+
+def checkSpotAvailable(firstDate, secondDate, firstHour, secondHour, idLugar):
+  if idLugar != None:
+    # Revisa que no se reserva un mismo lugar a la mismahora
+    overlapping_slots = Reserva.objects.filter(
+      Q(fechaInicio__lt=firstDate, horaInicio__lt=firstHour, fechaFinal__gt=firstDate, horaFinal__gt=firstHour) |
+      Q(fechaInicio__lt=secondDate, horaInicio__lt=secondHour, fechaFinal__gt=secondDate, horaFinal__gt=secondHour))
+    print(overlapping_slots)
+    if overlapping_slots.exists(): return False
+    else: return True
 
 @csrf_exempt
 def updateReserva(req):
