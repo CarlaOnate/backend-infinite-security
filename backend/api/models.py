@@ -97,7 +97,7 @@ class Usuario(AbstractUser):
 
   deletedAt = models.DateTimeField(null=True)
   USERNAME_FIELD = 'correo'
-  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'username']
+  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'username', 'genero', 'oficio', 'rol']
   pass
 
   class Meta:

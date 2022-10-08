@@ -116,7 +116,6 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 @csrf_exempt
 def getUsers(req):
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  # TODO: Opcional, agregar al query cuenta de total de reservas
   allUsers = Usuario.objects.filter(deletedAt=None).all()
   usersResponse = []
   for user in allUsers:
@@ -126,6 +125,10 @@ def getUsers(req):
 
 def getUserJson(user):
   rolName = 'Usuario'
+  print(user)
+  print(user.oficio)
+  print(user.genero)
+  print(user.rol)
   if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol - 1][1]
   usuarioDict = {
     "pk": user.id,
@@ -135,7 +138,7 @@ def getUserJson(user):
     "apellidoMaterno": user.apellidoMaterno,
     "genero": user.genero,
     "departament": user.departament,
-    "oficio": user.OFICIO_ENUM[user.oficio][1],
+    "oficio": Usuario.OFICIO_ENUM[user.oficio - 1][1],
     "correo": user.correo,
     "verified": user.verified,
     "fechaDesbloqueo": user.fechaDesbloqueo,
@@ -274,7 +277,7 @@ def getProducto(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
-          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria - 1][1],
         }
         productsList.append(productDict)
       returnObj[category[1]] = productsList
@@ -288,7 +291,7 @@ def getProducto(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
-          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria - 1][1],
         }
         productsList.append(productDict)
       returnObj[type[1]] = productsList
@@ -515,7 +518,7 @@ def getMostReservedCategories(body):
   mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
   for category in mostReservedCategories:
-    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"] - 1][1], "count": category['num_category']})
   return JsonResponse({"value": productsResponse})
 
 # Estadisticas de 1 solo user
@@ -564,7 +567,7 @@ def getUserMostReservedCategories(body, user):
   mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
   for category in mostReservedCategories:
-    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"] - 1][1], "count": category['num_category']})
   return JsonResponse({"value": productsResponse, "graphCols": ["Categoria",  "Cantidad"] })
 
 def getElementResponse(element, tipo):
@@ -576,7 +579,7 @@ def getElementResponse(element, tipo):
       "nombre": element.nombre,
       "modelo": element.modelo,
       "detalles": element.detalles,
-      "categoria": element.PRODUCT_CATEGORIES[element.categoria][1],
+      "categoria": element.PRODUCT_CATEGORIES[element.categoria - 1][1],
       "cantidadSolicitada": element.cantidadSolicitada
     }
 
@@ -682,21 +685,25 @@ def DeleteReserva(req):
 def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  user = Usuario.objects.get(correo=body['email'])
-  if user.deletedAt != None: return HttpResponseForbidden()
-  if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
-  email = body['email']
-  password = body["password"]
-  authenticatedUser = authenticate(req, correo=email, password=password)
-  if authenticatedUser is not None:
-    login(req, authenticatedUser) # set user in req.user
-    userDict = {
-      "user": req.user.id,
-      "rol": req.user.rol
-    }
-    return JsonResponse(userDict)
-  else:
-    return JsonResponse({ "error": "invalid credentials" })
+  try:
+    user = Usuario.objects.get(correo=body['email'])
+    if user.deletedAt != None: return HttpResponseForbidden()
+    if user.fechaDesbloqueo != None:
+      if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
+    email = body['email']
+    password = body["password"]
+    authenticatedUser = authenticate(req, correo=email, password=password)
+    if authenticatedUser is not None:
+      login(req, authenticatedUser) # set user in req.user
+      userDict = {
+        "user": req.user.id,
+        "rol": req.user.rol
+      }
+      return JsonResponse(userDict)
+    else:
+      return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
+  except:
+      return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
 
 @csrf_exempt
 def createUser(req): # Add email validation

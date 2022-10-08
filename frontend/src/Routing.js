@@ -30,7 +30,7 @@ function Routing(props) {
     userId: user.id,
     userLoggedIn,
     userIsAdmin,
-    userIsGeneralAdmin: user.rol === 0
+    userIsGeneralAdmin: user.rol === 1
   };
 
   const renderAuthRoutes = (authProps) => (

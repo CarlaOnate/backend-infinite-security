@@ -60,11 +60,10 @@ const HacerReserva = () => {
         "byFloor": true
       }
       getRecursos(filtrado).then((response) => {
-        console.log('RES', response)
         createDropdownData(response.value)
         setDataLugares(response)
       }).catch((error) => {
-        console.log(error);
+        console.error(error);
       })
     }
     llamarLista()

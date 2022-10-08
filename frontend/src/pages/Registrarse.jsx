@@ -21,18 +21,15 @@ const Registrarse = () => {
 
     const handleStep1 = async () =>{
         const user = await crearUsuario(inputs)
-        console.log(user)
         const emailObject = {
             type:"verify-email",
             email: inputs.email
         }
         const email = await sendEmail(emailObject)
-        console.log(email)
     }
 
     const handelInputs = (e, tipo) => {
         const {target} = e
-        //console.log(target.value)
         if(tipo === 'work') setRadio2(e.target.value) 
         if(tipo === 'gender') setRadio1(e.target.value) 
         setInputs(prep => ({
@@ -42,7 +39,6 @@ const Registrarse = () => {
     }
 
     const onChange = (date, dateString) => {
-        console.log(date, dateString);
         setInputs(prep => ({
             ...prep,
             "dateOfBirth":dateString
@@ -53,9 +49,6 @@ const Registrarse = () => {
         RegistrarseCodigo: navigate.pathname === '/RegistrarseCodigo',
         IniciarSesion: navigate.pathname === '/IniciarSesion'
     };
-
-    console.log(inputs)
-
 
     return(
         <div className="ArearegistroGeneral">
