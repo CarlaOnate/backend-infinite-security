@@ -12,7 +12,7 @@ export const ReservesManagement = () => {
   const [ error, setError ] = useState(false)
   const [ warning, setWarning ] = useState({})
   const [ success, setSuccess ] = useState(false)
-  const [ warning1, setWarning1 ] = useState(false)
+  const [ editWarning, setEditWarning ] = useState(false)
 
   const fetchData = () => {
     data && onSearch(data[0].reserva.id)
@@ -45,11 +45,16 @@ export const ReservesManagement = () => {
       } else {
         setData([data])
       }
-    }).catch(() => setError(true))
+    }).catch(() => setError({ msg: "Hubo un problema consultando la información" }))
   }
 
   const onSubmit = (inputs = {}, type) => {
     if (type === 'edit') {
+      console.log(inputs.estatus)
+      console.log(inputs.estatus < 1 || inputs.estatus > 4)
+
+      if (inputs.estatus < 1 || inputs.estatus > 4) return setEditWarning({ msg: "Valor estatus no valido (1 - 4)"})
+
       const editRequest = {
         reserva: data[0].reserva.id,
         estatus: data[0].reserva.estatus,
@@ -62,10 +67,10 @@ export const ReservesManagement = () => {
       updateReserva(editRequest)
         .then(data => {
           if (data.recurso) setSuccess(true)
-          if (data.warning) setWarning1({ msg: data.warning })
+          if (data.warning) setEditWarning({ msg: data.warning })
           fetchData()
         })
-        .catch(() => setError(true))
+        .catch(() => setError({ msg: "Hubo un problema editando la reserva" }))
     }
     if (type === 'remove') {
       deleteReserva({ id: data[0].reserva.id })
@@ -73,13 +78,13 @@ export const ReservesManagement = () => {
           if (data.recurso) setSuccess(true)
           fetchData()
         })
-        .catch(() => setError(true))
+        .catch(() => setError({ msg: "Hubo un problema borrando la reserva" }))
     }
   }
 
   const resetAltersStates = () => {
     setWarning({})
-    setWarning1({})
+    setEditWarning({})
     setError(false)
     setSuccess(false)
   }
@@ -87,6 +92,7 @@ export const ReservesManagement = () => {
   const editReservationOptions = [
     {
       text: "Producto id",
+      key: 'product',
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'producto'),
       inputType: "number",
@@ -94,13 +100,15 @@ export const ReservesManagement = () => {
     },
     {
       text: "Lugar id",
+      key: 'lugar',
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'lugar'),
       inputType: "number",
       show: data
     },
     {
-      text: "Estatus (numero)",
+      text: "Estatus (1: Por iniciar, 2: En proceso, 3: Finalizada, 4: Cancelada)",
+      key: 'estatus',
       style: "reservation-edit-input",
       onChange: (e) => onChangeEditInput(e, 'estatus'),
       inputType: "number",
@@ -144,7 +152,9 @@ export const ReservesManagement = () => {
             <div key={option.text}>
               {option.show && (<>
                 <label> {option.text} </label>
-                <Input type={option.inputType} onChange={option.onChange} />
+                {option.key === 'estatus' ?
+                  <Input type={option.inputType} min={1} max={4} onChange={option.onChange} /> :
+                  <Input type={option.inputType} onChange={option.onChange} />}
               </>)}
             </div>
           ))}
@@ -167,10 +177,10 @@ export const ReservesManagement = () => {
         columns={tableColumns}
       />
       {showEditInputs && renderInputs(editReservationOptions, editInputs, 'edit')}
-      {error &&
+      {error.msg &&
         <Alert
           message="Error"
-          description="Hubo un error, inténtalo mas tarde"
+          description={error.msg}
           type="error"
           showIcon
           afterClose={resetAltersStates}
@@ -184,7 +194,7 @@ export const ReservesManagement = () => {
           afterClose={resetAltersStates}
           closable
         />}
-        {warning1.msg && (renderWarning(warning1))}
+        {editWarning.msg && (renderWarning(editWarning))}
     </section>
   )
 }
