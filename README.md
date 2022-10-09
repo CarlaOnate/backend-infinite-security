@@ -20,7 +20,7 @@ Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
 **Todos los pasos anteriroes se tienen que hacer dentro de la carpeta de backend, para revisar esto usa `ls` en la terminar y debes de ver el archivo de manage.py en la carpeta en la que estes**
 
 ---
-### Setup de front
+### Setup de front
 - Abrir nueva terminal
 - Ingresar a la carpeta de frontend `cd frontend` - o escribir todo el path usando tab para que la terminal autocomplete las opciones hacia donde ir.
 - Revisar que este instalado npm: `npm --version`
