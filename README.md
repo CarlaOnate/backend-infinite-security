@@ -2,13 +2,13 @@
 
 # Instalación app web
 ### Setup del back del proyecto
---
-** Clonar repositorio y accesar proyecto **
+---
+**Clonar repositorio y accesar proyecto**
 Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
 - En la terminal o el command prompt ingresar al folder llamado backend. `cd Pagina-web/backend`
---
-** Activar ambiente virtaul en back **
-* Instrucciones para mac o linux *
+---
+**Activar ambiente virtaul en back**
+*Instrucciones para mac o linux*
 - Revisar que este instalado pip (revisar esta guía) https://www.geeksforgeeks.org/how-to-install-pip-in-macos/
   Esto es importante para poder instalar los paquetes que necesita django para funcionar.
 - Revisar si se tiene virtualenv instalado `virtualenv --version`
@@ -18,7 +18,7 @@ Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
 - Instalar paquetes necesarios con: `pip install -r requirements.txt`
 - Correr django con: `python manage.py runserver`
 
-** Todos los pasos anteriroes se tienen que hacer dentro de la carpeta de backend, para revisar esto usa `ls` en la terminar y debes de ver el archivo de manage.py en la carpeta en la que estes **
+**Todos los pasos anteriroes se tienen que hacer dentro de la carpeta de backend, para revisar esto usa `ls` en la terminar y debes de ver el archivo de manage.py en la carpeta en la que estes**
 
 ### Setup de front
 - Abrir nueva terminal
