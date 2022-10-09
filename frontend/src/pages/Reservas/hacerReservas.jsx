@@ -13,7 +13,6 @@ const HacerReserva = props => {
   const { changeMenuOption } = props;
   const [pantalla, setPantalla] = useState(1);
   const [ enviado, setEnviado ]  = useState({});
-  const [ enviado2, setEnviado2 ]  = useState({});
   const [ lugares, setLugares ] = useState({ pisosDropdown: [], salonesDropdown: [] });
   const [aviso, setAviso] = useState()
 
@@ -133,8 +132,8 @@ const HacerReserva = props => {
           <Radio value={1}>Lugar</Radio>
           <Radio value={2}>Producto</Radio>
         </Radio.Group>
-        {pantalla === 1 && <PantallaReserva1 enviado = {enviado} items = {items}/>}
-        {pantalla === 2 && <MenuInterno setEnviado2={setEnviado2}/>}
+        {pantalla === 1 && <PantallaReserva1 enviado={setEnviado} enviadoObj={enviado} items = {items}/>}
+        {pantalla === 2 && <MenuInterno enviado={setEnviado} enviadoObj={enviado}/>}
       </div>
       <div className="HacerReservaDerecha">
         <h1 className="tituloHacerReserva">¿Cuando es la reserva?</h1>

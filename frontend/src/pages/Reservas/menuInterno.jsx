@@ -66,8 +66,12 @@ const MenuInterno = (props) => {
       selectable
       items = {categoriaMostrar}
       onClick = {({key}) => {
-        setCategoría(categoriaMostrar.find((elm) => elm.key === key).key);
-        updateEnviadoObj()
+        const categoria = categoriaMostrar.find((elm) => elm.key === key).key;
+        setCategoría(categoria);
+        props.enviado(prev => ({
+          ...prev,
+          Categoria: categoria
+        }))
       }}
     />
   );
@@ -77,19 +81,15 @@ const MenuInterno = (props) => {
       selectable
       items = {nombreMostrar}
       onClick = {({key}) => {
-        setNombre(nombreMostrar.find((elm) => elm.key === key).key);
-        updateEnviadoObj()
+        const nombre = nombreMostrar.find((elm) => elm.key === key).key
+        setNombre(nombre)
+        props.enviado(prev => ({
+          ...prev,
+          Productos: nombre
+        }))
       }}
     />
   );
-
-  const updateEnviadoObj = () => {
-    setEnviado2(prev => ({
-      ...prev,
-      Categoria: categoria,
-      Productos: nombre
-    }))
-  }
 
     return(
         <div className="HacerReservaCentral">

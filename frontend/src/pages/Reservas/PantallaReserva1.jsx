@@ -21,7 +21,12 @@ const PantallaReserva1 = (props) => {
           defaultSelectedKeys={['3']}
           items = {props.items}
           onClick = {({key}) => {
-            setPiso(props.items.find((elm) => elm.key === key).key);
+            const piso = props.items.find((elm) => elm.key === key).key;
+            setPiso(piso);
+            props.enviado(prev => ({
+              ...prev,
+              Piso: piso
+            }))
           }}
         />
     );
@@ -32,7 +37,11 @@ const PantallaReserva1 = (props) => {
           defaultSelectedKeys={['3']}
           items = {salonesMostrar}
           onClick = {({key}) => {
-            setSalon(salonesMostrar.find((elm) => elm.key === key).key);
+            const salon = salonesMostrar.find((elm) => elm.key === key).key
+            props.enviado(prev => ({
+              ...prev,
+              Salon: salon
+            }))
           }}
         />
     );
@@ -66,14 +75,17 @@ const PantallaReserva1 = (props) => {
         generarArreglo(piso)
 
     }, [piso])
-    props.enviado["Piso"] = piso;
-    props.enviado["Salon"] = salon;
-    
-    if(pantallainterior === 2){
-        props.enviado["Categoria"] = null;
-        props.enviado["Cantidad"] = null;
-        props.enviado["Productos"] = null;
-    }
+
+    useEffect( () => {
+      if (pantallainterior === 2) {
+        props.enviado(prev => ({
+          ...prev,
+          Categoria: null,
+          Cantidad: null,
+          Productos: null
+        }))
+      }
+    }, [props, pantallainterior])
 
     return(
         <div className="HacerReservaCentral">

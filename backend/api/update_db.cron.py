@@ -15,7 +15,6 @@ def updateReservations():
   for reserva in reservations:
     # Updatear cantidad de productos que se prestaron, restarlos de cantidad Solicitada
     reservationDate = datetime(reserva.fechaInicio + ' ' + reserva.horaInicio)
-    print(reservationDate)
     if reservationDate < today: reserva.estatus = 2
     if reservationDate < today:
       reserva.estatus = 3

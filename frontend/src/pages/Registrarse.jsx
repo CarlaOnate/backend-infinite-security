@@ -21,9 +21,9 @@ const Registrarse = () => {
 
     const handleStep1 = async () => {
       if (Object.keys(inputs).length === 8) {
-        const validPassword = validatePasswordStrength()
+        const validPassword = validatePasswordStrength(inputs.password)
         if (validPassword) {
-          const emailObject = {
+          const emailObject = { // A1!holaholahola
             type:"verify-email",
             email: inputs.email
           }
