@@ -6,6 +6,7 @@ import { Navigate, NavLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { DatePicker, Alert } from 'antd';
 import {crearUsuario, sendEmail} from '../services/axios/user'
+import { validatePasswordStrength } from "../util";
 
 const Registrarse = () => {
     const navigate = useLocation()
@@ -31,7 +32,7 @@ const Registrarse = () => {
                 setLoading(true)
                 return sendEmail(emailObject)
               })
-            .then(data => data.msg && setRedirect(true)) // A1!piunhoiknon
+            .then(data => data.msg && setRedirect(true))
             .catch(() => setError(true))
         } else {
           setWarning({ msg: "La contrseña tiene que ser igual o mayor 8 dígitos, tener una mayúscula, una minúscula, un número y un cáracter espcial"})
@@ -60,12 +61,6 @@ const Registrarse = () => {
         RegistrarseCodigo: navigate.pathname === '/RegistrarseCodigo',
         IniciarSesion: navigate.pathname === '/IniciarSesion'
     };
-
-    const validatePasswordStrength = () => {
-      const regex = new RegExp(/^(?=[^A-Z]*[A-Z])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{6,}$/)
-      const { password } = inputs;
-      return password.match(regex)
-    }
 
     const resetAlertStates = () => {
       setWarning({})
