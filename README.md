@@ -1,6 +1,6 @@
 # Infinite Security
 
-# Instalación app web
+# Instalación app 
 ### Setup del back del proyecto
 **Clonar repositorio y accesar proyecto**
 Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
