@@ -3,7 +3,7 @@
 # Instalación app web
 ### Setup del back del proyecto
 **Clonar repositorio y accesar proyecto**
-Clonar el repositorio en la computadora usando `git clone <url del repositorio>` \n
+Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
 - En la terminal o el command prompt ingresar al folder llamado backend. `cd Pagina-web/backend`
 ---
 **Activar ambiente virtaul en back**
