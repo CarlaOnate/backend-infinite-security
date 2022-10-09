@@ -58,9 +58,9 @@ export const UserStats = () => {
     }
 
     if (Object.keys(data).length === 0) {
-      userStats({ graph: 'Producto', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "productos": data.value}))})
-      userStats({ graph: 'Lugar', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "lugares": data.value}))})
-      userStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => {setData(prev => ({...prev, "categorias": data.value}))})
+      userStats({ graph: 'Producto', timeRange: 'year'}).then(data => { setData(prev => ({...prev, "productos": data.value }))})
+      userStats({ graph: 'Lugar', timeRange: 'year'}).then(data => { setData(prev => ({...prev, "lugares": data.value }))})
+      userStats({ graph: 'Producto-categoria', timeRange: 'year'}).then(data => { setData(prev => ({...prev, "categorias": data.value }))})
     }
     formatGraphObject()
   }, [data])
@@ -72,6 +72,8 @@ export const UserStats = () => {
       setSelectedButton(type)
     }
   }
+
+  const renderGraph = formattedData[selectedButton] && formattedData[selectedButton].data.length > 1
 
   return (
     <>
@@ -85,12 +87,12 @@ export const UserStats = () => {
           ))}
         </div>
         <div className='stats-graphs'>
-          {formattedData[selectedButton] && <Chart
+          {renderGraph ? <Chart
             chartType="Bar"
             height="300px"
-            data={formattedData[selectedButton].data}
+            data={formattedData[selectedButton].data || [[]]}
             options={formattedData[selectedButton].options}
-          />}
+          /> : <p>No hay elementos que mostrar</p>}
         </div>
       </section>
     </>

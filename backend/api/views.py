@@ -1,3 +1,4 @@
+from concurrent.futures.process import _ExceptionWithTraceback
 from django.http import JsonResponse, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
@@ -7,7 +8,8 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from django.db.models import Q
 from django.utils import timezone
 import random
 import json
@@ -115,7 +117,6 @@ def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
 @csrf_exempt
 def getUsers(req):
   if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
-  # TODO: Opcional, agregar al query cuenta de total de reservas
   allUsers = Usuario.objects.filter(deletedAt=None).all()
   usersResponse = []
   for user in allUsers:
@@ -125,6 +126,10 @@ def getUsers(req):
 
 def getUserJson(user):
   rolName = 'Usuario'
+  print(user)
+  print(user.oficio)
+  print(user.genero)
+  print(user.rol)
   if user.rol != None: rolName = Usuario.ROL_ENUM[user.rol - 1][1]
   usuarioDict = {
     "pk": user.id,
@@ -134,7 +139,7 @@ def getUserJson(user):
     "apellidoMaterno": user.apellidoMaterno,
     "genero": user.genero,
     "departament": user.departament,
-    "oficio": user.OFICIO_ENUM[user.oficio][1],
+    "oficio": Usuario.OFICIO_ENUM[user.oficio - 1][1],
     "correo": user.correo,
     "verified": user.verified,
     "fechaDesbloqueo": user.fechaDesbloqueo,
@@ -273,7 +278,7 @@ def getProducto(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
-          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria - 1][1],
         }
         productsList.append(productDict)
       returnObj[category[1]] = productsList
@@ -287,7 +292,7 @@ def getProducto(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
-          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria][1],
+          "categoria": Producto.PRODUCT_CATEGORIES[producto.categoria - 1][1],
         }
         productsList.append(productDict)
       returnObj[type[1]] = productsList
@@ -514,7 +519,7 @@ def getMostReservedCategories(body):
   mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
   for category in mostReservedCategories:
-    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"] - 1][1], "count": category['num_category']})
   return JsonResponse({"value": productsResponse})
 
 # Estadisticas de 1 solo user
@@ -563,7 +568,7 @@ def getUserMostReservedCategories(body, user):
   mostReservedCategories = productosEnReservas.values("categoria").annotate(num_category=Count('categoria'))
   productsResponse = []
   for category in mostReservedCategories:
-    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"]][1], "count": category['num_category']})
+    productsResponse.append({ "recurso": Producto.PRODUCT_CATEGORIES[category["categoria"] - 1][1], "count": category['num_category']})
   return JsonResponse({"value": productsResponse, "graphCols": ["Categoria",  "Cantidad"] })
 
 def getElementResponse(element, tipo):
@@ -575,7 +580,7 @@ def getElementResponse(element, tipo):
       "nombre": element.nombre,
       "modelo": element.modelo,
       "detalles": element.detalles,
-      "categoria": element.PRODUCT_CATEGORIES[element.categoria][1],
+      "categoria": element.PRODUCT_CATEGORIES[element.categoria - 1][1],
       "cantidadSolicitada": element.cantidadSolicitada
     }
 
@@ -609,7 +614,6 @@ def getReserva(req):
       return JsonResponse({"warning": "No se encontro esa reserva"})
   return JsonResponse({"Recurso": "Recurso.id"})
 
-
 @csrf_exempt
 def createReserva(req):
   body_unicode = req.body.decode('utf-8')
@@ -619,15 +623,28 @@ def createReserva(req):
     codigoReserva = generateCodigoReserva()
     fechaInicio = body["FechaInicio"]
     fechaFinal = body["fechaFinal"]
-    # comentarios =body["comentarios"]
     horaI = body["horaI"]
     horaF = body["horaF"]
     idLugar = body["Salon"]
     idProducto = body["Productos"]
-    Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-    return JsonResponse({"Recurso": Recurso.id})
+    startDate = timezone.make_aware(datetime.strptime(fechaInicio+horaI, '%Y-%m-%d%H:%M'))
+    endDate = timezone.make_aware(datetime.strptime(fechaFinal+horaF, '%Y-%m-%d%H:%M'))
+    print(startDate, endDate)
+    if checkSpotAvailable(startDate, endDate, idLugar):
+      Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+      return JsonResponse({"Recurso": Recurso.id})
+    else:
+      return JsonResponse({"warning": "Ese lugar no esta disponible"})
   except:
-   return HttpResponseServerError()
+    return HttpResponseServerError()
+
+def checkSpotAvailable(startDate, endDate, idLugar):
+  print(idLugar)
+  if idLugar != None:
+    print(startDate, endDate)
+    overlapping_slots = Reserva.objects.filter(idLugar_id=idLugar, endDate__gte=startDate, startDate__lte=endDate)
+    if overlapping_slots.exists(): return False
+    else: return True
 
 @csrf_exempt
 def updateReserva(req):
@@ -668,21 +685,25 @@ def DeleteReserva(req):
 def loginUser(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
-  user = Usuario.objects.get(correo=body['email'])
-  if user.deletedAt != None: return HttpResponseForbidden()
-  if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
-  email = body['email']
-  password = body["password"]
-  authenticatedUser = authenticate(req, correo=email, password=password)
-  if authenticatedUser is not None:
-    login(req, authenticatedUser) # set user in req.user
-    userDict = {
-      "user": req.user.id,
-      "rol": req.user.rol
-    }
-    return JsonResponse(userDict)
-  else:
-    return JsonResponse({ "error": "invalid credentials" })
+  try:
+    user = Usuario.objects.get(correo=body['email'])
+    if user.deletedAt != None: return HttpResponseForbidden()
+    if user.fechaDesbloqueo != None:
+      if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
+    email = body['email']
+    password = body["password"]
+    authenticatedUser = authenticate(req, correo=email, password=password)
+    if authenticatedUser is not None:
+      login(req, authenticatedUser) # set user in req.user
+      userDict = {
+        "user": req.user.id,
+        "rol": req.user.rol
+      }
+      return JsonResponse(userDict)
+    else:
+      return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
+  except:
+      return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
 
 @csrf_exempt
 def createUser(req): # Add email validation
@@ -699,10 +720,9 @@ def createUser(req): # Add email validation
     work = body["work"]
     username = name + ' ' + lastName + ' ' + secondLastName
     newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
-    # Create user and login at the same time
-    return JsonResponse({"user": newUser.id, "rol": req.user.rol})
+    return JsonResponse({"user": newUser.id, "rol": newUser.rol})
   except:
-    return JsonResponse({"Razon": "El campo no es unico"})
+   return HttpResponseBadRequest()
 
 @csrf_exempt
 def logoutUser(req):
@@ -720,8 +740,10 @@ def sendEmail(req):
   body = json.loads(body_unicode)
   if 'type' in body.keys():
     typeEmail = body['type']
-    if typeEmail == "verify-email": return sendVerificationEmail(body)
-    elif typeEmail == "change-password": return sendChagePasswordEmail(body)
+    try:
+      if typeEmail == "verify-email": return sendVerificationEmail(body)
+      elif typeEmail == "change-password": return sendChagePasswordEmail(body)
+    except: return HttpResponseBadRequest()
   else:
     return JsonResponse({"msg": "Tipo no valido"})
 

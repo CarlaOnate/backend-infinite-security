@@ -20,8 +20,8 @@ import { Profile } from './pages/Profile';
 
 function Routing(props) {
   const { user } = useContext(UserContext);
-  const userLoggedIn = user.id !== null;
-  const userIsAdmin = user.rol !== null;
+  const userLoggedIn = user.id;
+  const userIsAdmin = user.rol;
   const showUserRoutes = userLoggedIn && !userIsAdmin;
   const showAuthRoutes = !userLoggedIn;
   const showAdminRoutes = userIsAdmin;
@@ -30,15 +30,15 @@ function Routing(props) {
     userId: user.id,
     userLoggedIn,
     userIsAdmin,
-    userIsGeneralAdmin: user.rol === 0
+    userIsGeneralAdmin: user.rol === 1
   };
 
   const renderAuthRoutes = (authProps) => (
     <>
-      <Route exact path='/login' element = {<IniciarSesion {...authProps} />}/>{/*Para la pestaña de login o de inicio de sesion*/}
-      <Route  exact path="/RecuperarContra" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>{/*Para la pestaña de recuperar contraseña*/}
-      <Route exact path="/Registrarse" element={<Registrarse {...authProps} />}/> {/*Para la pestaña de Registrarse*/}
-      <Route exact path="/RegistrarseCodigo" element={<RegistrarseCodigo {...authProps} />}/> {/*para ir a registrarse donde te pide el código codigo*/}
+      <Route exact path='login' element = {<IniciarSesion {...authProps} />}/>{/*Para la pestaña de login o de inicio de sesion*/}
+      <Route  exact path="RecuperarContra" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>{/*Para la pestaña de recuperar contraseña*/}
+      <Route exact path="Registrarse" element={<Registrarse {...authProps} />}/> {/*Para la pestaña de Registrarse*/}
+      <Route exact path="RegistrarseCodigo" element={<RegistrarseCodigo {...authProps} />}/> {/*para ir a registrarse donde te pide el código codigo*/}
     </>
   );
 
@@ -53,19 +53,18 @@ function Routing(props) {
     return (
       <>
         <Route  exact path="perfil" element={<Profile {...authProps} />}/>
-        <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
-        <Route  exact path="/perfil" element={<Profile {...authProps} />}/>
+        <Route  exact path="statistics" element={<Stats {...authProps} />}/>
       </>
     );
   };
 
   const renderAdminRoutes = (authProps) => (
     <>
-      <Route  exact path="/reserves-history" element={<HistorialReservas {...authProps} />}/>
-      <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
+      <Route  exact path="reserves-history" element={<HistorialReservas {...authProps} />}/>
+      <Route  exact path="statistics" element={<Stats {...authProps} />}/>
       <Route  exact path="perfil" element={<Profile {...authProps} />}/>
-      <Route exact path="/reservation" element={<ReservasMenu {...authProps} />}/>
-      <Route exact path="/users" element={<Users {...authProps} />}/>
+      <Route exact path="reservation" element={<ReservasMenu {...authProps} />}/>
+      <Route exact path="users" element={<Users {...authProps} />}/>
     </>
   );
 

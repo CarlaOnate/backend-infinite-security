@@ -83,22 +83,31 @@ export const HistorialReservas = props => {
     setError(false)
   }
 
+  const showDropdownTooltip = dropdownItem === '3'
+
   return (
     <div className='historial-reservas-container'>
       <div className='historial-top'>
         <p className='tab'>Reservas</p>
         <div className='historial-filter'>
-          <Dropdown
-            className='historial-dropdown'
-            onClickItem={handleDropdownItem}
-            selectedItem={dropdownItem}
-            items={dropdownItems}
-          />
-          <Search
-            size="small"
-            placeholder="valor a filtrar"
-            onSearch={onSearch}
-          />
+          <div>
+            <Dropdown
+              className='historial-dropdown'
+              onClickItem={handleDropdownItem}
+              selectedItem={dropdownItem}
+              items={dropdownItems}
+            />
+            <Search
+              size="small"
+              placeholder="valor a filtrar"
+              onSearch={onSearch}
+            />
+          </div>
+          {showDropdownTooltip &&
+            <div>
+              <p>(1: Por iniciar, 2: En progreso, 3: Finalizada, 4: Cancelada)</p>
+            </div>
+          }
         </div>
       </div>
       {error &&

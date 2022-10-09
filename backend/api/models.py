@@ -79,9 +79,9 @@ class Usuario(AbstractUser):
   nombre = models.TextField()
   apellidoPaterno = models.TextField()
   apellidoMaterno = models.TextField()
-  genero = models.IntegerField(choices=GENERO_ENUM)
-  fechaNacimiento = models.DateField()
-  oficio = models.IntegerField(choices=OFICIO_ENUM)
+  genero = models.IntegerField(choices=GENERO_ENUM, null=True)
+  fechaNacimiento = models.DateField(null=True)
+  oficio = models.IntegerField(choices=OFICIO_ENUM, null=True)
   correo = models.EmailField(unique=True)
   verified = models.BooleanField(default=False)
   changePasswordCode = models.TextField(null=True)
@@ -97,7 +97,7 @@ class Usuario(AbstractUser):
 
   deletedAt = models.DateTimeField(null=True)
   USERNAME_FIELD = 'correo'
-  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno']
+  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'username', 'genero', 'oficio', 'rol']
   pass
 
   class Meta:
@@ -118,7 +118,8 @@ class Reserva(models.Model):
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
   fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
   fechaFinal = models.DateField()
-  
+  startDate = models.DateTimeField(null=True)
+  endDate = models.DateTimeField(null=True)
   #Para saber las horas de uso
   horaInicio = models.TextField(null = True)
   horaFinal = models.TextField(null = True)

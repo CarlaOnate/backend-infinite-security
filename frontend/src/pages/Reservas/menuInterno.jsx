@@ -3,30 +3,12 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, Space, Typography } from 'antd';
 import { getRecursos } from "../../services/axios/user";
 
-const MenuInterno = (props) =>{
-  
+const MenuInterno = (props) => {
+  const { setEnviado2 } = props;
   const [categoriaMostrar, setcategoriaMostrar] = useState("No aplica")
   const [categoria, setCategoría] = useState("No aplica");
-  const [cantidadesMostrar, setCantidades] = useState("0");
-  //const [cantidadSeleccionada, setCantidadSeleccionada] = useState(null)
-
   const [nombre, setNombre] = useState(null)
   const [nombreMostrar, setNombreMostrar] = useState("No aplica");
-
-  const items=[
-    {
-      key: '1',
-      label: 'Item 1',
-    },
-    {
-      key: '2',
-      label: 'Item 2',
-    },
-    {
-      key: '3',
-      label: 'Item 3',
-    },
-  ]
 
   useEffect(() =>{//Ya sirve y es para desplegar las categorias
     const generarArreglo = (categoria) =>{
@@ -49,45 +31,12 @@ const MenuInterno = (props) =>{
 
         setcategoriaMostrar(categoriaMostrar);
         setCategoría(null)
-        //setCantidadSeleccionada(null)
         setNombre(null)
         })
       }
       generarArreglo()
 
   }, [])
-
-  // useEffect(() =>{ 
-  //   const generarArreglo = (categoria) =>{
-
-  //     const filtrado = {
-  //       "resourceType": "Producto",
-  //       "byCategory":true
-  //     }
-
-  //     getRecursos(filtrado).then((response) => {
-  //       const cantidadesMostrar = [];
-  //       if(response.value && response.value[categoria].length === 0){
-  //         setCantidades(0)
-  //       } else {
-  //         let contador = 0;
-  //         const categoriaElegida = response.value[categoria];
-  //         categoriaElegida && categoriaElegida.map(() => {
-  //           contador = contador + 1;
-  //           cantidadesMostrar.push({
-  //             key: `${contador}`,
-  //             label: `${contador}`
-  //           })
-  //         });
-
-  //         setCantidades(cantidadesMostrar);
-  //         setCantidadSeleccionada(null)
-  //       }
-  //       })
-  //     }
-  //     generarArreglo(categoria)
-
-  // }, [categoria])
 
   useEffect(() =>{ 
     const generarArreglo = (categoria) =>{
@@ -97,7 +46,6 @@ const MenuInterno = (props) =>{
         "byCategory":true
       }
 
-      
       getRecursos(filtrado).then((response) => {
         const nombreMostrar = [];
         response.value && response.value[categoria].map(element => {
@@ -107,7 +55,6 @@ const MenuInterno = (props) =>{
           })
         });
           setNombreMostrar(nombreMostrar);
-          //setCantidadSeleccionada(null)
         })
       }
       generarArreglo(categoria)
@@ -115,24 +62,15 @@ const MenuInterno = (props) =>{
 
 
   const menu = (
-    <Menu 
+    <Menu
       selectable
       items = {categoriaMostrar}
       onClick = {({key}) => {
         setCategoría(categoriaMostrar.find((elm) => elm.key === key).key);
+        updateEnviadoObj()
       }}
     />
   );
-
-  // const menu2 = (
-  //   <Menu
-  //     selectable
-  //     items = {cantidadesMostrar}
-  //     onClick = {({key}) => {
-  //       setCantidadSeleccionada(cantidadesMostrar.find((elm) => elm.key === key).key);
-  //     }}
-  //   />
-  // );
 
   const menu3 = (
     <Menu
@@ -140,13 +78,18 @@ const MenuInterno = (props) =>{
       items = {nombreMostrar}
       onClick = {({key}) => {
         setNombre(nombreMostrar.find((elm) => elm.key === key).key);
+        updateEnviadoObj()
       }}
     />
   );
 
-  props.enviado["Categoria"] = categoria;
-  // props.enviado["Cantidad"] = cantidadSeleccionada;
-  props.enviado["Productos"] = nombre;
+  const updateEnviadoObj = () => {
+    setEnviado2(prev => ({
+      ...prev,
+      Categoria: categoria,
+      Productos: nombre
+    }))
+  }
 
     return(
         <div className="HacerReservaCentral">

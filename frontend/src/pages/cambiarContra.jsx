@@ -5,12 +5,15 @@ import { NavLink } from "react-router-dom";
 import { Input, Alert } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { sendEmail, verificar, changePassword } from '../services/axios/user'
+import { validatePasswordStrength } from "../util";
+
 
 const Contra = (props) => {
     const [ step, setStep ] = useState(0)
     const [ inputs , setInputs ] = useState({})
     const [ success, setSuccess ] = useState({})
     const [ error, setError ] = useState({})
+    const [ warning, setWarning ] = useState()
     const [ redirectToLogin, setRedirectToLogin ] = useState(false)
 
     const changeNextStep = async () => {
@@ -62,10 +65,9 @@ const Contra = (props) => {
     const handleStep3Actions = () => {
       const { email, password_1 } = inputs;
       if (verifySamePassword()) {
-        const changePasswordReq = {
-          email,
-          password: password_1
-        }
+        const validPassword = validatePasswordStrength(password_1)
+        if (!validPassword) return setWarning(true)
+        const changePasswordReq = { email, password: password_1 }
         changePassword(changePasswordReq)
           .then(res => {
             if (res.msg) {
@@ -102,6 +104,16 @@ const Contra = (props) => {
         type="success"
         showIcon
         afterClose={() => setError(false)}
+        closable
+      />
+    )
+
+    const renderPasswordWarning = () => (
+      <Alert
+        description="La contrseña tiene que ser igual o mayor 8 dígitos, tener una mayúscula, una minúscula, un número y un cáracter espcial"
+        type="warning"
+        showIcon
+        afterClose={() => setWarning(false)}
         closable
       />
     )
@@ -166,6 +178,7 @@ const Contra = (props) => {
                         iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
                         {success.msg && renderSuccess()}
                         {error.msg && renderError()}
+                        {warning && renderPasswordWarning()}
                         {!redirectToLogin && <button className='Codigo' onClick={changeNextStep}>Actualizar</button>}
                         {redirectToLogin && <button className='Codigo' onClick={changeNextStep}><NavLink to="login">Login</NavLink></button>}
                     </div>
