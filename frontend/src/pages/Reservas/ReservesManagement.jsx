@@ -50,11 +50,7 @@ export const ReservesManagement = () => {
 
   const onSubmit = (inputs = {}, type) => {
     if (type === 'edit') {
-      console.log(inputs.estatus)
-      console.log(inputs.estatus < 1 || inputs.estatus > 4)
-
       if (inputs.estatus < 1 || inputs.estatus > 4) return setEditWarning({ msg: "Valor estatus no valido (1 - 4)"})
-
       const editRequest = {
         reserva: data[0].reserva.id,
         estatus: data[0].reserva.estatus,
@@ -63,7 +59,6 @@ export const ReservesManagement = () => {
         usuario: data[0].usuario.id,
         ...inputs,
       }
-
       updateReserva(editRequest)
         .then(data => {
           if (data.recurso) setSuccess(true)

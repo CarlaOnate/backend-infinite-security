@@ -3,7 +3,7 @@ import { Table } from '../../components/Table';
 import { historial } from '../../services/axios/user';
 import { Dropdown } from './Dropdown';
 import { tableColumns } from './tableColumns';
-import { Input, Alert } from 'antd';
+import { Input, Alert, Spin } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
 import '../../Estilos/historial-reservas.css';
@@ -50,16 +50,26 @@ const dropdownItems = [
 export const HistorialReservas = props => {
   const [ data, setData ] = useState()
   const [ error, setError ] = useState(false)
+  const [ loading, setLoading ] = useState(false)
   const [ dropdownItem, setDropdownItem ] = useState()
 
   const fetchData = filter => {
     historial(filter).then(data => {
+      if (data.error) {
+        setError(true)
+        return setLoading(false)
+      }
       setData(data.values)
-    }).catch(e => console.log(e))
+      setLoading(false)
+    }).catch(() => {
+      setLoading(false)
+      setError(true)
+    })
   }
 
   useEffect(() => {
     const fetch = async () => {
+      setLoading(true)
       await fetchData()
     }
     fetch()
@@ -86,51 +96,56 @@ export const HistorialReservas = props => {
   const showDropdownTooltip = dropdownItem === '3'
 
   return (
-    <div className='historial-reservas-container'>
-      <div className='historial-top'>
-        <p className='tab'>Reservas</p>
-        <div className='historial-filter'>
-          <div>
-            <Dropdown
-              className='historial-dropdown'
-              onClickItem={handleDropdownItem}
-              selectedItem={dropdownItem}
-              items={dropdownItems}
-            />
-            <Search
-              size="small"
-              placeholder="valor a filtrar"
-              onSearch={onSearch}
-            />
+    <section>
+      {loading && <Spin size="small" />}
+      {!loading && (
+        <div className='historial-reservas-container'>
+          <div className='historial-top'>
+            <p className='tab'>Reservas</p>
+            <div className='historial-filter'>
+              <div>
+                <Dropdown
+                  className='historial-dropdown'
+                  onClickItem={handleDropdownItem}
+                  selectedItem={dropdownItem}
+                  items={dropdownItems}
+                />
+                <Search
+                  size="small"
+                  placeholder="valor a filtrar"
+                  onSearch={onSearch}
+                />
+              </div>
+              {showDropdownTooltip &&
+                <div>
+                  <p>(1: Por iniciar, 2: En progreso, 3: Finalizada, 4: Cancelada)</p>
+                </div>
+              }
+            </div>
           </div>
-          {showDropdownTooltip &&
+          {error &&
             <div>
-              <p>(1: Por iniciar, 2: En progreso, 3: Finalizada, 4: Cancelada)</p>
+              <Alert
+                message="Error"
+                description="Hubo un error, inténtalo mas tarde"
+                type="error"
+                showIcon
+                afterClose={resetAltersStates}
+                closable/>
             </div>
           }
+          <div className='full-table'>
+            <Table
+              columns={tableColumns}
+              data={data}
+            />
+          </div>
+          <button className='button-right'>
+            <DownloadOutlined />
+            Descargar historial
+          </button>
         </div>
-      </div>
-      {error &&
-        <div>
-          <Alert
-            message="Error"
-            description="Hubo un error, inténtalo mas tarde"
-            type="error"
-            showIcon
-            afterClose={resetAltersStates}
-            closable/>
-        </div>
-      }
-      <div className='full-table'>
-        <Table
-          columns={tableColumns}
-          data={data}
-        />
-      </div>
-      <button className='button-right'>
-        <DownloadOutlined />
-        Descargar historial
-      </button>
-    </div>
+      )}
+    </section>
   );
 };
