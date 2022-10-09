@@ -1,0 +1,12 @@
+@mixin button($color) {
+    background-color: $color;
+    border-radius: 4%
+}
+
+.standarButton {
+    @include button($standarButtonColor);
+}
+
+.warningButton {
+    @include button($warningButtonColor);
+}

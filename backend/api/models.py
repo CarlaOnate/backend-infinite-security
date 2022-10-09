@@ -1,7 +1,4 @@
-from operator import truediv
-from this import d
-from tkinter import TRUE
-from unicodedata import category
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -48,7 +45,7 @@ class Lugar(models.Model):
   id = models.BigAutoField(primary_key=True)
   piso = models.TextField()
   capacidad = models.IntegerField()
-  idProductos = models.JSONField(encoder=None, null=True) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
+  idProductos = models.ManyToManyField(Producto) # ForeignKey -> sqlite no tiene arrayFields - en caso de que se borre se tendran que hacer los cambios manualmente
   detalles = models.TextField(blank=True)
   salon = models.TextField()
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
@@ -82,11 +79,12 @@ class Usuario(AbstractUser):
   nombre = models.TextField()
   apellidoPaterno = models.TextField()
   apellidoMaterno = models.TextField()
-  genero = models.IntegerField(choices=GENERO_ENUM)
-  fechaNacimiento = models.DateField()
-  oficio = models.IntegerField(choices=OFICIO_ENUM)
+  genero = models.IntegerField(choices=GENERO_ENUM, null=True)
+  fechaNacimiento = models.DateField(null=True)
+  oficio = models.IntegerField(choices=OFICIO_ENUM, null=True)
   correo = models.EmailField(unique=True)
   verified = models.BooleanField(default=False)
+  changePasswordCode = models.TextField(null=True)
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
@@ -99,7 +97,7 @@ class Usuario(AbstractUser):
 
   deletedAt = models.DateTimeField(null=True)
   USERNAME_FIELD = 'correo'
-  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno']
+  REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'username', 'genero', 'oficio', 'rol']
   pass
 
   class Meta:
@@ -116,10 +114,17 @@ class Reserva(models.Model):
   codigoReserva = models.TextField(unique=True)
   idUsuario = models.ForeignKey("Usuario", on_delete=models.RESTRICT)
   idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT, null=True)
+  cantidadProducto = models.IntegerField(null=True)
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
-  fechaInicio = models.DateTimeField()
-  fechaFinal = models.DateTimeField()
-  estatus = models.IntegerField(choices=ESTATUS_ENUM)
+  fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
+  fechaFinal = models.DateField()
+  startDate = models.DateTimeField(null=True)
+  endDate = models.DateTimeField(null=True)
+  #Para saber las horas de uso
+  horaInicio = models.TextField(null = True)
+  horaFinal = models.TextField(null = True)
+
+  estatus = models.IntegerField(choices=ESTATUS_ENUM, default = 1)
   comentarios = models.TextField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) # Automatically updates timestamp when instance is saved

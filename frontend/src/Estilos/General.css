@@ -1,0 +1,23 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0 20px;
+  display: flex;
+}
+
+#root {
+  flex-grow: 1;
+}
+
+#root div, section {
+  height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+h1 {
+  margin: 0;
+}

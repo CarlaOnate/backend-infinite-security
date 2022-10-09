@@ -1,0 +1,61 @@
+.SeccionGlobalUsuarios{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding-top: 15rem;
+}
+.BotonesUsuario{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem
+}
+.BotonesTablaAdmin{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.BotonesManejoUsuario{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.IngresoDatos{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.BotonConfirmarAdmin{
+    margin-top: 2rem;
+}
+
+.CamposTexto{
+    margin-top: 2rem;
+}
+
+.BotonesUser{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-bottom: 2rem;
+}
+
+.BloquearUserSection{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.BotonConfirmarBloqueo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
