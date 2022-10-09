@@ -67,7 +67,7 @@ const RegistrarseCodigo = (props) =>{
                         Registrarse
                     </div>
                     <div className="Link1RegistroCodigo">
-                        <NavLink to="/IniciarSesion" className={paths.IniciarSesion}>Iniciar Sesion</NavLink>
+                        <NavLink to="/login" className={paths.IniciarSesion}>Iniciar Sesion</NavLink>
                     </div>
                 </div>
                 <br></br>

@@ -1,6 +1,7 @@
 import React , {useContext, useState} from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import '../Estilos/IniciarSesion.css'
 import {login} from '../services/axios/user.js'
 import {UserContext} from '../context/userContext'
@@ -63,9 +64,12 @@ const IniciarSesion = () => {
               </div>
               <div className="CajasTextoInicioSesion">
                 <p>Correo: </p>
-                <Input onChange={(e) => handelInputs(e,1)} placeholder="Correo"/>
+                <Input type="email" onChange={(e) => handelInputs(e,1)} placeholder="Correo"/>
                 <p>Contraseña: </p>
-                <Input onChange={(e) => handelInputs(e,2)} placeholder="Contraseña" />
+                <Input.Password
+                  onChange = {(e) => handelInputs(e,2)}
+                  placeholder="Contraseña"
+                  iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
               </div>
               <div className="BotonLinkfinal">
                 <Button onClick={onClickLogin} className="CodigoPeque">Iniciar sesión</Button>

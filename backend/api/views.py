@@ -1,3 +1,4 @@
+from concurrent.futures.process import _ExceptionWithTraceback
 from django.http import JsonResponse, HttpResponseServerError, HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import HttpResponse
 from .models import Usuario, Producto, Reserva, Lugar
@@ -719,10 +720,9 @@ def createUser(req): # Add email validation
     work = body["work"]
     username = name + ' ' + lastName + ' ' + secondLastName
     newUser = Usuario.objects.create_user(username=username, correo=email, password=password, genero=gender, fechaNacimiento=dateOfBirth, oficio=work, nombre=name, apellidoPaterno=lastName, apellidoMaterno=secondLastName, verified=False)
-    # Create user and login at the same time
-    return JsonResponse({"user": newUser.id, "rol": req.user.rol})
+    return JsonResponse({"user": newUser.id, "rol": newUser.rol})
   except:
-    return JsonResponse({"Razon": "El campo no es unico"})
+   return HttpResponseBadRequest()
 
 @csrf_exempt
 def logoutUser(req):
@@ -740,8 +740,10 @@ def sendEmail(req):
   body = json.loads(body_unicode)
   if 'type' in body.keys():
     typeEmail = body['type']
-    if typeEmail == "verify-email": return sendVerificationEmail(body)
-    elif typeEmail == "change-password": return sendChagePasswordEmail(body)
+    try:
+      if typeEmail == "verify-email": return sendVerificationEmail(body)
+      elif typeEmail == "change-password": return sendChagePasswordEmail(body)
+    except: return HttpResponseBadRequest()
   else:
     return JsonResponse({"msg": "Tipo no valido"})
 
