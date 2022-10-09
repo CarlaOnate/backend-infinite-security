@@ -26,8 +26,6 @@ const Registrarse = () => {
             type:"verify-email",
             email: inputs.email
           }
-          console.log('INPUTS', inputs)
-          console.log('EMAIL OBJECT', emailObject)
           crearUsuario(inputs)
             .then(() => {
                 setLoading(true)
@@ -91,9 +89,6 @@ const Registrarse = () => {
         afterClose={resetAlertStates}
         closable/>
     </div>)
-
-
-    console.log(warning)
 
     return(
         <div className="ArearegistroGeneral">
