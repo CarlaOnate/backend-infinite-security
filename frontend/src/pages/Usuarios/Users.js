@@ -26,7 +26,7 @@ export const Users = props => {
         {shouldShowAdminManagement && <div><Button className='CodigoPeque' onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>}
         <div><Button className='CodigoPeque' onClick={() => onClickOption('user-management')}> Manejo de usuarios </Button></div>
       </div>
-      
+
       <div>
         {showAdminManagement && <AdminManagement />}
         {showUserList && <UserList />}
