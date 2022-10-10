@@ -7,6 +7,7 @@ import { Input, Alert, Spin } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
 import '../../Estilos/historial-reservas.css';
+import { formatDownloadData } from './formatDownloadData';
 const { Search } = Input;
 
 const dropdownItems = [
@@ -95,6 +96,11 @@ export const HistorialReservas = props => {
 
   const showDropdownTooltip = dropdownItem === '3'
 
+  const onDonwloadData = () => {
+    const csvData = formatDownloadData(data);
+    console.log('csv data =>', csvData)
+  }
+
   return (
     <section>
       {loading && <Spin size="small" />}
@@ -140,7 +146,7 @@ export const HistorialReservas = props => {
               data={data}
             />
           </div>
-          <button className='button-right'>
+          <button className='button-right' onClick={onDonwloadData}>
             <DownloadOutlined />
             Descargar historial
           </button>
