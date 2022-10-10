@@ -5,11 +5,11 @@ import { UserManagement } from './UserManagement'
 import { UserList } from './UserList'
 
 export const Users = props => {
-  const { userIsAdmin } = props;
+  const { userIsGeneralAdmin } = props;
 
   const [ menuSelection, setMenuSelection ] = useState('user-list')
 
-  const shouldShowAdminManagement = userIsAdmin;
+  const shouldShowAdminManagement = userIsGeneralAdmin;
 
   const onClickOption = (selection) => {
     setMenuSelection(selection)
@@ -23,12 +23,12 @@ export const Users = props => {
     <section className='SeccionGlobalUsuarios'>
       <div className='BotonesUsuario'>
         <div><Button className='CodigoPeque' onClick={() => onClickOption('user-list')}> Usuarios </Button></div>
-        <div><Button className='CodigoPeque' onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>
+        {shouldShowAdminManagement && <div><Button className='CodigoPeque' onClick={() => onClickOption('admin-management')}> Manejo de administradores </Button></div>}
         <div><Button className='CodigoPeque' onClick={() => onClickOption('user-management')}> Manejo de usuarios </Button></div>
       </div>
       
       <div>
-        {shouldShowAdminManagement && showAdminManagement && <AdminManagement />}
+        {showAdminManagement && <AdminManagement />}
         {showUserList && <UserList />}
         {showUserManagement && <UserManagement />}
       </div>
