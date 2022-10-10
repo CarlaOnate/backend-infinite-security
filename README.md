@@ -37,5 +37,7 @@ Clonar el repositorio en la computadora usando `git clone <url del repositorio>`
 LISTO! Una pantalla en el navegador se debería abrir con la aplicación corriendo
 
 ## Uso de Django Admin para modificar DB
-
+Para entrar al sitio de administrador de django ir a esta liga: http://127.0.0.1:8000/admin/
+- Usuario admin 1: admin@admin.com
+- Usuario admin 2: admin2@admin.com
 
