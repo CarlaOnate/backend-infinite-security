@@ -96,10 +96,7 @@ export const HistorialReservas = props => {
 
   const showDropdownTooltip = dropdownItem === '3'
 
-  const onDonwloadData = () => {
-    const csvData = formatDownloadData(data);
-    console.log('csv data =>', csvData)
-  }
+  const onDonwloadData = () => formatDownloadData(data, setError);
 
   return (
     <section>

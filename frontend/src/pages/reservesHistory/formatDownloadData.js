@@ -1,6 +1,6 @@
 import { parse } from 'json2csv';
 
-export const formatDownloadData = data => {
+export const formatDownloadData = (data, setError) => {
   const columns = [
     'ID', 'Codigo reserva', 'Usuario id', 'Usuario',
     'Usuario rol', 'Producto id', 'Producto nombre',
@@ -34,12 +34,7 @@ export const formatDownloadData = data => {
 
   try {
     const csv = parse(formattedFields, columns)
-
-    console.log('CSV', csv)
-
-
-
-    var file = new Blob([csv], {type: '.csv'});
+    const file = new Blob([csv], {type: '.csv'});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, 'historial-reservas.csv');
     else { // Others
@@ -55,7 +50,7 @@ export const formatDownloadData = data => {
         }, 0);
     }
   } catch  (err) {
-    console.log(err)
+    setError(true)
   }
 
 
