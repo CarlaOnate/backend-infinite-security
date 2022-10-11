@@ -1,5 +1,6 @@
 # Infinite Security
 
+- Recomendamos ver el video ya que se explicar a detalle la funcionalidad actual de la aplicación
 Explciacion poyecto web: https://drive.google.com/drive/folders/1HMrMYtW7E6jmSzVUbklvNxIJLFkpqheA?usp=sharing
 
 # Instalación app 
