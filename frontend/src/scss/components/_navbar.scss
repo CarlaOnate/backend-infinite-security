@@ -1,0 +1,28 @@
+.navbar {
+    @include flexbox;
+    width: 100%;
+    align-content: center;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+
+.navbar__option {
+    @include flexbox;
+    align-items: center;
+    color: $navbarOrangeColor;
+    font-size: 1.8rem;
+    padding: 0 2rem;
+
+    .navbar__option:hover {
+        background-color: yellow!important;;
+    }
+    
+    .navbar__option--selected {
+        background-color: $navbarOrangeColor;
+        font-size: 1.8rem;
+    }
+
+
+
+
+}

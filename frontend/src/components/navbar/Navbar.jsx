@@ -1,7 +1,6 @@
 import React from 'react';
 import { userOptions, adminOptions, notLoggedOptions } from './navbarOptions';
 import { NavLink } from 'react-router-dom';
-import '../../styles/navbar.css';
 export const Navbar = (props) => {
   const { userLoggedIn, userIsAdmin } = props;
   const showUserOptions = userLoggedIn && !userIsAdmin;
