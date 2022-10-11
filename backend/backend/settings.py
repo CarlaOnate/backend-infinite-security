@@ -48,9 +48,13 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
+CRONTAB_DJANGO_MANAGE_PATH = '/Users/carla/Documents/ITC-Tec/Ago-Dic22/SeguridadRedes_SistemasSoft/projectScss/Pagina-web/backend/manage.py'
+
 CRONJOBS = [
-    ('*/1 * * * *', 'api.update_db.cron.updateDB', '>> update_db.logs')
+  ('*/1 * * * *', 'api.cron.updateDB', '>> /Users/carla/Documents/ITC-Tec/Ago-Dic22/SeguridadRedes_SistemasSoft/projectScss/Pagina-web/backend/update_db.logs')
 ]
+
+CRONTAB_COMMAND_SUFFIX = '2>&1'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
