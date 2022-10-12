@@ -1,3 +1,9 @@
+button {
+  font-size: $fontSizeSmall;
+  font-size: $fontSizeSmall;
+  padding: 0.5rem;
+}
+
 .Codigo{
     background-color: rgb(249, 165, 81);
     margin-top: 40px;
@@ -9,23 +15,21 @@
 }
 
 .CodigoPeque{
-    background-color: rgb(249, 165, 81);
-    color: white;
-    height: 40px;
+    color: rgb(249, 165, 81);
+    border: 1px solid $orangeColor;
     width: fit-content;
-    padding: 10px;
-    font-size: medium;
-    border: none;
 }
 
 .CodigoMediano{
-    background-color: rgb(249, 165, 81);
-    color: white;
-    height: 60px;
-    width: fit-content;
-    padding: 10px;
-    font-size: large;
-    border: none;
+  color: rgb(249, 165, 81);
+  border: 1px solid $orangeColor;
+  background-color: rgb(249, 165, 81);
+}
+
+.accept-button {
+  color: white;
+  border: 1px solid $acceptGreen;
+  background-color: $acceptGreen;
 }
 
 .CodigoespecialMediano{
@@ -52,8 +56,9 @@
     color: rgb(51, 181, 156);
     background-color: white;
     border-color: rgb(51, 181, 156);
-    font-size: large;
-    height: 40px;
+    font-size: $fontSizeSmall;
+    font-size: $fontSizeSmall;
+    padding: 0.5rem;
     width: fit-content;
 }
 
@@ -65,8 +70,9 @@
     border-style: solid;
     height: 40px;
     width: fit-content;
-    font-size: large;
     text-align: center;
+    font-size: medium;
+    padding: 10px;
 }
 
 .FechaProfile{

@@ -6,8 +6,10 @@ import { tableColumns } from './tableColumns';
 import { Input, Alert, Spin } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
-import '../../Estilos/historial-reservas.css';
+import { formatDownloadData } from './formatDownloadData';
 const { Search } = Input;
+
+
 
 const dropdownItems = [
   {
@@ -95,33 +97,36 @@ export const HistorialReservas = props => {
 
   const showDropdownTooltip = dropdownItem === '3'
 
+  const onDonwloadData = () => formatDownloadData(data, setError);
+
   return (
-    <section>
+    <section className='historial-reservas'>
       {loading && <Spin size="small" />}
       {!loading && (
         <div className='historial-reservas-container'>
           <div className='historial-top'>
             <p className='tab'>Reservas</p>
-            <div className='historial-filter'>
-              <div>
-                <Dropdown
-                  className='historial-dropdown'
-                  onClickItem={handleDropdownItem}
-                  selectedItem={dropdownItem}
-                  items={dropdownItems}
-                />
+              <div className='historial-filter'>
+                  <Dropdown
+                    className='historial-dropdown'
+                    onClickItem={handleDropdownItem}
+                    selectedItem={dropdownItem}
+                    items={dropdownItems}
+                  />
+                <div>
+                  {showDropdownTooltip &&
+                  <div className='historial-reservas__tooltip'>
+                    <p>(1: Por iniciar, 2: En progreso, 3: Finalizada, 4: Cancelada)</p>
+                  </div>
+                  }
                 <Search
+                  className='historial-reservas__search-bar'
                   size="small"
                   placeholder="valor a filtrar"
                   onSearch={onSearch}
                 />
-              </div>
-              {showDropdownTooltip &&
-                <div>
-                  <p>(1: Por iniciar, 2: En progreso, 3: Finalizada, 4: Cancelada)</p>
                 </div>
-              }
-            </div>
+              </div>
           </div>
           {error &&
             <div>
@@ -140,7 +145,7 @@ export const HistorialReservas = props => {
               data={data}
             />
           </div>
-          <button className='button-right'>
+          <button className='button-right' onClick={onDonwloadData}>
             <DownloadOutlined />
             Descargar historial
           </button>

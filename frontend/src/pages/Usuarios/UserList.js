@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Alert } from 'antd'
+import { Table } from '../../components/Table';
+import { Alert } from 'antd'
 import { getUsers } from '../../services/axios/user'
 import { userListTableColumns } from './userFixtures'
 
@@ -16,7 +17,7 @@ export const UserList = () => {
   }, [])
 
   return (
-    <section>
+    <>
       {error &&
         <Alert
           message="Error"
@@ -28,9 +29,8 @@ export const UserList = () => {
       />}
       <Table
         columns={userListTableColumns}
-        dataSource={data || []}
-        scroll = {{y:250}}
+        data={data || []}
       />
-    </section>
+    </>
   )
 }

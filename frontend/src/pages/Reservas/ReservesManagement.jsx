@@ -141,7 +141,7 @@ export const ReservesManagement = () => {
 
   const renderInputs = (options, inputs, type) => {
     return (
-      <div className='TablaReservas'>
+      <div className="reserva_management__inputs">
         <div>
           {options.map(option => (
             <div key={option.text}>
@@ -155,14 +155,14 @@ export const ReservesManagement = () => {
           ))}
         </div>
         <div>
-          <Button onClick={() => onSubmit(inputs, type)}>Confirmar</Button>
+          <Button className="accept-button" onClick={() => onSubmit(inputs, type)}>Confirmar</Button>
         </div>
       </div>
     )
   }
 
   return (
-    <section>
+    <div>
       <SearchData
         title="Nombre o ID de Reserva"
         buttons={searchTableActions}
@@ -190,6 +190,6 @@ export const ReservesManagement = () => {
           closable
         />}
         {editWarning.msg && (renderWarning(editWarning))}
-    </section>
+    </div>
   )
 }

@@ -48,6 +48,7 @@ export const UserStats = () => {
             data: [columnData, ...columns],
             buttonText: dataDefaultTexts[key].buttonText,
             options: {
+              legend: "none",
               chart: {
                 title: dataDefaultTexts[key].title,
               },
@@ -77,22 +78,25 @@ export const UserStats = () => {
 
   return (
     <>
-      <section className='stats-container'>
-        <div className='stats-top'>
-          <h1>Estadistica</h1>
-        </div>
-        <div className='stats-options'>
-          {Object.keys(formattedData).map(key => (
-            <Button key={key} type={`${selectedButton === key && 'primary'}`} onClick={() => handleOnClick(key)}>{formattedData[key].buttonText}</Button>
-          ))}
-        </div>
-        <div className='stats-graphs'>
-          {renderGraph ? <Chart
-            chartType="Bar"
-            height="300px"
-            data={formattedData[selectedButton].data || [[]]}
-            options={formattedData[selectedButton].options}
-          /> : <p>No hay elementos que mostrar</p>}
+      <section className='stats'>
+        <div>
+          <div className='stats-top'>
+            <h1>Estadistica</h1>
+          </div>
+          <div className='stats-options'>
+            {Object.keys(formattedData).map(key => (
+              <Button key={key} type={`${selectedButton === key && 'primary'}`} onClick={() => handleOnClick(key)}>{formattedData[key].buttonText}</Button>
+            ))}
+          </div>
+          <div className='stats-graphs'>
+            {renderGraph ? <Chart
+              chartType="Bar"
+              height="300px"
+              width={"80vw"}
+              data={formattedData[selectedButton].data || [[]]}
+              options={formattedData[selectedButton].options}
+            /> : <p>No hay elementos que mostrar</p>}
+          </div>
         </div>
       </section>
     </>

@@ -44,9 +44,9 @@ const renderCategoria = (_, record) => {
 }
 
 const renderFecha = (_, record) => {
-  const { reserva: {fechaInicio, fechafinal }} = record;
+  const { reserva: {fechaInicio, fechaFinal }} = record;
   return (
-    <p key={`${fechaInicio}${fechafinal}+${record.reserva.codigoReserva}`}>{moment(fechaInicio).format('ll')} - {moment(fechafinal).format('ll')}</p>
+    <p key={`${fechaInicio}${fechaFinal}+${record.reserva.codigoReserva}`}>{moment(fechaInicio).format('ll')} - {moment(fechaFinal).format('ll')}</p>
   )
 }
 

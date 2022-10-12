@@ -138,10 +138,7 @@ export const Profile = props => {
             </div>
           </div>
         </div>
-        <div className='BotonConfirmarCambios'>
-          {editValues && (<Button className = 'Codigorojopeque' onClick={onSubmitEdit}>Confirmar cambios</Button>)}
-        </div>
-        
+        {editValues && (<Button onClick={onSubmitEdit}>Confirmar cambios</Button>)}
         {!editValues && (
           <div className='BotonesProfile'>
 
@@ -169,7 +166,6 @@ export const Profile = props => {
           afterClose={resetAltersStates}
           closable
         />}
-      
       {success &&
         <Alert
           message="Se hizo el cambio con exito"
