@@ -1,16 +1,45 @@
 .SeccionGlobalUsuarios{
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  min-height: 40rem;
+
+  & > div {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
-    padding-top: 15rem;
+    gap: 3rem;
+    width: 90vw;
+  }
 }
-.BotonesUsuario{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem
+
+.users__right {
+  flex-grow: 3;
 }
+
+.BotonesUsuario {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  flex-grow: 1;
+  button {
+    font-size: 100%;
+    width: 100%;
+  }
+}
+
+.user-management__secondary-actions {
+  margin-top: 5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 3rem;
+
+  button {
+    font-size: 1rem;
+  }
+}
+
 .BotonesTablaAdmin{
     display: flex;
     flex-direction: row;
@@ -18,11 +47,16 @@
     justify-content: space-around;
 }
 
+.users__right {
+  flex-grow: 2;
+}
+
 .BotonesManejoUsuario{
+    margin-top: 1rem;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-end;
+    gap: 3rem;
 }
 
 .IngresoDatos{
@@ -43,9 +77,8 @@
 
 .BotonesUser{
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-bottom: 2rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
 .BloquearUserSection{

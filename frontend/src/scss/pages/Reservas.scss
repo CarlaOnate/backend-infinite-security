@@ -85,3 +85,16 @@ li{
     font-weight: 700;
     width: 400px;
 }
+
+.reserva_management__inputs {
+  & > div:first-child {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    div {
+      min-width: 10rem;
+    }
+  }
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { userOptions, adminOptions, notLoggedOptions } from './navbarOptions';
 import { NavLink } from 'react-router-dom';
-import '../../styles/navbar.css';
 export const Navbar = (props) => {
   const { userLoggedIn, userIsAdmin } = props;
   const showUserOptions = userLoggedIn && !userIsAdmin;
@@ -19,7 +18,7 @@ export const Navbar = (props) => {
       {showNotLoggedInOptions && renderNavbarOptions(notLoggedOptions)}
       {showUserOptions && renderNavbarOptions(userOptions)}
       {showAdminOptions && renderNavbarOptions(adminOptions)}
-      {userLoggedIn && <NavLink to="perfil" className='navbar__option'>PROFILE</NavLink>}
+      {userLoggedIn && <NavLink to="profile" className='navbar__option'>PROFILE</NavLink>}
     </nav>
   );
 };

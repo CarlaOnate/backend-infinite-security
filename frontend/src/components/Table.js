@@ -5,14 +5,14 @@ export const Table = props => {
   const { columns, data, renderFooter } = props;
 
   return (
-    <section>
+    <section className="table">
       <AntTable
         bordered
         size="small"
         columns={columns}
         dataSource={data}
         footer={renderFooter}
-        scroll={{ y: 250 }}
+        scroll={{ y: '50vh' }}
         pagination={{
           position: ['bottomCenter'],
         }}

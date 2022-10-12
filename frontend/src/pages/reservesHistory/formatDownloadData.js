@@ -28,7 +28,6 @@ export const formatDownloadData = (data, setError) => {
   })
 
   const formattedFields = data.map(el => {
-    console.log(field(el))
     return field(el)
   })
 

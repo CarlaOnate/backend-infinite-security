@@ -203,11 +203,8 @@ export const AdminManagement = () => {
         columns={adminManagementTableColumn}
         className = "BotonesTablaAdmin"
       />
-      {/* <div className='IngresoDatos'> */}
-        {showEditInputs && renderInputs(editAdminOptions, editInputs)}
-        {showAddAdminInputs && renderInputs(addAdminOptions, addInputs, 'add')}
-      {/* </div> */}
-      
+      {showEditInputs && renderInputs(editAdminOptions, editInputs)}
+      {showAddAdminInputs && renderInputs(addAdminOptions, addInputs, 'add')}
       {error &&
         <Alert
           message="Error"
