@@ -49,6 +49,7 @@ export const AdminStats = () => {
             data: [columnData, ...columns],
             buttonText: dataDefaultTexts[key].buttonText,
             options: {
+              legend: { position: 'none' },
               chart: {
                 title: dataDefaultTexts[key].title,
               },
@@ -96,30 +97,33 @@ export const AdminStats = () => {
 
   return (
     <>
-      <section className='stats-container'>
-        <div className='stats-top'>
-          <h1>Estadistica</h1>
-        </div>
+      <section className='stats'>
         <div>
-          <div className='stats-options'>
-            {Object.keys(formattedData).map(key => (
-              <Button key={key} type={`${selectedButtons[key] && 'primary'}`} onClick={() => handleOnClick(key)}>{formattedData[key].buttonText}</Button>
-            ))}
+          <div className='stats-top'>
+            <h1>Estadistica</h1>
           </div>
-          <div className='stats-graphs'>
-            {Object.keys(selectedGraphs) !== 0 && Object.keys(selectedGraphs).filter(el => el !== 'count').map(key => {
-              if (selectedGraphs[key]) {
-                return (
-                <Chart
-                  key={key}
-                  chartType="Bar"
-                  height="300px"
-                  data={selectedGraphs[key]}
-                  options={formattedData[key].options}
-                /> )
-              }
-              return <></>
-            })}
+          <div>
+            <div className='stats-options'>
+              {Object.keys(formattedData).map(key => (
+                <Button key={key} type={`${selectedButtons[key] && 'primary'}`} onClick={() => handleOnClick(key)}>{formattedData[key].buttonText}</Button>
+              ))}
+            </div>
+            <div className='stats-graphs'>
+              {Object.keys(selectedGraphs) !== 0 && Object.keys(selectedGraphs).filter(el => el !== 'count').map(key => {
+                if (selectedGraphs[key]) {
+                  return (
+                  <Chart
+                    key={key}
+                    chartType="Bar"
+                    height="300px"
+                    width={"45vw"}
+                    data={selectedGraphs[key]}
+                    options={formattedData[key].options}
+                  /> )
+                }
+                return <></>
+              })}
+            </div>
           </div>
         </div>
       </section>
