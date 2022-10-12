@@ -88,7 +88,7 @@ class Usuario(AbstractUser):
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
-  fechaCambioContraseña = models.DateTimeField(blank=True, null=True)
+  fechaCambioContrasena = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) # Automatically updates timestamp when instance is saved
 

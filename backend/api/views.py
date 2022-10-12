@@ -806,6 +806,7 @@ def changePassword(req): # Called from front after sending code via email - emai
   user = Usuario.objects.get(correo=email)
   if user.changePasswordCode != -1:
     user.set_password(newPassword)
+    user.fechaCambioContraseña = timezone.make_aware(datetime.today())
     user.save()
     return JsonResponse({"msg": "Contraseña cambiada exitosamente"})
   else:
