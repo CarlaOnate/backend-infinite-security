@@ -1,17 +1,19 @@
 .SeccionGeneralHacerReservas{
     display: flex;
-    align-items: center;
-    padding-top: 10%;
-    // column-gap: 40px;
-    gap: 10rem;
+    padding-top: 1rem;
+    gap: 3rem;
     justify-content: space-around;
 }
 .HacerReservaIzquierda{
     display: flex;
     flex-direction: column;
-    align-items: center;
     align-content: space-around;
     row-gap: 10px;
+
+    button {
+      width: 100%;
+      font-size: 100%;
+    }
 }
 
 .HacerReservaCentral{

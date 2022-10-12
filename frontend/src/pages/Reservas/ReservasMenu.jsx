@@ -11,15 +11,17 @@ export const ReservasMenu = props => {
 
   return (
     <section className='SeccionGeneralReservasGlobal'>
-      <div className="HacerReservaIzquierda">
-        <Button className="CodigoPeque" onClick={() => onClickMenuOption('create-reservation')} >Crear Reservas</Button>
-        <Button className="CodigoPeque" onClick={() => onClickMenuOption('reservations-list')} >Mis Reservas</Button>
-        <Button className="CodigoPeque" onClick={() => onClickMenuOption('reservation-management')} >Manejo de Reservas</Button>
-      </div>
       <div>
-        {menuOption === 'create-reservation' && <HacerReserva changeMenuOption={onClickMenuOption} />}
-        {menuOption === 'reservations-list' && <ReservationList />}
-        {menuOption === 'reservation-management' && <ReservesManagement />}
+        <div className="HacerReservaIzquierda">
+          <Button className="CodigoPeque" onClick={() => onClickMenuOption('create-reservation')} >Crear Reservas</Button>
+          <Button className="CodigoPeque" onClick={() => onClickMenuOption('reservations-list')} >Mis Reservas</Button>
+          <Button className="CodigoPeque" onClick={() => onClickMenuOption('reservation-management')} >Manejo de Reservas</Button>
+        </div>
+        <div className='reservation__right'>
+          {menuOption === 'create-reservation' && <HacerReserva changeMenuOption={onClickMenuOption} />}
+          {menuOption === 'reservations-list' && <ReservationList />}
+          {menuOption === 'reservation-management' && <ReservesManagement />}
+        </div>
       </div>
     </section>
   )

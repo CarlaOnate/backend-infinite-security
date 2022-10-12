@@ -11,13 +11,16 @@
 @import // Components
     './components/buttons',
     './components/dropdown',
+    './components/table',
     './components/navbar';
 
 @import // Layout
     './layout/footer',
     './layout/forms',
     './layout/header',
-    './layout/sidebar';
+    './layout/sidebar',
+    './layout/searchData',
+    './layout/stats';
 
 @import // Pages
     // './pages/deleteAccount',
