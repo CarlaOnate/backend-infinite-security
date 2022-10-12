@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8000/api"; // url de la api de back
+const baseURL = "https://153.92.222.205:8000/api";
 const service = axios.create({ baseURL, headers: {
   'Content-Type': 'application/json',
 },

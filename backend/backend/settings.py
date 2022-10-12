@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)2-2g@@&saws=uc@j+drhod2h=4_v5gq-5c&fqw5ajf8+1obx2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'infinite-security.herokuapp.com' ]
+ALLOWED_HOSTS = [ '127.0.0.1', 'infinite-security.netlify.app' ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-mail.outlook.com'
@@ -115,6 +115,7 @@ DATABASES = {
     }
 }
 
+SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
