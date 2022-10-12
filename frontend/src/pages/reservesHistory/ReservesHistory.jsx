@@ -6,9 +6,10 @@ import { tableColumns } from './tableColumns';
 import { Input, Alert, Spin } from 'antd';
 import moment from 'moment';
 import { DownloadOutlined } from '@ant-design/icons';
-import '../../Estilos/historial-reservas.css';
 import { formatDownloadData } from './formatDownloadData';
 const { Search } = Input;
+
+
 
 const dropdownItems = [
   {

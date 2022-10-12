@@ -4,8 +4,15 @@ import CajaNumeros from "../components/NumberBox"
 import CajaImagen from "../components/ImageBox";
 import '../Estilos/Pantallaprincipal.css'
 import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Pantallaprincipal = ()=>{
+
+    const navigate = useLocation()
+
+    const paths = {
+        home: navigate.pathname === 'reserves'
+    };
 
     return(
         <div>
@@ -16,12 +23,13 @@ const Pantallaprincipal = ()=>{
                         HUB de Ciberseguridad Campus Santa Fe
 
                         <section className="Subtitulo">
-                            Primera intitución especializada en la ciberseguridad mexicana
+                            Primera institución especializada en la ciberseguridad mexicana
                         </section>
                         
                         <button className="CodigoPeque">
-                            <NavLink to="reserves">Descubre más</NavLink>
+                            <NavLink to="reserves" className={paths.home}>Descubre más</NavLink> 
                         </button>
+                        {/* <Button texto = "Descubre más" clase = 'CodigoPeque'/> */}
                     </div>
 
                 </section>
