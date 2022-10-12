@@ -1,11 +1,9 @@
-asgiref @ file:///tmp/build/80754af9/asgiref_1625643473416/work
+asgiref==3.5.2
 certifi==2021.10.8
-Django @ file:///Users/runner/miniforge3/conda-bld/django_1646775932163/work
+Django==4.1.2
 django-cors-headers==3.13.0
 django-crontab==0.7.1
-gunicorn==20.1.0
-psycopg2 @ file:///opt/concourse/worker/volumes/live/7541fe58-2a45-4073-5d69-313e733fc729/volume/psycopg2_1612298592535/work
+psycopg2==2.9.4
 pytz==2021.3
-sqlparse @ file:///tmp/build/80754af9/sqlparse_1602184451250/work
-typing-extensions @ file:///tmp/build/80754af9/typing_extensions_1631814937681/work
-whitenoise==6.2.0
+sqlparse==0.4.3
+typing_extensions==4.4.0
