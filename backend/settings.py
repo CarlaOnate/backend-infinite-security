@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 load_dotenv()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -39,8 +38,6 @@ EMAIL_FROM = os.getenv("EMAIL_FROM")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
-
-
 INSTALLED_APPS = [
     'django_crontab',
     'api.apps.ApiConfig',
@@ -49,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'corsheaders'
 ]
 
