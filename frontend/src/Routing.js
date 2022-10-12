@@ -53,8 +53,6 @@ function Routing(props) {
   const renderUserRoutes = (authProps) => {
     return (
       <>
-        <Route exact path="/BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
-        <Route  exact path="/graph-users" element={<Contra imagen = {RecoverPasswordImage} mensaje = "Ingrese su correo" {...authProps} />}/>
         <Route  exact path="/statistics" element={<Stats {...authProps} />}/>
         <Route  exact path="/profile" element={<Profile {...authProps} />}/>
       </>
@@ -68,7 +66,6 @@ function Routing(props) {
       <Route exact path="reservation" element={<ReservasMenu {...authProps} />}/>
       <Route exact path="users" element={<Users {...authProps} />}/>
       <Route  exact path="statistics" element={<Stats {...authProps} />}/>
-      <Route exact path="BorrarCuentaUser" element={<BorrarCuentaUser {...authProps} />}/>
       <Route  exact path="profile" element={<Profile {...authProps} />}/>
     </>
   );

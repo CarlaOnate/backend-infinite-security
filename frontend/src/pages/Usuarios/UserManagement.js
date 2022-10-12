@@ -194,10 +194,10 @@ export const UserManagement = () => {
             closable
           />}
 
-          <div className='BotonesManejoUsuario'>
+          <div className='user-management__secondary-actions'>
             {data && (<>
-            <Button className='CodigoPeque' onClick={() => onClickUserDetails('reservations')}> Historial Reservas </Button>
-            <Button className='CodigoPeque' onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
+            <Button size="small" className="secondary-action-button-purple" onClick={() => onClickUserDetails('reservations')}> Historial Reservas </Button>
+            <Button size="small" className="secondary-action-button-green" onClick={() => onClickUserDetails('stats')}> Estadisticas </Button>
             </>)}
           </div>
           

@@ -682,7 +682,9 @@ def loginUser(req):
     user = Usuario.objects.get(correo=body['email'])
     if user.deletedAt != None: return HttpResponseForbidden()
     if user.fechaDesbloqueo != None:
-      if user.fechaDesbloqueo > timezone.make_aware(datetime.today()): return HttpResponseForbidden()
+      today = timezone.make_aware(datetime.today())
+      print(today, user.fechaBloqueo, user.fechaDesbloqueo)
+      if today >= user.fechaBloqueo and today < user.fecha.Desbloqueo: return HttpResponseForbidden()
     email = body['email']
     password = body["password"]
     authenticatedUser = authenticate(req, correo=email, password=password)

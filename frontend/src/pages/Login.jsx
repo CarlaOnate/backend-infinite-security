@@ -2,6 +2,7 @@ import React , {useContext, useState} from "react";
 import { NavLink } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import '../Estilos/IniciarSesion.css'
 import {login} from '../services/axios/user.js'
 import {UserContext} from '../context/userContext'
 import { Button, Input, Alert } from "antd";

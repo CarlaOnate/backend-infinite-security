@@ -18,7 +18,7 @@ export const Navbar = (props) => {
       {showNotLoggedInOptions && renderNavbarOptions(notLoggedOptions)}
       {showUserOptions && renderNavbarOptions(userOptions)}
       {showAdminOptions && renderNavbarOptions(adminOptions)}
-      {userLoggedIn && <NavLink to="perfil" className='navbar__option'>PROFILE</NavLink>}
+      {userLoggedIn && <NavLink to="profile" className='navbar__option'>PROFILE</NavLink>}
     </nav>
   );
 };
