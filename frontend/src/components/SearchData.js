@@ -21,6 +21,7 @@ export const SearchData = props => {
         <Table
           columns={columns}
           dataSource={data}
+          pagination={false}
         />
       </div>
       <div className='BotonesUser'>
