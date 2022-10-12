@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   padding-top: 1rem;
+  min-height: 40rem;
 
   & > div {
     display: flex;
@@ -21,6 +22,10 @@
   flex-direction: column;
   gap: 2rem;
   flex-grow: 1;
+  button {
+    font-size: 100%;
+    width: 100%;
+  }
 }
 
 .user-management__secondary-actions {

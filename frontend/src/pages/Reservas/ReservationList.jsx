@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Alert } from 'antd'
+import { Table } from '../../components/Table';
+import { Alert } from 'antd'
 import { userHistorial } from '../../services/axios/user'
 import { tableColumns } from '../reservesHistory/tableColumns'
 
@@ -28,9 +29,8 @@ export const ReservationList = props => {
           closable
       />}
       <Table
-        size="small"
         columns={ tableColumns }
-        dataSource={data || []}
+        data={data || []}
       />
     </section>
   )

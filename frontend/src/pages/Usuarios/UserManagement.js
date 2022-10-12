@@ -145,7 +145,7 @@ export const UserManagement = () => {
           ))}
         </div>
         <div className='BotonConfirmarBloqueo'>
-          <Button className = 'CodigoPeque' onClick={() => onSubmit(inputs, 'block')}>Confirmar</Button>
+          <Button className="accept-button" onClick={() => onSubmit(inputs, 'block')}>Confirmar</Button>
         </div>
       </div>
     )
