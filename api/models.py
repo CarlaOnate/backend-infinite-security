@@ -30,7 +30,7 @@ class Producto(models.Model):
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) #It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) #Automatically updates timestamp when instance is saved
-  deletedAt = models.DateTimeField(null=True)
+  deletedAt = models.DateTimeField(null=True, blank=True)
 
   class Meta:
     db_table = 'Productos'
@@ -52,7 +52,7 @@ class Lugar(models.Model):
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) # Automatically updates timestamp when instance is saved
-  deletedAt = models.DateTimeField(null=True)
+  deletedAt = models.DateTimeField(null=True, blank=True)
 
   class Meta:
     db_table = 'Lugar'
@@ -84,7 +84,7 @@ class Usuario(AbstractUser):
   oficio = models.IntegerField(choices=OFICIO_ENUM, null=True)
   correo = models.EmailField(unique=True)
   verified = models.BooleanField(default=False)
-  changePasswordCode = models.TextField(null=True)
+  changePasswordCode = models.TextField(null=True, blank=True)
   rol = models.IntegerField(choices=ROL_ENUM, null=True, blank=True)
   fechaBloqueo = models.DateTimeField(blank=True, null=True)
   fechaDesbloqueo = models.DateTimeField(blank=True, null=True)
@@ -95,7 +95,7 @@ class Usuario(AbstractUser):
   #Se añade el departamento al que el usuario es asignado
   departament = models.TextField(blank = True, null=True)
 
-  deletedAt = models.DateTimeField(null=True)
+  deletedAt = models.DateTimeField(null=True, blank=True)
   USERNAME_FIELD = 'correo'
   REQUIRED_FIELDS = ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'username', 'genero', 'oficio', 'rol']
   pass
@@ -114,20 +114,20 @@ class Reserva(models.Model):
   codigoReserva = models.TextField(unique=True)
   idUsuario = models.ForeignKey("Usuario", on_delete=models.RESTRICT)
   idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT, null=True)
-  cantidadProducto = models.IntegerField(null=True)
+  cantidadProducto = models.IntegerField(null=True, blank=True)
   idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
   fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
   fechaFinal = models.DateField()
-  startDate = models.DateTimeField(null=True)
-  endDate = models.DateTimeField(null=True)
+  startDate = models.DateTimeField(null=True, blank=True)
+  endDate = models.DateTimeField(null=True, blank=True)
   #Para saber las horas de uso
   horaInicio = models.TextField(null = True)
   horaFinal = models.TextField(null = True)
   estatus = models.IntegerField(choices=ESTATUS_ENUM, default = 1)
-  comentarios = models.TextField(blank=True, null=True)
+  comentarios = models.TextField(null=True, blank=True)
   createdAt = models.DateTimeField(auto_now_add=True) # It automatically adds the date of the moment the instance is created
   updatedAt = models.DateTimeField(auto_now=True) # Automatically updates timestamp when instance is saved
-  deletedAt = models.DateTimeField(null=True)
+  deletedAt = models.DateTimeField(null=True, blank=True)
 
   class Meta:
     db_table = 'Reserva'
