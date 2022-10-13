@@ -113,9 +113,9 @@ class Reserva(models.Model):
   id = models.BigAutoField(primary_key=True)
   codigoReserva = models.TextField(unique=True)
   idUsuario = models.ForeignKey("Usuario", on_delete=models.RESTRICT)
-  idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT, null=True)
-  cantidadProducto = models.IntegerField(null=True, blank=True)
-  idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True)
+  idProducto = models.ForeignKey('Producto',  on_delete=models.RESTRICT, null=True, blank=True)
+  cantidadProducto = models.IntegerField(null=True, blank=True,)
+  idLugar = models.ForeignKey("Lugar" ,on_delete=models.RESTRICT, null=True, blank=True)
   fechaInicio = models.DateField() #Se cambian estos dos para que solo se registre fecha y no hora con fecha
   fechaFinal = models.DateField()
   startDate = models.DateTimeField(null=True, blank=True)
