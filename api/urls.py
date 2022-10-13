@@ -21,6 +21,7 @@ urlpatterns = [
   path('delete-resource', views.deleteResource, name='deleteResource'),
   path('estadistica-general', views.getGeneralStatistic, name='getGeneralStatistic'),
   path('estadistica-user', views.getUserStatistic, name='getUserStatistic'),
+    path('get-resourceCel', views.getRecursoC, name='getRecursoC'),
   # Reservas
   path('get-reserva', views.getReserva, name='getReserva'),
   path('create-reserva', views.createReserva, name='createReserva'),

@@ -210,6 +210,76 @@ def createRecurso(req):
   else:
     return JsonResponse({"error": "Resource type not present"})
 
+@csrf_exempt
+def getRecursoC(req): # Individual or all resources
+  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
+  body_unicode = req.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  if 'resourceType' in body.keys():
+    tipoRecurso = body['resourceType']
+    if tipoRecurso == "Lugar": return getLugarSinPiso(body)
+    elif tipoRecurso == "Producto": return getProductoC(body)
+    else: return JsonResponse({"error": "Resource type not valid"})
+  else:
+    return JsonResponse({"error": "Resource type not present"})
+
+def getLugarSinPiso(body):
+  if 'id' in body.keys(): #single product
+    lugar = Lugar.objects.get(pk=body['id'])
+    serializedLugar = serializers.serialize('json', [lugar])
+    return JsonResponse({"value": serializedLugar})
+  elif 'byFloor' in body.keys():
+    lugaresList = []
+    lugares = Lugar.objects.all().filter(deletedAt=None) # return lugares that havent been deleted
+    for lugar in lugares:
+      lugaresList.append(getElementResponse(lugar, 'Lugar'))
+    return JsonResponse({"value": lugaresList}, safe=False)
+  else:
+    lugares = Lugar.objects.all().filter(deletedAt=None)
+    lugaresList = []
+    for lugar in lugares:
+      lugaresList.append(getElementResponse(lugar, 'Lugar'))
+    return JsonResponse({"value": lugaresList}, safe=False)
+
+@csrf_exempt
+def getProductoC(body):
+  if 'id' in body.keys(): #single product
+    producto = Producto.objects.get(pk=body['id'])
+    serializedProducto = serializers.serialize('json', [producto])
+    return JsonResponse({"value": serializedProducto})
+  elif 'byCategory' in body.keys():
+    returnObj = {}
+    for category in Producto.PRODUCT_CATEGORIES_CEL:
+      productos = Producto.objects.all().filter(deletedAt=None, categoria=category[0]) # return Productes that havent been deleted
+      productsList = []
+      for producto in productos:
+        productDict = {
+          "id": producto.pk,
+          "nombre": producto.nombre,
+          "categoria": Producto.PRODUCT_CATEGORIES_CEL[producto.categoria][1],
+        }
+        productsList.append(productDict)
+      returnObj[category[1]] = productsList
+    return JsonResponse({"value": returnObj})
+  elif 'byType' in body.keys():
+    returnObj = {}
+    for type in Producto.PRODUCT_TYPES:
+      productos = Producto.objects.all().filter(deletedAt=None, tipo=type[0])
+      productsList = []
+      for producto in productos:
+        productDict = {
+          "id": producto.pk,
+          "nombre": producto.nombre,
+          "categoria": Producto.PRODUCT_CATEGORIES_CEL[producto.categoria][1],
+        }
+        productsList.append(productDict)
+      returnObj[type[1]] = productsList
+    return JsonResponse({"value": returnObj})
+  else:
+    productos = Producto.objects.all().filter(deletedAt=None) # return products that havent been deleted
+    serializedProductos = serializers.serialize('json', productos)
+    return JsonResponse({"value": serializedProductos})
+
 def createLugar(body):
   # Variables must exist in request body
   piso = body['floor'] # 1 to 3
