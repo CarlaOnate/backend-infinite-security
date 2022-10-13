@@ -81,7 +81,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'infinite-security.netlify.app',
+    'https://infinite-security.netlify.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
