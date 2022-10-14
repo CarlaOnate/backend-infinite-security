@@ -21,13 +21,12 @@ urlpatterns = [
   path('delete-resource', views.deleteResource, name='deleteResource'),
   path('estadistica-general', views.getGeneralStatistic, name='getGeneralStatistic'),
   path('estadistica-user', views.getUserStatistic, name='getUserStatistic'),
-    path('get-resourceCel', views.getRecursoC, name='getRecursoC'),
+  path('get-resourceCel', views.getRecursoC, name='getRecursoC'),
   # Reservas
   path('get-reserva', views.getReserva, name='getReserva'),
   path('create-reserva', views.createReserva, name='createReserva'),
   path('update-reserva', views.updateReserva, name='updateReserva'),
   path('delete-reserva', views.DeleteReserva, name='DeleteReserva'),
-  path('logout-user', views.logoutUser, name='logoutUser'),
   # Email auth
   path('email', views.sendEmail, name='sendEmail'),
   # Change password

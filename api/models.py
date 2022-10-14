@@ -17,6 +17,15 @@ class Producto(models.Model):
     (1, 'SOFTWARE'),
     (2, 'HARDWARE'),
   ]
+  PRODUCT_CATEGORIES_CEL = [
+    (1, 'Routers'),
+    (2, 'Switches'),
+    (3, 'Computadoras'),
+    (4, 'CiscoSoftware'),
+    (5, 'SoftwaredeCalculo'),
+    (6, 'Cableado'),
+    (7, 'Antivirus'),
+  ]
   id = models.BigAutoField(primary_key=True)
   nombre = models.TextField()
   detalles = models.TextField(blank=True)

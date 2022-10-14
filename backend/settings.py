@@ -18,7 +18,6 @@ from dotenv import load_dotenv
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -102,7 +101,6 @@ ROOT_URLCONF = 'backend.urls'
 
 AUTH_USER_MODEL = 'api.Usuario'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -132,7 +130,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
     }
 } """
 
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
