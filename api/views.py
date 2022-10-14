@@ -685,23 +685,23 @@ def createReserva(req):
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   idUsuario = Usuario.objects.get(pk=req.user.id)
-  #try:
-  codigoReserva = generateCodigoReserva()
-  fechaInicio = body["FechaInicio"]
-  fechaFinal = body["fechaFinal"]
-  horaI = body["horaI"]
-  horaF = body["horaF"]
-  idLugar = body["Salon"]
-  idProducto = body["Productos"]
-  startDate = timezone.make_aware(datetime.strptime(fechaInicio+horaI, '%Y-%m-%d%H:%M'))
-  endDate = timezone.make_aware(datetime.strptime(fechaFinal+horaF, '%Y-%m-%d%H:%M'))
-  if checkSpotAvailable(startDate, endDate, idLugar):
-    Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
-    return JsonResponse({"Recurso": Recurso.id})
-  else:
-    return JsonResponse({"warning": "Ese lugar no esta disponible"})
-  #except:
-  #  return HttpResponseServerError()
+  try:
+    codigoReserva = generateCodigoReserva()
+    fechaInicio = body["FechaInicio"]
+    fechaFinal = body["fechaFinal"]
+    horaI = body["horaI"]
+    horaF = body["horaF"]
+    idLugar = body["Salon"]
+    idProducto = body["Productos"]
+    startDate = timezone.make_aware(datetime.strptime(fechaInicio+horaI, '%Y-%m-%d%H:%M'))
+    endDate = timezone.make_aware(datetime.strptime(fechaFinal+horaF, '%Y-%m-%d%H:%M'))
+    if checkSpotAvailable(startDate, endDate, idLugar):
+      Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+      return JsonResponse({"Recurso": Recurso.id})
+    else:
+      return JsonResponse({"warning": "Ese lugar no esta disponible"})
+  except:
+    return HttpResponseBadRequest()
 
 def checkSpotAvailable(startDate, endDate, idLugar):
   if idLugar != None:
