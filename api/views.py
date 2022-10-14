@@ -95,10 +95,8 @@ def reservaJSONResponse(reservas):
 
 # User
 @csrf_exempt
-@login_required
 def getUserHistorial(req): # reservas de 1 usuario o del usuario loggeado
   if req.body:
-    # if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
     body_unicode = req.body.decode('utf-8')
     body = json.loads(body_unicode)
     userId = body['id']
@@ -212,7 +210,6 @@ def createRecurso(req):
 
 @csrf_exempt
 def getRecursoC(req): # Individual or all resources
-  #if req.user.rol == None: return JsonResponse({"error": "Action not permited"})
   body_unicode = req.body.decode('utf-8')
   body = json.loads(body_unicode)
   if 'resourceType' in body.keys():
@@ -693,10 +690,12 @@ def createReserva(req):
     horaF = body["horaF"]
     idLugar = body["Salon"]
     idProducto = body["Productos"]
+    comentarios = None
+    if 'comentarios' in body.keys(): comentarios = body['comentarios']
     startDate = timezone.make_aware(datetime.strptime(fechaInicio+horaI, '%Y-%m-%d%H:%M'))
     endDate = timezone.make_aware(datetime.strptime(fechaFinal+horaF, '%Y-%m-%d%H:%M'))
     if checkSpotAvailable(startDate, endDate, idLugar):
-      Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = None, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
+      Recurso = Reserva.objects.create(idUsuario = idUsuario, codigoReserva = codigoReserva, startDate=startDate, endDate=endDate, fechaInicio = fechaInicio, fechaFinal = fechaFinal, horaInicio = horaI, horaFinal = horaF, comentarios = comentarios, idLugar_id = idLugar, idProducto_id = idProducto, estatus = 1)
       return JsonResponse({"Recurso": Recurso.id})
     else:
       return JsonResponse({"warning": "Ese lugar no esta disponible"})
@@ -753,8 +752,7 @@ def loginUser(req):
     if user.deletedAt != None: return HttpResponseForbidden()
     if user.fechaDesbloqueo != None:
       today = timezone.make_aware(datetime.today())
-      print(today, user.fechaBloqueo, user.fechaDesbloqueo)
-      if today >= user.fechaBloqueo and today < user.fecha.Desbloqueo: return HttpResponseForbidden()
+      if today >= user.fechaBloqueo and today < user.fechaDesbloqueo: return HttpResponseForbidden()
     email = body['email']
     password = body["password"]
     authenticatedUser = authenticate(req, correo=email, password=password)
@@ -768,7 +766,7 @@ def loginUser(req):
     else:
       return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
   except:
-      return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
+    return JsonResponse({ "error": "El correo o la contraseña no son correctos" })
 
 @csrf_exempt
 def createUser(req): # Add email validation
