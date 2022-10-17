@@ -55,7 +55,7 @@ def reservaJSONResponse(reservas):
       productoDict = {
         "id": reserva.idProducto.pk,
         "nombre": reserva.idProducto.nombre,
-        "categoria": Producto.PRODUCT_CATEGORIES[reserva.idProducto.categoria][1],
+        "categoria": Producto.PRODUCT_CATEGORIES[reserva.idProducto.categoria - 1][1],
         "cantidadSolicitada": reserva.idProducto.cantidadSolicitada
       }
     if reserva.idLugar != None:
@@ -709,6 +709,7 @@ def checkSpotAvailable(startDate, endDate, idLugar):
     overlapping_slots = Reserva.objects.filter(idLugar_id=idLugar, endDate__gte=startDate, startDate__lte=endDate)
     if overlapping_slots.exists(): return False
     else: return True
+  else: return True
 
 @csrf_exempt
 def updateReserva(req):
