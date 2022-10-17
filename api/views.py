@@ -253,6 +253,7 @@ def getProductoC(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
+          "detalles": producto.detalles,
           "categoria": Producto.PRODUCT_CATEGORIES_CEL[producto.categoria - 1][1],
         }
         productsList.append(productDict)
@@ -267,6 +268,7 @@ def getProductoC(body):
         productDict = {
           "id": producto.pk,
           "nombre": producto.nombre,
+          "detalles": producto.detalles,
           "categoria": Producto.PRODUCT_CATEGORIES_CEL[producto.categoria - 1][1],
         }
         productsList.append(productDict)
